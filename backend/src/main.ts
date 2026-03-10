@@ -3,6 +3,9 @@ import { AppModule } from './app.module'
 import { Logger, ValidationPipe } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { getCorsConfig } from './config'
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
+import { AuthModule } from './auth/auth.module'
+import { EmailConfirmationModule } from './auth/email-confirmation/email-confirmation.module'
 
 import cookieParser from 'cookie-parser'
 import session from 'express-session'
@@ -61,6 +64,18 @@ async function bootstrap() {
   )
 
   app.enableCors(getCorsConfig(config))
+
+  const swaggerConfig = new DocumentBuilder()
+    .setTitle('Auth API')
+    .setDescription('Authentication endpoints')
+    .setVersion('1.0')
+    .addTag('auth')
+    .build()
+
+  const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig, {
+    include: [AuthModule, EmailConfirmationModule],
+  })
+  SwaggerModule.setup('docs', app, swaggerDocument)
 
   const port = config.getOrThrow('HTTP_PORT')
   const host = config.getOrThrow('HTTP_HOST')
