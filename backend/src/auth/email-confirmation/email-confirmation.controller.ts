@@ -4,16 +4,23 @@ import { type Request } from 'express'
 import { ConfirmationDto } from './dto'
 import { ApiTags, ApiOperation, ApiBody, ApiResponse } from '@nestjs/swagger'
 
-@ApiTags('auth')
+@ApiTags('Auth')
 @Controller('auth/email-confirmation')
 export class EmailConfirmationController {
   constructor(private readonly emailConfirmationService: EmailConfirmationService) {}
 
   @Post()
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Confirm email with token' })
+  @ApiOperation({ summary: 'Подтвердить аккаунт по токену' })
   @ApiBody({ type: ConfirmationDto })
-  @ApiResponse({ status: 200, description: 'Email successfully confirmed' })
+  @ApiResponse({
+    status: 200,
+    schema: {
+      example: {
+        status: 'ok',
+      },
+    },
+  })
   public async newVerification(@Req() req: Request, @Body() dto: ConfirmationDto) {
     return this.emailConfirmationService.newVerification(req, dto)
   }

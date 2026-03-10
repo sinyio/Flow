@@ -20,7 +20,7 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly configService: ConfigService,
     private readonly emailConfirmationService: EmailConfirmationService,
-  ) {}
+  ) { }
 
   public async register(req: Request, dto: RegisterDto) {
     const isExists = await this.userService.findByEmail(dto.email)
@@ -34,6 +34,7 @@ export class AuthService {
     await this.emailConfirmationService.sendVerificationToken(newUser)
 
     return {
+      stasus: 'ok',
       message: 'Вы успешно зарегистрировались. Пожалуйста, подтвердите email',
     }
   }
@@ -61,7 +62,7 @@ export class AuthService {
     return this.saveSession(req, user)
   }
 
-  public async logout(req: Request, res: Response): Promise<void> {
+  public async logout(req: Request, res: Response) {
     return new Promise((resolve, reject) => {
       req.session.destroy((err) => {
         if (err) {
@@ -70,7 +71,7 @@ export class AuthService {
       })
 
       res.clearCookie(this.configService.getOrThrow('SESSION_NAME'))
-      resolve()
+      resolve({ status: 'ok' })
     })
   }
 
@@ -84,9 +85,7 @@ export class AuthService {
           return reject(new InternalServerErrorException('Не удалось сохранить сессию'))
         }
 
-        resolve({
-          user,
-        })
+        resolve({ status: 'ok' })
       })
     })
   }

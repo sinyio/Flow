@@ -32,8 +32,6 @@ export class EmailConfirmationService {
       },
     })
 
-    console.log(dto.token)
-
     if (!existingToken) {
       throw new NotFoundException('Токен подтверждения не найден')
     }
