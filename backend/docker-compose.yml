@@ -29,8 +29,8 @@ services:
     container_name: backend
     build:
       context: .
-      dockerfile: Dockerfile.dev
-    command: sh -c "npx prisma db push && npm run start:dev"
+      dockerfile: Dockerfile
+    command: sh -c "npx prisma db push && if [ \"$NODE_ENV\" = \"production\" ]; then npm run build && node dist/main.js; else npm run start:dev; fi"
     env_file: .env
     volumes:
       - .:/usr/src/app

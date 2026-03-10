@@ -1,28 +1,20 @@
-FROM node:22-alpine AS builder
+FROM node:22-alpine
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
-RUN npm ci
-
-COPY . .
-
-RUN npm run build
-RUN npx prisma generate
-
-FROM node:22-alpine AS production
-
-WORKDIR /usr/src/app
-ENV NODE_ENV=production
+ENV NODE_ENV=development
 
 COPY package*.json ./
-RUN npm ci --omit=dev
-
-COPY --from=builder /usr/src/app/dist ./dist
 COPY prisma ./prisma
 COPY prisma.config.ts ./
 
-EXPOSE 3000
+RUN npm install --legacy-peer-deps
 
-CMD ["node", "dist/main.js"]
+COPY . .
+
+RUN npx prisma generate
+
+EXPOSE 4000
+
+CMD ["sh", "-c", "if [ \"$NODE_ENV\" = \"production\" ]; then npm run build && node dist/main.js; else npm run start:dev; fi"]
 
