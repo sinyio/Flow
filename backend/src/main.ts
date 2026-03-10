@@ -66,10 +66,7 @@ async function bootstrap() {
   app.enableCors(getCorsConfig(config))
 
   const swaggerConfig = new DocumentBuilder()
-    .setTitle('Auth API')
-    .setDescription('Authentication endpoints')
-    .setVersion('1.0')
-    .addTag('auth')
+    .setTitle('Flow API')
     .build()
 
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig, {
