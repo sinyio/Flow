@@ -1,20 +1,37 @@
-FROM node:22-alpine
+# ---------- BUILD STAGE ----------
+FROM node:22-alpine AS builder
 
-WORKDIR /usr/src/app
-
-ENV NODE_ENV=development
+WORKDIR /app
 
 COPY package*.json ./
+
+# копируем prisma schema ДО npm install
 COPY prisma ./prisma
-COPY prisma.config.ts ./
+COPY prisma.config.ts ./prisma.config.ts
 
 RUN npm install --legacy-peer-deps
 
 COPY . .
 
 RUN npx prisma generate
+RUN npm run build
+
+
+# ---------- PRODUCTION STAGE ----------
+FROM node:22-alpine
+
+WORKDIR /app
+ENV NODE_ENV=production
+
+COPY package*.json ./
+RUN npm install --omit=dev --ignore-scripts --legacy-peer-deps
+
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
 
 EXPOSE 4000
 
-CMD ["sh", "-c", "if [ \"$NODE_ENV\" = \"production\" ]; then npm run build && node dist/main.js; else npm run start:dev; fi"]
-
+CMD ["node", "dist/src/main.js"]
