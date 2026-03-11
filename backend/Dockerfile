@@ -7,6 +7,7 @@ COPY package*.json ./
 
 # копируем prisma schema ДО npm install
 COPY prisma ./prisma
+COPY prisma.config.ts ./prisma.config.ts
 
 RUN npm install --legacy-peer-deps
 
