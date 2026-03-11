@@ -1,0 +1,13 @@
+.bgLiquidGlass {
+  backdrop-filter: blur(4px);
+  background: hsla(0, 0%, 100%, 0.4);
+  width: fit-content;
+  height: fit-content;
+  border: #0000004D solid 1px;
+}
+
+@supports not (hanging-punctuation:first) {
+  .bgLiquidGlass {
+    backdrop-filter: url(#displacementFilter) blur(2px);
+  }
+}

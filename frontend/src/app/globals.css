@@ -1,42 +1,42 @@
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+@import url('../../public/fonts/TildaSans-Black/TildaSans-Black.css');
+@import url('../../public/fonts/TildaSans-Bold/TildaSans-Bold.css');
+@import url('../../public/fonts/TildaSans-ExtraBold/TildaSans-ExtraBold.css');
+@import url('../../public/fonts/TildaSans-Light/TildaSans-Light.css');
+@import url('../../public/fonts/TildaSans-Medium/TildaSans-Medium.css');
+@import url('../../public/fonts/TildaSans-Regular/TildaSans-Regular.css');
+@import url('../../public/fonts/TildaSans-Semibold/TildaSans-Semibold.css');
 
 html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
+  font-family: 'TildaSansBlack';
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+.g-root {
+  --g-font-family-sans: 'Inter', sans-serif;
 
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
+  --g-text-header-font-weight: 600;
+  --g-text-subheader-font-weight: 600;
+  --g-text-display-font-weight: 600;
+  --g-text-accent-font-weight: 600;
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
+  --g-input-base-backgroundColor: rgba(255, 255, 255, 0.85);
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+  --g-color-base-brand: rgb(117, 155, 255);
+  --g-color-base-brand-hover: rgb(99, 143, 255);
+  --g-color-base-selection: rgba(82, 130, 255, 0.05);
+  --g-color-base-selection-hover: rgba(82, 130, 255, 0.1);
+  --g-color-line-brand: rgb(117, 155, 255);
+  --g-color-text-brand: rgb(117, 155, 255);
+  --g-color-text-brand-contrast: rgb(255, 255 ,255);
+  --g-color-text-link: rgb(117, 155, 255);
+  --g-color-text-link-hover: rgb(82, 130, 255);
+
+  --g-border-radius-xs: 3px;
+  --g-border-radius-s: 5px;
+  --g-border-radius-m: 6px;
+  --g-border-radius-l: 8px;
+  --g-border-radius-xl: 20px;
+  /* --g-border-radius-2xl: 16px; */
 }
