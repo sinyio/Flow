@@ -30,7 +30,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     env_file: ./backend/.env
-    command: sh -c "npx prisma db push && node dist/src/main.js"  
+    command: sh -c "npx prisma db push && node dist/src/main.js"
     ports:
       - 4000:4000
     depends_on:
@@ -39,11 +39,25 @@ services:
     networks:
       - flow-backend
     profiles:
-      - prod-back
+      - prod
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    depends_on:
+      - backend
+    networks:
+      - flow-backend
+    profiles:
+      - prod
 
 volumes:
   postgres_data:
   redis_data:
+
 
 networks:
   flow-backend:
