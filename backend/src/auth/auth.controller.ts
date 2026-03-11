@@ -3,9 +3,8 @@ import { AuthService } from './auth.service'
 import { LoginDto, RegisterDto } from './dto'
 
 import { type Request, type Response } from 'express'
-import { Recaptcha } from '@nestlab/google-recaptcha'
 import { ApiTags, ApiOperation, ApiBody, ApiResponse } from '@nestjs/swagger'
-import { AuthGuard } from './guards/auth.guard'
+import { Authorization } from './decorators/auth.decorator'
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -83,7 +82,7 @@ export class AuthController {
   }
 
   @Get('me')
-  @UseGuards(AuthGuard)
+  @Authorization()
   @ApiOperation({ summary: 'Проверить, авторизован ли пользователь' })
   @ApiResponse({
     status: 200,
