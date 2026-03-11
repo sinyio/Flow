@@ -1,6 +1,5 @@
 services:
   db:
-    container_name: postgres
     image: postgres:17
     restart: always
     environment:
@@ -15,7 +14,6 @@ services:
       - flow-backend
 
   redis:
-    container_name: redis
     image: redis:8
     restart: always
     ports:
