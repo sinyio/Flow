@@ -5,6 +5,7 @@ import { AuthModule } from './auth/auth.module'
 import { UserModule } from './user/user.module'
 import { MailModule } from './mail/mail.module'
 import { EmailConfirmationModule } from './auth/email-confirmation/email-confirmation.module'
+import { AdModule } from './ad/ad.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { EmailConfirmationModule } from './auth/email-confirmation/email-confirm
     UserModule,
     MailModule,
     EmailConfirmationModule,
+    AdModule,
   ],
 })
 export class AppModule {}

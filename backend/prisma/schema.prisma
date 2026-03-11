@@ -9,15 +9,17 @@ datasource db {
 model User {
   id String @id @default(uuid())
 
-  phoneNumber String? @unique @map("phone_number")
-  email String @unique
-  password String
-  photo String?
-  isVerified Boolean @default(false) @map("is_verified")
-  role UserRole @default(REGULAR)
+  phoneNumber String?  @unique @map("phone_number")
+  email       String   @unique
+  password    String
+  photo       String?
+  isVerified  Boolean  @default(false) @map("is_verified")
+  role        UserRole @default(REGULAR)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+
+  ads Ad[]
 
   @@map("users")
 }
@@ -28,11 +30,11 @@ enum UserRole {
 }
 
 model Token {
-  id String @id @default(uuid())
-  email String
-  token String @unique
-  type TokenType
-  expiresIn DateTime @map("expires_in")
+  id        String    @id @default(uuid())
+  email     String
+  token     String    @unique
+  type      TokenType
+  expiresIn DateTime  @map("expires_in")
 
   @@map("tokens")
 }
@@ -40,4 +42,47 @@ model Token {
 enum TokenType {
   VERIFICATION
   PASSWORD_RESET
+}
+
+model Ad {
+  id String @id @default(uuid())
+
+  title       String
+  image       String?
+  description String
+
+  startDate DateTime @map("start_date")
+  endDate   DateTime @map("end_date")
+
+  fromCity String @map("from_city")
+  toCity   String @map("to_city")
+
+  price  Float
+  weight Float?
+
+  isFragile  Boolean @map("is_fragile")
+  isDocument Boolean @map("is_document")
+
+  packaging Packaging
+
+  length Float
+  width  Float
+  height Float
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@map("ads")
+}
+
+enum Packaging {
+  PACKAGE
+  BOX
+  ENVELOPE
+  FILM
+  NO_PACKAGING
+  OTHER
 }

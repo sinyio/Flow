@@ -103,27 +103,4 @@ export class AuthController {
   public async me() {
     return true
   }
-
-  @Get('test')
-  @Authorization()
-  @ApiOperation({ summary: 'Проверить, авторизован ли пользователь' })
-  @ApiResponse({
-    status: 200,
-    schema: {
-      example: true,
-    },
-  })
-  @ApiResponse({
-    status: 401,
-    schema: {
-      example: {
-        message: 'Пользователь не авторизован',
-        error: 'Unauthorized',
-        statusCode: 401,
-      },
-    },
-  })
-  public async qwe() {
-    return true
-  }
 }
