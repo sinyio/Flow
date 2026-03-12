@@ -22,24 +22,25 @@ export class AdController {
     status: 200, schema: {
       example: {
         "id": "22222222-2222-2222-2222-222222222222",
-        "title": "Доставка посылки из Москвы в П",
+        "title": "Доставка посылки из Москвы в Питер",
         "image": null,
         "description": "Нужно доставить аккуратно упак",
-        "start_date": "2026-03-12 10:00:00",
-        "end_date": "2026-03-15 18:00:00",
-        "from_city": "Москва",
-        "to_city": "Санкт-Петербург",
+        "startDate": "2026-03-12 10:00:00",
+        "endDate": "2026-03-15 18:00:00",
+        "fromCity": "Москва",
+        "toCity": "Санкт-Петербург",
         "price": 1500,
         "weight": 5,
-        "is_fragile": true,
-        "is_document": false,
+        "isFragile": true,
+        "isDocument": false,
         "packaging": "BOX",
         "length": 30,
         "width": 20,
         "height": 10,
-        "created_at": "2026-03-11 23:42:10.952",
-        "updated_at": "2026-03-11 23:42:10.952",
-        "user_id": "e014cd64-c0c4-428a-840b-d96dc6"
+        "user": {
+          id: "123321-12dd1923-d13i-13f5v413",
+          photo: "https://photoLink.ru"
+        }
       },
     }
   })
