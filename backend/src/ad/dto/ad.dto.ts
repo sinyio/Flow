@@ -105,7 +105,7 @@ export class AdResponseDto {
   @ApiProperty({ example: null })
   image: string | null
 
-  @ApiProperty({ example: 'Нужно доставить аккуратно упак' })
+  @ApiProperty({ example: 'Нужно доставить аккуратно' })
   description: string
 
   @ApiProperty({ example: '2026-03-12T00:00:00.000Z' })
@@ -147,15 +147,16 @@ export class AdResponseDto {
   @ApiProperty({ example: 20 })
   height: number
 
-  @ApiProperty({ example: true })
-  canEdit: boolean
-
   @ApiProperty({
-    enum: AdRoles,
-    enumName: 'AdRoles',
-    example: AdRoles.VIEWER
+    example: {
+      canEdit: false,
+      role: AdRoles.VIEWER
+    }
   })
-  role: AdRoles
+  userState: {
+    canEdit: boolean
+    role: AdRoles
+  }
 
   @ApiProperty({
     example: getUserExample()
@@ -200,8 +201,10 @@ export const getAdResponse = (ad: AdWithUsers, userId?: string) => ({
   length: ad.length,
   width: ad.width,
   height: ad.height,
-  canEdit: ad.authorId === userId,
-  role: ad.senderId === userId ? 'sender' : ad.recipientId === userId ? 'recipient' : 'viewer',
+  userState: {
+    canEdit: ad.authorId === userId,
+    role: ad.senderId === userId ? 'sender' : ad.recipientId === userId ? 'recipient' : 'viewer',
+  },
   author: getUserResponse(ad.author),
   sender: ad.sender ? getUserResponse(ad.sender) : null,
   recipient: ad.recipient ? getUserResponse(ad.recipient) : null,
