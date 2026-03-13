@@ -138,4 +138,19 @@ export class AdService {
 
     return getStatusOk()
   }
+
+  public async delete(req: Request, id: string) {
+    const authorId = req.session.userId
+    if (!authorId) throw new UnauthorizedException('Сессия не найдена')
+
+    if (!id || Array.isArray(id)) throw new BadRequestException('Invalid ID');
+
+    await this.prisma.ad.delete({
+      where: {
+        id
+      }
+    })
+
+    return getStatusOk()
+  }
 }

@@ -1,10 +1,11 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post, Query, Req } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { AdService } from './ad.service';
 import { Authorization } from '../auth/decorators/auth.decorator';
 import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AdDto, AdFilterDto, AdPaginatedResponseDto, AdResponseDto } from './dto';
 import { type Request } from 'express';
 import { getStatusOk } from '../common/helpers';
+import { CanEditAd } from './guards';
 
 @ApiTags('Ads')
 @Controller('ads')
@@ -134,7 +135,22 @@ export class AdController {
       example: getStatusOk(),
     }
   })
+  @UseGuards(CanEditAd)
   public update(@Req() req: Request, @Param('id') id: string, @Body() ad: AdDto) {
     return this.adService.update(req, id, ad)
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Delete(':id')
+  @ApiOperation({ summary: 'Удалить объявление' })
+  @ApiParam({ name: 'id', example: 'ad_123' })
+  @ApiResponse({
+    status: 200, schema: {
+      example: getStatusOk(),
+    }
+  })
+  @UseGuards(CanEditAd)
+  public delete(@Req() req: Request, @Param('id') id: string) {
+    return this.adService.delete(req, id)
   }
 }
