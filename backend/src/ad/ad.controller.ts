@@ -1,8 +1,10 @@
-import { Controller, Get, HttpCode, HttpStatus, Param, Query } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post, Query, Req } from '@nestjs/common';
 import { AdService } from './ad.service';
 import { Authorization } from '../auth/decorators/auth.decorator';
-import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { AdFilterDto } from './dto';
+import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { AdDto, AdFilterDto, AdPaginatedResponseDto, AdResponseDto } from './dto';
+import { type Request } from 'express';
+import { getStatusOk } from '../common/helpers';
 
 @ApiTags('Ads')
 @Controller('ads')
@@ -13,37 +15,14 @@ export class AdController {
   @HttpCode(HttpStatus.OK)
   @Get(':id')
   @ApiOperation({ summary: 'Получить объявление по id' })
-  @ApiQuery({
+  @ApiParam({
     name: 'id',
     required: true,
     description: 'Id объявления',
     type: String,
   })
   @ApiResponse({
-    status: 200, schema: {
-      example: {
-        "id": "22222222-2222-2222-2222-222222222222",
-        "title": "Доставка посылки из Москвы в Питер",
-        "image": null,
-        "description": "Нужно доставить аккуратно упак",
-        "startDate": "2026-03-12 10:00:00",
-        "endDate": "2026-03-15 18:00:00",
-        "fromCity": "Москва",
-        "toCity": "Санкт-Петербург",
-        "price": 1500,
-        "weight": 5,
-        "isFragile": true,
-        "isDocument": false,
-        "packaging": "BOX",
-        "length": 30,
-        "width": 20,
-        "height": 10,
-        "user": {
-          id: "123321-12dd1923-d13i-13f5v413",
-          photo: "https://photoLink.ru"
-        }
-      },
-    }
+    status: 200, type: AdResponseDto
   })
   @ApiResponse({
     status: 404, schema: {
@@ -54,8 +33,8 @@ export class AdController {
       },
     }
   })
-  public getById(@Param('id') id: string) {
-    return this.adService.findAdById(id);
+  public getById(@Req() req: Request, @Param('id') id: string) {
+    return this.adService.findAdById(req, id);
   }
 
   @HttpCode(HttpStatus.OK)
@@ -72,6 +51,18 @@ export class AdController {
     required: false,
     description: 'Размер страницы (по умолчанию 10)',
     type: Number,
+  })
+  @ApiQuery({
+    name: 'isDocument',
+    required: false,
+    description: 'Документы',
+    type: Boolean,
+  })
+  @ApiQuery({
+    name: 'isFragile',
+    required: false,
+    description: 'Хрупкое',
+    type: Boolean,
   })
   @ApiQuery({
     name: 'minPrice',
@@ -104,42 +95,46 @@ export class AdController {
     type: String,
   })
   @ApiResponse({
+    status: 200, type: AdPaginatedResponseDto
+  })
+  public getAll(@Req() req: Request, @Query() filters: AdFilterDto) {
+    return this.adService.findAll(req, filters)
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post()
+  @ApiBody({ type: AdDto })
+  @ApiOperation({ summary: 'Создать объявление' })
+  @ApiResponse({
     status: 200, schema: {
+      example: getStatusOk(),
+    }
+  })
+  @ApiResponse({
+    status: 400, schema: {
       example: {
-        "data": [
-          {
-            "id": "22222222-2222-2222-2222-222222222222",
-            "title": "Доставка посылки из Москвы в Питер",
-            "image": null,
-            "description": "Нужно доставить аккуратно упакованную посылку",
-            "startDate": "2026-03-12T10:00:00.000Z",
-            "endDate": "2026-03-15T18:00:00.000Z",
-            "fromCity": "Москва",
-            "toCity": "Санкт-Петербург",
-            "price": 1500,
-            "weight": 5,
-            "isFragile": true,
-            "isDocument": false,
-            "packaging": "BOX",
-            "length": 30,
-            "width": 20,
-            "height": 10,
-            "user": {
-              "id": "e014cd64-c0c4-428a-840b-d96dc60a4f29",
-              "photo": null
-            }
-          }
+        "message": [
+          "Вес посылки обязателен"
         ],
-        "meta": {
-          "page": 1,
-          "limit": 5,
-          "total": 1,
-          "pages": 1
-        }
+        "error": "Bad Request",
+        "statusCode": 400
       },
     }
   })
-  public getAll(@Query() filters: AdFilterDto) {
-    return this.adService.findAll(filters)
+  public create(@Req() req: Request, @Body() ad: AdDto) {
+    return this.adService.create(req, ad)
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Patch(':id')
+  @ApiOperation({ summary: 'Обновить объявление' })
+  @ApiParam({ name: 'id', example: 'ad_123' })
+  @ApiResponse({
+    status: 200, schema: {
+      example: getStatusOk(),
+    }
+  })
+  public update(@Req() req: Request, @Param('id') id: string, @Body() ad: AdDto) {
+    return this.adService.update(req, id, ad)
   }
 }

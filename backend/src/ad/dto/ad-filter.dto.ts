@@ -1,7 +1,7 @@
 
 import { PaginationDto } from '@/src/common/dto'
 import { Type } from 'class-transformer'
-import { IsDateString, IsNumber, IsOptional, IsString } from 'class-validator'
+import { IsBoolean, IsDateString, IsNumber, IsOptional, IsString } from 'class-validator'
 
 export class AdFilterDto extends PaginationDto {
     @IsOptional()
@@ -24,4 +24,10 @@ export class AdFilterDto extends PaginationDto {
     @IsOptional()
     @IsDateString()
     endDate?: string
+
+    @IsOptional()
+    isFragile?: boolean
+
+    @IsOptional()
+    isDocument?: boolean
 }

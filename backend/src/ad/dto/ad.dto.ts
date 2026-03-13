@@ -1,9 +1,189 @@
 import { getUserResponse } from '@/src/user/dto'
-import { Ad, User } from '@prisma/client'
+import { ApiProperty } from '@nestjs/swagger'
+import { Ad, Packaging, User } from '@prisma/client'
+import { IsNotEmpty } from 'class-validator'
+import { AdRoles } from '../types'
+import { getUserExample, PaginationMetaDto } from '@/src/common/swagger-examples'
 
-type AdWithUser = Ad & { user: User }
+type AdWithUsers = Ad & { author: User, sender: User | null, recipient: User | null }
 
-export const getAdResponse = (ad: AdWithUser) => ({
+export class AdDto {
+  @ApiProperty({
+    example: 'Новое объявление',
+    description: 'Название объявления',
+  })
+  @IsNotEmpty({ message: 'Название объявления обязательно для заполенния' })
+  title: string
+
+  @ApiProperty({
+    example: '2026-03-12T00:00:00.000Z',
+  })
+  @IsNotEmpty({ message: 'Начало периода доставки обязательно' })
+  startDate: Date
+
+  @ApiProperty({
+    example: '2026-03-20T00:00:00.000Z',
+  })
+  @IsNotEmpty({ message: 'Конец периода доставки обязательно' })
+  endDate: Date
+
+  @ApiProperty({
+    example: 'Москва',
+  })
+  @IsNotEmpty({ message: 'Город отправления доставки обязателен' })
+  fromCity: string
+
+  @ApiProperty({
+    example: 'Саратов',
+  })
+  @IsNotEmpty({ message: 'Город получения доставки обязателен' })
+  toCity: string
+
+  @ApiProperty({
+    example: '0.5',
+  })
+  @IsNotEmpty({ message: 'Вес посылки обязателен' })
+  weight: number
+
+  @ApiProperty({
+    example: '40',
+  })
+  @IsNotEmpty({ message: 'Длина посылки обязательна' })
+  length: number
+
+  @ApiProperty({
+    example: '30',
+  })
+  @IsNotEmpty({ message: 'Ширины посылки обязательна' })
+  width: number
+
+  @ApiProperty({
+    example: '20',
+  })
+  @IsNotEmpty({ message: 'Высота посылки обязательная' })
+  height: number
+
+  @ApiProperty({
+    example: '2000',
+  })
+  @IsNotEmpty({ message: 'Вознаграждание обязательно' })
+  price: number
+
+  @ApiProperty({
+    example: 'BOX',
+  })
+  @IsNotEmpty({ message: 'Вид упаковки обязателен' })
+  packaging: Packaging
+
+  @ApiProperty({
+    example: 'sender',
+  })
+  @IsNotEmpty({ message: 'Роль обязательна' })
+  role: AdRoles
+
+  @ApiProperty({
+    example: true,
+  })
+  isFragile: boolean
+
+  @ApiProperty({
+    example: false,
+  })
+  isDocument: boolean
+
+  description: string
+}
+
+export class AdResponseDto {
+
+  @ApiProperty({ example: '22222222-2222-2222-2222-222222222222' })
+  id: string
+
+  @ApiProperty({ example: 'Новое объявление' })
+  title: string
+
+  @ApiProperty({ example: null })
+  image: string | null
+
+  @ApiProperty({ example: 'Нужно доставить аккуратно упак' })
+  description: string
+
+  @ApiProperty({ example: '2026-03-12T00:00:00.000Z' })
+  startDate: Date
+
+  @ApiProperty({ example: '2026-03-20T00:00:00.000Z' })
+  endDate: Date
+
+  @ApiProperty({ example: 'Москва' })
+  fromCity: string
+
+  @ApiProperty({ example: 'Саратов' })
+  toCity: string
+
+  @ApiProperty({ example: 2000 })
+  price: number
+
+  @ApiProperty({ example: 0.5 })
+  weight: number
+
+  @ApiProperty({ example: true })
+  isFragile: boolean
+
+  @ApiProperty({ example: false })
+  isDocument: boolean
+
+  @ApiProperty({
+    enum: Packaging,
+    example: Packaging.BOX
+  })
+  packaging: Packaging
+
+  @ApiProperty({ example: 40 })
+  length: number
+
+  @ApiProperty({ example: 30 })
+  width: number
+
+  @ApiProperty({ example: 20 })
+  height: number
+
+  @ApiProperty({ example: true })
+  canEdit: boolean
+
+  @ApiProperty({
+    enum: AdRoles,
+    enumName: 'AdRoles',
+    example: AdRoles.VIEWER
+  })
+  role: AdRoles
+
+  @ApiProperty({
+    example: getUserExample()
+  })
+  author: any
+
+  @ApiProperty({
+    example: getUserExample(),
+    nullable: true
+  })
+  sender: any | null
+
+  @ApiProperty({
+    example: getUserExample(),
+    nullable: true
+  })
+  recipient: any | null
+}
+
+export class AdPaginatedResponseDto {
+  @ApiProperty({ type: () => [AdResponseDto] })
+  data: AdResponseDto[]
+
+  @ApiProperty({ type: PaginationMetaDto })
+  meta: PaginationMetaDto
+}
+
+export const getAdResponse = (ad: AdWithUsers, userId?: string) => ({
   id: ad.id,
   title: ad.title,
   image: ad.image,
@@ -20,5 +200,9 @@ export const getAdResponse = (ad: AdWithUser) => ({
   length: ad.length,
   width: ad.width,
   height: ad.height,
-  user: getUserResponse(ad.user),
+  canEdit: ad.authorId === userId,
+  role: ad.senderId === userId ? 'sender' : ad.recipientId === userId ? 'recipient' : 'viewer',
+  author: getUserResponse(ad.author),
+  sender: ad.sender ? getUserResponse(ad.sender) : null,
+  recipient: ad.recipient ? getUserResponse(ad.recipient) : null,
 })

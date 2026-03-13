@@ -9,6 +9,9 @@ datasource db {
 model User {
   id String @id @default(uuid())
 
+  firstName String?
+  lastName  String?
+
   phoneNumber String?  @unique @map("phone_number")
   email       String   @unique
   password    String
@@ -19,7 +22,9 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  ads Ad[]
+  authoredAds Ad[] @relation("AdAuthor")
+  sentAds     Ad[] @relation("AdSender")
+  receivedAds Ad[] @relation("AdRecipient")
 
   @@map("users")
 }
@@ -49,7 +54,7 @@ model Ad {
 
   title       String
   image       String?
-  description String
+  description String?
 
   startDate DateTime @map("start_date")
   endDate   DateTime @map("end_date")
@@ -58,10 +63,10 @@ model Ad {
   toCity   String @map("to_city")
 
   price  Float
-  weight Float?
+  weight Float
 
-  isFragile  Boolean @map("is_fragile")
-  isDocument Boolean @map("is_document")
+  isFragile  Boolean @default(false) @map("is_fragile")
+  isDocument Boolean @default(false) @map("is_document")
 
   packaging Packaging
 
@@ -72,8 +77,13 @@ model Ad {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  userId String @map("user_id")
-  user   User   @relation(fields: [userId], references: [id])
+  authorId    String  @map("author_id")
+  senderId    String? @map("sender_id")
+  recipientId String? @map("recipient_id")
+
+  author    User  @relation("AdAuthor", fields: [authorId], references: [id])
+  sender    User? @relation("AdSender", fields: [senderId], references: [id])
+  recipient User? @relation("AdRecipient", fields: [recipientId], references: [id])
 
   @@map("ads")
 }

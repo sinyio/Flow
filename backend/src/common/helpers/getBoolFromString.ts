@@ -1,0 +1,1 @@
+export const getBoolFromString = (value: "true" | "false") => value === "true"
