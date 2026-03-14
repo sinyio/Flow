@@ -30,4 +30,8 @@ export class AdFilterDto extends PaginationDto {
 
     @IsOptional()
     isDocument?: boolean
+
+    @Type(() => Number)
+    @IsOptional()
+    maxWeight?: number
 }

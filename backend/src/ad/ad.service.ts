@@ -1,14 +1,22 @@
 import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
-import { AdFilterDto, AdDto, getAdResponse } from './dto'
+import { AdFilterDto, AdDto, getAdResponse, AdUpdateDto } from './dto'
 import { PaginatedResponse } from '../common/types'
-import { getBoolFromString, getStatusOk } from '../common/helpers'
+import { filterEmptyValues, getBoolFromString, getStatusOk } from '../common/helpers'
 import { type Request } from 'express'
+import { nanoid } from 'nanoid'
+import { S3Service } from '../s3/s3.service'
+import { ConfigModule, ConfigService } from '@nestjs/config'
+import sharp from 'sharp'
 
 
 @Injectable()
 export class AdService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly s3: S3Service,
+    private readonly configService: ConfigService
+  ) { }
 
   public async findAdById(req: Request, id: string) {
     const ad = await this.prisma.ad.findUnique({
@@ -32,6 +40,7 @@ export class AdService {
       page = 1,
       limit = 10,
       minPrice,
+      maxWeight,
       startDate,
       endDate,
       fromCity,
@@ -43,9 +52,15 @@ export class AdService {
     const where: any = {}
 
     if (minPrice) {
-      where.price = {}
+      where.price = {
+        gte: minPrice
+      }
+    }
 
-      if (minPrice) where.price.gte = minPrice
+    if (maxWeight) {
+      where.weight = {
+        lte: maxWeight
+      }
     }
 
     if (startDate && endDate) {
@@ -86,44 +101,80 @@ export class AdService {
     }
   }
 
-  public async create(req: Request, ad: AdDto) {
-    const { role, ...data } = ad
+  public async create(req: Request, ad: AdDto, file) {
+    const { role, description, ...data } = ad
 
     const authorId = req.session.userId
 
     if (!authorId) throw new UnauthorizedException('Сессия не найдена')
 
-    let senderId
+    let senderId, recipientId
     if (role === 'sender') senderId = authorId
-
-    let recipientId
     if (role === 'recipient') recipientId = authorId
+
+    const adId = nanoid(12)
+
+    let imageKey: string | undefined
+    if (file) {
+      const originalBuffer = file.buffer
+      imageKey = `ads/${adId}/image`
+
+      const thumb250 = await sharp(originalBuffer)
+        .resize(250, 250, { fit: 'cover' })
+        .jpeg({ quality: 85 })
+        .toBuffer()
+
+      await this.s3.upload(
+        this.configService.getOrThrow('MINIO_BUCKET'),
+        imageKey,
+        thumb250,
+        'image/jpeg'
+      )
+    }
+
+    const imagePath = imageKey = `${this.configService.getOrThrow('MINIO_HOST')}/${this.configService.getOrThrow('MINIO_BUCKET')}/${imageKey}`
 
     await this.prisma.ad.create({
       data: {
+        id: adId,
         ...data,
         authorId,
         senderId,
-        recipientId
+        recipientId,
+        image: imagePath
       }
     })
 
     return getStatusOk()
   }
 
-  public async update(req: Request, id: string, ad: AdDto) {
-    const { role, ...data } = ad
+  public async update(req: Request, id: string, ad: AdUpdateDto, file?) {
+    const { role, ...data } =  filterEmptyValues(ad)
 
     const authorId = req.session.userId
     if (!authorId) throw new UnauthorizedException('Сессия не найдена')
 
-    if (!id || Array.isArray(id)) throw new BadRequestException('Invalid ID');
-
-    let senderId
+    let senderId, recipientId
     if (role === 'sender') senderId = authorId
-
-    let recipientId
     if (role === 'recipient') recipientId = authorId
+
+    if (file) {
+      const adId = id
+      const originalBuffer = file.buffer
+      const imageKey = `ads/${adId}/image`
+
+      const thumb250 = await sharp(originalBuffer)
+        .resize(250, 250, { fit: 'cover' })
+        .jpeg({ quality: 85 })
+        .toBuffer()
+
+      await this.s3.upload(
+        this.configService.getOrThrow('MINIO_BUCKET'),
+        imageKey,
+        thumb250,
+        'image/jpeg'
+      )
+    }
 
     await this.prisma.ad.update({
       where: {
@@ -133,7 +184,7 @@ export class AdService {
         ...data,
         authorId,
         senderId,
-        recipientId
+        recipientId,
       }
     })
 

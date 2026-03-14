@@ -1,11 +1,12 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Query, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AdService } from './ad.service';
 import { Authorization } from '../auth/decorators/auth.decorator';
-import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { AdDto, AdFilterDto, AdPaginatedResponseDto, AdResponseDto, PopularRoutesResponseDto } from './dto';
+import { ApiBody, ApiConsumes, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { AdDto, AdFilterDto, AdPaginatedResponseDto, AdResponseDto, AdUpdateDto, PopularRoutesResponseDto } from './dto';
 import { type Request } from 'express';
 import { getStatusOk } from '../common/helpers';
 import { CanEditAd } from './guards';
+import { FileInterceptor } from '@nestjs/platform-express'
 
 @ApiTags('Ads')
 @Controller('ads')
@@ -76,6 +77,12 @@ export class AdController {
     type: Boolean,
   })
   @ApiQuery({
+    name: 'maxWeight',
+    required: false,
+    description: 'Максимальный вес',
+    type: Number,
+  })
+  @ApiQuery({
     name: 'minPrice',
     required: false,
     description: 'Минимальная цена',
@@ -94,15 +101,15 @@ export class AdController {
     type: String,
   })
   @ApiQuery({
-    name: 'startDate',
+    name: 'endDate',
     required: false,
-    description: 'Дата отправления (ISO, например 2026-03-12)',
+    description: 'Дата прибытия (ISO, например 2026-03-15 или 2026-03-15T00:00:00.000Z)',
     type: String,
   })
   @ApiQuery({
-    name: 'endDate',
+    name: 'startDate',
     required: false,
-    description: 'Дата прибытия (ISO, например 2026-03-15)',
+    description: 'Дата отправления (ISO, например 2026-03-12 или 2026-03-12T00:00:00.000Z)',
     type: String,
   })
   @ApiResponse({
@@ -114,6 +121,7 @@ export class AdController {
 
   @HttpCode(HttpStatus.OK)
   @Post()
+  @ApiConsumes('multipart/form-data')
   @ApiBody({ type: AdDto })
   @ApiOperation({ summary: 'Создать объявление' })
   @ApiResponse({
@@ -132,22 +140,26 @@ export class AdController {
       },
     }
   })
-  public create(@Req() req: Request, @Body() ad: AdDto) {
-    return this.adService.create(req, ad)
+  @UseInterceptors(FileInterceptor('image'))
+  public create(@Req() req: Request, @Body() ad: AdDto, @UploadedFile() file) {
+    return this.adService.create(req, ad, file)
   }
 
   @HttpCode(HttpStatus.OK)
   @Patch(':id')
   @ApiOperation({ summary: 'Обновить объявление' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({ type: AdUpdateDto })
   @ApiParam({ name: 'id', example: 'ad_123' })
   @ApiResponse({
     status: 200, schema: {
       example: getStatusOk(),
     }
   })
+  @UseInterceptors(FileInterceptor('image'))
   @UseGuards(CanEditAd)
-  public update(@Req() req: Request, @Param('id') id: string, @Body() ad: AdDto) {
-    return this.adService.update(req, id, ad)
+  public update(@Req() req: Request, @Param('id') id: string, @Body() ad: AdUpdateDto, @UploadedFile() file) {
+    return this.adService.update(req, id, ad, file)
   }
 
   @HttpCode(HttpStatus.OK)

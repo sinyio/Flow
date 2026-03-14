@@ -1,9 +1,10 @@
 import { getUserResponse } from '@/src/user/dto'
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { Ad, Packaging, User } from '@prisma/client'
-import { IsNotEmpty } from 'class-validator'
+import { IsNotEmpty, IsOptional, MinLength } from 'class-validator'
 import { AdRoles } from '../types'
 import { getUserExample, PaginationMetaDto } from '@/src/common/swagger-examples'
+import { Type } from 'class-transformer'
 
 type AdWithUsers = Ad & { author: User, sender: User | null, recipient: User | null }
 
@@ -39,32 +40,37 @@ export class AdDto {
   @IsNotEmpty({ message: 'Город получения доставки обязателен' })
   toCity: string
 
+  @Type(() => Number)
   @ApiProperty({
-    example: '0.5',
+    example: 0.5,
   })
   @IsNotEmpty({ message: 'Вес посылки обязателен' })
   weight: number
 
+  @Type(() => Number)
   @ApiProperty({
-    example: '40',
+    example: 40,
   })
   @IsNotEmpty({ message: 'Длина посылки обязательна' })
   length: number
 
+  @Type(() => Number)
   @ApiProperty({
-    example: '30',
+    example: 30,
   })
   @IsNotEmpty({ message: 'Ширины посылки обязательна' })
   width: number
 
+  @Type(() => Number)
   @ApiProperty({
-    example: '20',
+    example: 20,
   })
   @IsNotEmpty({ message: 'Высота посылки обязательная' })
   height: number
 
+  @Type(() => Number)
   @ApiProperty({
-    example: '2000',
+    example: 2000,
   })
   @IsNotEmpty({ message: 'Вознаграждание обязательно' })
   price: number
@@ -81,17 +87,23 @@ export class AdDto {
   @IsNotEmpty({ message: 'Роль обязательна' })
   role: AdRoles
 
+  @Type(() => Boolean)
   @ApiProperty({
     example: true,
   })
   isFragile: boolean
 
+  @Type(() => Boolean)
   @ApiProperty({
     example: false,
   })
   isDocument: boolean
 
-  description: string
+  @ApiPropertyOptional()
+  description?: string
+
+  @ApiProperty({ type: 'string', format: 'binary' })
+  image: any
 }
 
 export class AdResponseDto {
