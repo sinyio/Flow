@@ -17,6 +17,7 @@ export class AdService {
     })
 
     const userId = req.session.userId
+    if (!userId) throw new UnauthorizedException('Сессия не найдена')
 
     if (!ad) throw new NotFoundException('Объявление не найдено')
 
@@ -152,5 +153,38 @@ export class AdService {
     })
 
     return getStatusOk()
+  }
+
+  async getPopularRoutes(req: Request) {
+    const routes = await this.prisma.ad.groupBy({
+      by: ['fromCity', 'toCity'],
+      _count: { id: true },
+      orderBy: { _count: { id: 'desc' } },
+      take: 2
+    })
+
+    const userId = req.session.userId
+    if (!userId) throw new UnauthorizedException('Сессия не найдена')
+
+    return Promise.all(
+      routes.map(async (route) => {
+        const ads = await this.prisma.ad.findMany({
+          where: {
+            fromCity: route.fromCity,
+            toCity: route.toCity
+          },
+          include: { author: true, sender: true, recipient: true },
+          orderBy: { createdAt: 'desc' },
+          take: 2
+        })
+
+        return {
+          fromCity: route.fromCity,
+          toCity: route.toCity,
+          totalAds: route._count.id,
+          latestAds: ads.map(ad => getAdResponse(ad, userId))
+        }
+      })
+    )
   }
 }

@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post
 import { AdService } from './ad.service';
 import { Authorization } from '../auth/decorators/auth.decorator';
 import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { AdDto, AdFilterDto, AdPaginatedResponseDto, AdResponseDto } from './dto';
+import { AdDto, AdFilterDto, AdPaginatedResponseDto, AdResponseDto, PopularRoutesResponseDto } from './dto';
 import { type Request } from 'express';
 import { getStatusOk } from '../common/helpers';
 import { CanEditAd } from './guards';
@@ -11,6 +11,16 @@ import { CanEditAd } from './guards';
 @Controller('ads')
 export class AdController {
   constructor(private readonly adService: AdService) { }
+
+  @HttpCode(HttpStatus.OK)
+  @Get('popular-routes')
+  @ApiOperation({ summary: 'Получить популярные маршруты (с последними объявлениями)' })
+  @ApiResponse({
+    status: 200, type: [PopularRoutesResponseDto]
+  })
+  public getPopularRoutes(@Req() req: Request) {
+    return this.adService.getPopularRoutes(req)
+  }
 
   // @Authorization()
   @HttpCode(HttpStatus.OK)
