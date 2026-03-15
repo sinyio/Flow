@@ -1,7 +1,7 @@
 import Image from 'next/image'
-import { TextInput } from '@gravity-ui/uikit'
 
 import { LiquidGlassBlock } from '@components/liquid-glass-block/component'
+import BaseTextInput from '@components/text-input/component'
 
 const AuthorizationView = () => (
   <div
@@ -23,7 +23,7 @@ const AuthorizationView = () => (
       src="/authorization/authorization-background.webp"
     />
     <LiquidGlassBlock style={{ borderRadius: '20px', padding: '20px' }}>
-      <TextInput type="email" size="xl" />
+      <BaseTextInput type="email" size="xl" />
     </LiquidGlassBlock>
   </div>
 )

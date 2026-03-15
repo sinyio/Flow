@@ -1,10 +1,5 @@
-@import url('../../public/fonts/TildaSans-Black/TildaSans-Black.css');
-@import url('../../public/fonts/TildaSans-Bold/TildaSans-Bold.css');
-@import url('../../public/fonts/TildaSans-ExtraBold/TildaSans-ExtraBold.css');
-@import url('../../public/fonts/TildaSans-Light/TildaSans-Light.css');
-@import url('../../public/fonts/TildaSans-Medium/TildaSans-Medium.css');
-@import url('../../public/fonts/TildaSans-Regular/TildaSans-Regular.css');
-@import url('../../public/fonts/TildaSans-Semibold/TildaSans-Semibold.css');
+@import url('../fonts.css');
+@import url('../theme.css');
 
 html,
 body {

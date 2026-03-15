@@ -1,7 +1,5 @@
 import { TextInput, TextInputProps } from '@gravity-ui/uikit'
 
-import './component.css'
-
-const BaseTextInput = ({ ...rest }: TextInputProps) => <TextInput {...rest} />
+const BaseTextInput = ({ ...rest }: TextInputProps) => <TextInput label="Email:" {...rest} />
 
 export default BaseTextInput
