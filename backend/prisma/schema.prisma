@@ -56,6 +56,8 @@ model Ad {
   image       String?
   description String?
 
+  status AdStatus @default(ACTIVE)
+
   startDate DateTime @map("start_date")
   endDate   DateTime @map("end_date")
 
@@ -86,6 +88,11 @@ model Ad {
   recipient User? @relation("AdRecipient", fields: [recipientId], references: [id])
 
   @@map("ads")
+}
+
+enum AdStatus {
+  ACTIVE
+  COMPLETED
 }
 
 enum Packaging {
