@@ -114,11 +114,14 @@ export class AdResponseDto {
   @ApiProperty({ example: 'Новое объявление' })
   title: string
 
-  @ApiProperty({ example: null })
+  @ApiProperty({ example: 'https://example.com/image.jpg' })
   image: string | null
 
   @ApiProperty({ example: 'Нужно доставить аккуратно' })
   description: string
+
+  @ApiProperty({ example: 'ACTIVE' })
+  status: string
 
   @ApiProperty({ example: '2026-03-12T00:00:00.000Z' })
   startDate: Date
@@ -201,6 +204,7 @@ export const getAdResponse = (ad: AdWithUsers, userId?: string) => ({
   title: ad.title,
   image: ad.image,
   description: ad.description,
+  status: ad.status,
   startDate: ad.startDate,
   endDate: ad.endDate,
   fromCity: ad.fromCity,
