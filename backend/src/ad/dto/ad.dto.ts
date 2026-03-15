@@ -1,8 +1,8 @@
 import { getUserResponse } from '@/src/user/dto'
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { Ad, Packaging, User } from '@prisma/client'
-import { IsNotEmpty, IsOptional, MinLength } from 'class-validator'
-import { AdRoles } from '../types'
+import { IsEnum, IsNotEmpty, IsOptional, MinLength } from 'class-validator'
+import { AdDtoRoles, AdRoles } from '../types'
 import { getUserExample, PaginationMetaDto } from '@/src/common/swagger-examples'
 import { Type } from 'class-transformer'
 
@@ -76,16 +76,19 @@ export class AdDto {
   price: number
 
   @ApiProperty({
-    example: 'BOX',
+    example: 'BOX', enum: Packaging
   })
   @IsNotEmpty({ message: 'Вид упаковки обязателен' })
+  @IsEnum(Packaging)
   packaging: Packaging
 
   @ApiProperty({
     example: 'sender',
+    enum: AdDtoRoles
   })
   @IsNotEmpty({ message: 'Роль обязательна' })
-  role: AdRoles
+  @IsEnum(AdDtoRoles)
+  role: AdDtoRoles
 
   @Type(() => Boolean)
   @ApiProperty({
