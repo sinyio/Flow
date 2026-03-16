@@ -1,13 +1,9 @@
 import axios from 'axios'
 
-const baseURL =
-  typeof window !== 'undefined'
-    ? (process.env.NEXT_PUBLIC_API_URL ?? '')
-    : (process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001')
+const baseURL = process.env.API_HOST || ''
 
 export const apiClient = axios.create({
   baseURL,
-  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
   },
