@@ -1,0 +1,40 @@
+.list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-top: 2px;
+}
+
+.title {
+    font-family: 'TildaSansBold'; 
+    color: var(--text-secondary);
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--text-secondary);
+}
+
+.indicator {
+    flex-shrink: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: rgba(229, 229, 229, 1);
+}
+
+.indicator_met {
+    background-color: rgba(94, 167, 101, 1);
+}
+
+.indicator_error {
+    background-color: rgba(230, 80, 57, 1);
+}
+
+.item.indicator_error {
+    color: rgba(230, 80, 57, 1);
+    background-color: unset;
+}

@@ -1,0 +1,25 @@
+.backgroundImage {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.flowImage {
+    height: 100px;
+    width: 200px;
+}
+
+.glassBlock {
+    border-radius: 20px;
+    padding: 24px 24px 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    max-width: 360px;
+    box-sizing: border-box;
+}

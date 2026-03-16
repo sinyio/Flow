@@ -8,7 +8,7 @@ interface BusinessLayoutProps {
 }
 
 export const BusinessLayout = ({ children }: BusinessLayoutProps) => (
-  <ThemeProvider scoped theme="dark">
+  <ThemeProvider scoped theme="light">
     {children}
   </ThemeProvider>
 )

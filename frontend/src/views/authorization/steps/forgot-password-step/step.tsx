@@ -1,0 +1,64 @@
+'use client'
+
+import { useCallback } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Button } from '@gravity-ui/uikit'
+import type { ForgotPasswordFormValues } from 'src/types/authorization'
+
+import { EmailField } from '@components/form'
+import { TextLink } from '@components/text-link/component'
+import { Typography } from '@components/typography/component'
+import { useAuthorizationStore } from '@utils/stores/authorization'
+import { forgotPasswordSchema } from 'src/constants/validation-schema'
+import styles from './step.module.css'
+
+export const ForgotPasswordStep = () => {
+  const goToSignIn = useAuthorizationStore(state => state.goToSignIn)
+
+  const { control, formState, handleSubmit } = useForm<ForgotPasswordFormValues>({
+    defaultValues: { email: '' },
+    mode: 'onChange',
+    resolver: zodResolver(forgotPasswordSchema),
+  })
+
+  const onSubmit = useCallback((data: ForgotPasswordFormValues) => {
+    console.log(data)
+  }, [])
+
+  return (
+    <form noValidate onSubmit={handleSubmit(onSubmit)} className={styles.container}>
+      <Typography variant="body1" className={styles.description}>
+        Введите email, и мы отправим ссылку для восстановления пароля
+      </Typography>
+
+      <EmailField<ForgotPasswordFormValues> controllerProps={{ control, name: 'email' }} />
+
+      <div className={styles.actions}>
+        <Button
+          type="submit"
+          size="xl"
+          view="action"
+          style={{ width: '100%' }}
+          disabled={!formState.isValid}
+        >
+          <Typography variant="header1">Отправить</Typography>
+        </Button>
+
+        <div className={styles.backToSignIn}>
+          <Typography variant="body1">Вспомнили пароль?</Typography>{' '}
+          <TextLink
+            href="#"
+            style={{ color: 'inherit' }}
+            onClick={e => {
+              e.preventDefault()
+              goToSignIn()
+            }}
+          >
+            Войти
+          </TextLink>
+        </div>
+      </div>
+    </form>
+  )
+}
