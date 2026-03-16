@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger'
-import { IsOptional, IsString, IsNumber, IsBoolean } from 'class-validator'
-import { AdRoles } from '../types'
+import { IsOptional, IsString, IsNumber, IsBoolean, IsEnum } from 'class-validator'
+import { AdDtoRoles } from '../types'
 import { Packaging } from '@prisma/client'
 import { Type } from 'class-transformer'
 
@@ -60,11 +60,13 @@ export class AdUpdateDto {
 
   @ApiPropertyOptional({ description: 'Вид упаковки', example: '', enum: Packaging })
   @IsOptional()
+  @IsEnum(Packaging)
   packaging?: Packaging
 
-  @ApiPropertyOptional({ description: 'Роль', example: '', enum: AdRoles })
+  @ApiPropertyOptional({ description: 'Роль', example: '', enum: AdDtoRoles })
   @IsOptional()
-  role?: AdRoles
+  @IsEnum(AdDtoRoles)
+  role?: AdDtoRoles
 
   @ApiPropertyOptional({ description: 'Хрупкое', example: '' })
   @IsOptional()

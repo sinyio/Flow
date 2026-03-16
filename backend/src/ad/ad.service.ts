@@ -102,7 +102,7 @@ export class AdService {
   }
 
   public async create(req: Request, ad: AdDto, file) {
-    const { role, description, ...data } = ad
+    const { role, ...data } = ad
 
     const authorId = req.session.userId
 
