@@ -45,7 +45,7 @@ const RootLayout = ({
           />
         </filter>
       </svg>
-      <ApiProvider apiHost={process.env.API_HOST ?? ''}>
+      <ApiProvider apiHost={process.env.NEXT_PUBLIC_API_HOST ?? ''}>
         <BusinessLayout>
           <PageContainer>{children}</PageContainer>
         </BusinessLayout>
