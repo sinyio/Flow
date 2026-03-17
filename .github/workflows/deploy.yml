@@ -58,6 +58,9 @@ jobs:
             # Prisma (внутри backend-контейнера)
             docker-compose exec -T backend npx prisma generate
             docker-compose exec -T backend npx prisma db push
+
+            docker system prune -af
+            docker builder prune -af
           EOF
 
   deploy-frontend:
@@ -84,4 +87,7 @@ jobs:
             docker-compose down frontend || true
             docker-compose build frontend
             docker-compose up -d frontend
+
+            docker system prune -af
+            docker builder prune -af
           EOF
