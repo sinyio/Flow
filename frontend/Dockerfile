@@ -9,6 +9,7 @@ RUN npm install
 
 COPY . .
 
+ENV NEXT_PUBLIC_API_HOST=$NEXT_PUBLIC_API_HOST
 RUN npm run build
 
 
