@@ -12,7 +12,7 @@ export class MailService {
   ) {}
 
   public async sendConfirmationEmail(email: string, token) {
-    const domain = this.configService.getOrThrow('HTTP_CORS')
+    const domain = this.configService.getOrThrow('FRONT_DOMAIN')
     const html = await render(ConfirmationTemplate({ domain, token }))
 
     return this.sendMail(email, 'Подтверждение почты', html)
