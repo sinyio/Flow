@@ -9,4 +9,4 @@ export const login = (
 ) =>
   typeof axiosInstance !== 'undefined'
     ? axiosInstance.post<TLoginResponse>('/auth/login', data, config)
-    : axios.post<TLoginResponse>(`${process.env.API_HOST}/auth/login`, data, config)
+    : axios.post<TLoginResponse>(`${process.env.HTTP_HOST}/auth/login`, data, config)

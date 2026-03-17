@@ -2,7 +2,7 @@ import axios from 'axios'
 
 /**
  * Дефолтный инстанс для кода вне ApiProvider.
- * В приложении предпочтительно использовать useAuthApi() (инстанс из контекста с API_HOST).
+ * В приложении предпочтительно использовать useAuthApi() (инстанс из контекста с HTTP_HOST).
  */
 export function createApiClient(baseURL: string) {
   return axios.create({
