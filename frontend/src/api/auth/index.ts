@@ -1,9 +1,5 @@
-export { authApi } from './auth.api'
-export type { AuthApiError } from './auth.api'
-export type {
-  LoginPayload,
-  LoginResponse,
-  LogoutResponse,
-  RegisterPayload,
-  RegisterResponse,
-} from './types'
+export * from './register'
+export * from './login'
+export * from './logout'
+export * from './me'
+export * from './email-confirmation'

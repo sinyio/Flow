@@ -1,6 +1,3 @@
-'use client'
-
-import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@gravity-ui/uikit'
@@ -12,18 +9,15 @@ import { EmailField } from '@components/form/email-field/field'
 import { PasswordField } from '@components/form/password-field/field'
 import { CheckboxField } from '@components/form/checkbox-field/field'
 import { LegalBlock } from '@components/legal-block/component'
-import { useAuthApi } from '@utils/hooks/use-auth-api'
-import { useAuthorizationStore } from '@utils/stores/authorization'
 import { getPasswordRequirementItems } from '@utils/password-check'
 import { SignUpFormValues } from 'src/types/authorization'
 import { signUpSchema } from 'src/constants/validation-schema'
 import styles from './step.module.css'
+import { useAuthorizationStore } from '@utils/stores/authorization'
+import { useAxiosInstance } from '@api/use-axios-instance'
 
 export const SignUpStep = () => {
-  const goToSignIn = useAuthorizationStore(state => state.goToSignIn)
-  const { register: registerUser } = useAuthApi()
-  const [successMessage, setSuccessMessage] = useState<string | null>(null)
-  const { control, handleSubmit, formState, watch, setError } = useForm<SignUpFormValues>({
+  const { control, handleSubmit, formState, watch } = useForm<SignUpFormValues>({
     defaultValues: {
       email: '',
       password: '',
@@ -38,31 +32,17 @@ export const SignUpStep = () => {
   const passwordHasError = Boolean(formState.errors.password)
   const requirementItems = getPasswordRequirementItems(passwordValue ?? '', passwordHasError)
 
+  const axiosInstance = useAxiosInstance()
+
+  const { setAuthorizationStep, register, isLoading } = useAuthorizationStore(store => store)
+
   const onSubmit = async (data: SignUpFormValues) => {
-    setSuccessMessage(null)
-    const result = await registerUser.execute({ email: data.email, password: data.password })
-
-    if ('data' in result) {
-      setSuccessMessage(result.data.message ?? 'Вы успешно зарегистрировались. Подтвердите email.')
-    } else {
-      const { error } = result
-
-      if (error.status === 409) {
-        setError('email', { type: 'server', message: error.message })
-      } else {
-        setError('root', { type: 'server', message: error.message })
-      }
-    }
+    await register(data, axiosInstance)
   }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.container}>
       <div className={styles.fields}>
-        {successMessage && (
-          <Typography variant="body1" style={{ color: 'var(--g-color-text-positive)' }}>
-            {successMessage}
-          </Typography>
-        )}
         <EmailField<SignUpFormValues> controllerProps={{ control, name: 'email' }} />
 
         <PasswordField<SignUpFormValues>
@@ -91,7 +71,7 @@ export const SignUpStep = () => {
           size="xl"
           view="action"
           style={{ width: '100%', marginBottom: '8px' }}
-          disabled={!formState.isValid || registerUser.isLoading}
+          disabled={!formState.isValid || isLoading.register}
         >
           <Typography variant="header1">Создать аккаунт</Typography>
         </Button>
@@ -105,7 +85,7 @@ export const SignUpStep = () => {
             href="#"
             onClick={e => {
               e.preventDefault()
-              goToSignIn()
+              setAuthorizationStep('sign-in')
             }}
           >
             Войти

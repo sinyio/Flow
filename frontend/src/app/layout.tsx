@@ -4,8 +4,9 @@ import '@gravity-ui/uikit/styles/fonts.css'
 import '@gravity-ui/uikit/styles/styles.css'
 import './globals.css'
 
-import { BusinessLayout } from '@utils/business-layout'
+import { ApiProvider } from '@contexts/api-context'
 import { PageContainer } from '@components/page-container/component'
+import { BusinessLayout } from '@utils/business-layout'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -44,9 +45,11 @@ const RootLayout = ({
           />
         </filter>
       </svg>
-      <BusinessLayout>
-        <PageContainer>{children}</PageContainer>
-      </BusinessLayout>
+      <ApiProvider apiHost={process.env.API_HOST ?? ''}>
+        <BusinessLayout>
+          <PageContainer>{children}</PageContainer>
+        </BusinessLayout>
+      </ApiProvider>
     </body>
   </html>
 )

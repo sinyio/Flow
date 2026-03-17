@@ -1,10 +1,15 @@
 import axios from 'axios'
 
-const baseURL = process.env.API_HOST || ''
-
-export const apiClient = axios.create({
-  baseURL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-})
+/**
+ * Дефолтный инстанс для кода вне ApiProvider.
+ * В приложении предпочтительно использовать useAuthApi() (инстанс из контекста с API_HOST).
+ */
+export function createApiClient(baseURL: string) {
+  return axios.create({
+    baseURL,
+    withCredentials: true,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+}

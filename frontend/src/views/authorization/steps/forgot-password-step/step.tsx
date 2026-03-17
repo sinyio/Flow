@@ -1,5 +1,3 @@
-'use client'
-
 import { useCallback } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -12,9 +10,11 @@ import { Typography } from '@components/typography/component'
 import { useAuthorizationStore } from '@utils/stores/authorization'
 import { forgotPasswordSchema } from 'src/constants/validation-schema'
 import styles from './step.module.css'
+import { useAxiosInstance } from '@api/use-axios-instance'
 
 export const ForgotPasswordStep = () => {
-  const goToSignIn = useAuthorizationStore(state => state.goToSignIn)
+  const axiosInstance = useAxiosInstance()
+  const { setAuthorizationStep, isLoading, checkIsAuth } = useAuthorizationStore(store => store)
 
   const { control, formState, handleSubmit } = useForm<ForgotPasswordFormValues>({
     defaultValues: { email: '' },
@@ -22,9 +22,13 @@ export const ForgotPasswordStep = () => {
     resolver: zodResolver(forgotPasswordSchema),
   })
 
-  const onSubmit = useCallback((data: ForgotPasswordFormValues) => {
-    console.log(data)
-  }, [])
+  const onSubmit = useCallback(
+    (data: ForgotPasswordFormValues) => {
+      void checkIsAuth(axiosInstance)
+      console.log(data)
+    },
+    [axiosInstance, checkIsAuth]
+  )
 
   return (
     <form noValidate onSubmit={handleSubmit(onSubmit)} className={styles.container}>
@@ -40,7 +44,7 @@ export const ForgotPasswordStep = () => {
           size="xl"
           view="action"
           style={{ width: '100%' }}
-          disabled={!formState.isValid}
+          disabled={!formState.isValid || isLoading.checkIsAuth}
         >
           <Typography variant="header1">Отправить</Typography>
         </Button>
@@ -52,7 +56,7 @@ export const ForgotPasswordStep = () => {
             style={{ color: 'inherit' }}
             onClick={e => {
               e.preventDefault()
-              goToSignIn()
+              setAuthorizationStep('sign-in')
             }}
           >
             Войти

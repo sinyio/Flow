@@ -10,5 +10,6 @@
 .innerContainer {
     display: block;
     width: fit-content;
-    height: fit-content
+    height: fit-content;
+    padding: 0 16px;
 }

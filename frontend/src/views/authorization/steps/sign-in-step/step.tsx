@@ -1,25 +1,19 @@
-'use client'
-
-import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@gravity-ui/uikit'
 
 import { TextLink } from '@components/text-link/component'
 import { Typography } from '@components/typography/component'
-import { useAuthApi } from '@utils/hooks/use-auth-api'
 import { signInSchema } from '../../../../constants/validation-schema'
 import styles from './step.module.css'
 import { CheckboxField, EmailField, PasswordField } from '@components/form'
-import { useAuthorizationStore } from '@utils/stores/authorization'
 import { SignInFormValues } from 'src/types/authorization'
+import { useAuthorizationStore } from '@utils/stores/authorization'
+import { useRouter } from 'next/navigation'
+import { useAxiosInstance } from '@api/use-axios-instance'
 
 export const SignInStep = () => {
-  const router = useRouter()
-  const { login } = useAuthApi()
-  const goToSignUp = useAuthorizationStore(state => state.goToSignUp)
-  const goToForgotPassword = useAuthorizationStore(state => state.goToForgotPassword)
-  const { control, formState, handleSubmit, setError } = useForm<SignInFormValues>({
+  const { control, formState, handleSubmit } = useForm<SignInFormValues>({
     defaultValues: {
       email: '',
       password: '',
@@ -29,21 +23,16 @@ export const SignInStep = () => {
     resolver: zodResolver(signInSchema),
   })
 
+  const axiosInstance = useAxiosInstance()
+  const router = useRouter()
+
+  const { setAuthorizationStep, login, isLoading } = useAuthorizationStore(store => store)
+
   const onSubmit = async (data: SignInFormValues) => {
-    const result = await login.execute({ email: data.email, password: data.password })
+    const response = await login(data, axiosInstance)
 
-    if ('data' in result) {
+    if ('status' in response) {
       router.push('/')
-    } else {
-      const { error } = result
-
-      if (error.status === 404) {
-        setError('email', { type: 'server', message: error.message })
-      } else if (error.status === 401) {
-        setError('password', { type: 'server', message: error.message })
-      } else {
-        setError('root', { type: 'server', message: error.message })
-      }
     }
   }
 
@@ -61,7 +50,7 @@ export const SignInStep = () => {
             className={styles.forgotPassword}
             onClick={e => {
               e.preventDefault()
-              goToForgotPassword()
+              setAuthorizationStep('forgot-password')
             }}
           >
             Забыли пароль?
@@ -80,7 +69,7 @@ export const SignInStep = () => {
           size="xl"
           view="action"
           style={{ width: '100%' }}
-          disabled={!formState.isValid || login.isLoading}
+          disabled={!formState.isValid || isLoading.login}
         >
           <Typography variant="header1">Войти</Typography>
         </Button>
@@ -91,7 +80,7 @@ export const SignInStep = () => {
             style={{ color: 'inherit' }}
             onClick={e => {
               e.preventDefault()
-              goToSignUp()
+              setAuthorizationStep('sign-up')
             }}
           >
             Зарегистрироваться
