@@ -10,7 +10,7 @@ export const emailConfirmation = (
   typeof axiosInstance !== 'undefined'
     ? axiosInstance.post<TEmailConfirmationResponse>('/auth/email-confirmation', data, config)
     : axios.post<TEmailConfirmationResponse>(
-        `${process.env.HTTP_HOST}/auth/email-confirmation`,
+        `${process.env.API_HOST}/auth/email-confirmation`,
         data,
         config
       )
