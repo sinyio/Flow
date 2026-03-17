@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger"
-import { AdResponseDto } from "./ad.dto"
+import { AdResponseDto } from "./ad-response.dto"
 
 export class PopularRoutesResponseDto {
   @ApiProperty({ example: 'Москва' })

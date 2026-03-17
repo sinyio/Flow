@@ -172,7 +172,20 @@ export class AdController {
     }
   })
   @UseGuards(CanEditAd)
-  public delete(@Req() req: Request, @Param('id') id: string) {
-    return this.adService.delete(req, id)
+  public delete(@Param('id') id: string) {
+    return this.adService.delete(id)
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post(':id/respond')
+  @ApiOperation({ summary: 'Откликнуться на объявление' })
+  @ApiParam({ name: 'id', example: 'ad_123' })
+  @ApiResponse({
+    status: 200, schema: {
+      example: getStatusOk(),
+    }
+  })
+  public respondToAd(@Req() req: Request, @Param('id') id: string) {
+    return this.adService.respondToAd(req, id)
   }
 }

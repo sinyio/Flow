@@ -6,7 +6,7 @@ import { filterEmptyValues, getBoolFromString, getStatusOk } from '../common/hel
 import { type Request } from 'express'
 import { nanoid } from 'nanoid'
 import { S3Service } from '../s3/s3.service'
-import { ConfigModule, ConfigService } from '@nestjs/config'
+import { ConfigService } from '@nestjs/config'
 import sharp from 'sharp'
 
 
@@ -21,15 +21,14 @@ export class AdService {
   public async findAdById(req: Request, id: string) {
     const ad = await this.prisma.ad.findUnique({
       where: { id },
-      include: { author: true, sender: true, recipient: true },
+      include: { author: true, sender: true, recipient: true, courier: true },
     })
 
     const userId = req.session.userId
-    if (!userId) throw new UnauthorizedException('Сессия не найдена')
 
     if (!ad) throw new NotFoundException('Объявление не найдено')
 
-    return getAdResponse(ad, userId)
+    return getAdResponse(ad, userId!)
   }
 
   public async findAll(
@@ -79,7 +78,7 @@ export class AdService {
     const [ads, total] = await this.prisma.$transaction([
       this.prisma.ad.findMany({
         where,
-        include: { author: true, sender: true, recipient: true },
+        include: { author: true, sender: true, recipient: true, courier: true },
         skip: (page - 1) * limit,
         take: limit
       }),
@@ -105,8 +104,6 @@ export class AdService {
     const { role, ...data } = ad
 
     const authorId = req.session.userId
-
-    if (!authorId) throw new UnauthorizedException('Сессия не найдена')
 
     let senderId, recipientId
     if (role === 'sender') senderId = authorId
@@ -138,7 +135,7 @@ export class AdService {
       data: {
         id: adId,
         ...data,
-        authorId,
+        authorId: authorId!,
         senderId,
         recipientId,
         image: imagePath
@@ -152,7 +149,6 @@ export class AdService {
     const { role, ...data } =  filterEmptyValues(ad)
 
     const authorId = req.session.userId
-    if (!authorId) throw new UnauthorizedException('Сессия не найдена')
 
     let senderId, recipientId
     if (role === 'sender') senderId = authorId
@@ -191,10 +187,7 @@ export class AdService {
     return getStatusOk()
   }
 
-  public async delete(req: Request, id: string) {
-    const authorId = req.session.userId
-    if (!authorId) throw new UnauthorizedException('Сессия не найдена')
-
+  public async delete(id: string) {
     if (!id || Array.isArray(id)) throw new BadRequestException('Invalid ID');
 
     await this.prisma.ad.delete({
@@ -224,7 +217,7 @@ export class AdService {
             fromCity: route.fromCity,
             toCity: route.toCity
           },
-          include: { author: true, sender: true, recipient: true },
+          include: { author: true, sender: true, recipient: true, courier: true },
           orderBy: { createdAt: 'desc' },
           take: 2
         })
@@ -237,5 +230,56 @@ export class AdService {
         }
       })
     )
+  }
+
+  async respondToAd(req: Request, id: string) {
+    const userId = req.session.userId
+
+    if (!userId) throw new UnauthorizedException('Сессия не найдена')
+
+    const ad = await this.prisma.ad.findUnique({
+      where: { id }
+    })
+
+    if (!ad) throw new NotFoundException('Объявление не найдено')
+
+    if (ad.authorId === userId) throw new BadRequestException('Вы не можете ответить на свое объявление')
+
+    await this.prisma.$transaction(async (tx) => {
+      const response = await tx.adResponse.upsert({
+        where: {
+          adId_courierId: {
+            adId: id,
+            courierId: userId,
+          },
+        },
+        update: {},
+        create: {
+          adId: id,
+          courierId: userId,
+        },
+      })
+
+      const chat = await tx.chat.upsert({
+        where: {
+          responseId: response.id,
+        },
+        update: {},
+        create: {
+          adId: id,
+          responseId: response.id,
+        },
+      })
+
+      await tx.chatMember.createMany({
+        data: [
+          { chatId: chat.id, userId: ad.authorId, role: 'CUSTOMER' },
+          { chatId: chat.id, userId, role: 'COURIER' },
+        ],
+        skipDuplicates: true,
+      })
+    })
+
+    return getStatusOk()
   }
 }

@@ -22,9 +22,16 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  authoredAds Ad[] @relation("AdAuthor")
-  sentAds     Ad[] @relation("AdSender")
-  receivedAds Ad[] @relation("AdRecipient")
+  authoredAds  Ad[] @relation("AdAuthor")
+  sentAds      Ad[] @relation("AdSender")
+  receivedAds  Ad[] @relation("AdRecipient")
+  deliveredAds Ad[] @relation("AdCourier")
+
+  adResponses     AdResponse[]
+  chatMembers     ChatMember[]
+  messages        Message[]
+  reviewsAuthored Review[]     @relation("ReviewAuthor")
+  reviewsReceived Review[]     @relation("ReviewTarget")
 
   @@map("users")
 }
@@ -82,10 +89,16 @@ model Ad {
   authorId    String  @map("author_id")
   senderId    String? @map("sender_id")
   recipientId String? @map("recipient_id")
+  courierId   String? @map("courier_id")
 
   author    User  @relation("AdAuthor", fields: [authorId], references: [id])
   sender    User? @relation("AdSender", fields: [senderId], references: [id])
   recipient User? @relation("AdRecipient", fields: [recipientId], references: [id])
+  courier   User? @relation("AdCourier", fields: [courierId], references: [id])
+
+  responses AdResponse[]
+  chats     Chat[]
+  reviews   Review[]
 
   @@map("ads")
 }
@@ -102,4 +115,105 @@ enum Packaging {
   FILM
   NO_PACKAGING
   OTHER
+}
+
+model AdResponse {
+  id        String           @id @default(uuid())
+  adId      String           @map("ad_id")
+  courierId String           @map("courier_id")
+  status    AdResponseStatus @default(PENDING)
+  createdAt DateTime         @default(now()) @map("created_at")
+  updatedAt DateTime         @updatedAt @map("updated_at")
+  ad        Ad               @relation(fields: [adId], references: [id])
+  courier   User             @relation(fields: [courierId], references: [id])
+  chat      Chat?
+
+  @@unique([adId, courierId])
+  @@map("ad_responses")
+}
+
+enum AdResponseStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  CANCELED
+}
+
+model Chat {
+  id         String       @id @default(uuid())
+  adId       String       @map("ad_id")
+  responseId String?      @unique @map("response_id")
+  createdAt  DateTime     @default(now()) @map("created_at")
+  updatedAt  DateTime     @updatedAt @map("updated_at")
+  ad         Ad           @relation(fields: [adId], references: [id])
+  response   AdResponse?  @relation(fields: [responseId], references: [id])
+  members    ChatMember[]
+  messages   Message[]
+
+  @@map("chats")
+}
+
+model ChatMember {
+  chatId   String   @map("chat_id")
+  userId   String   @map("user_id")
+  role     ChatRole
+  joinedAt DateTime @default(now()) @map("joined_at")
+  chat     Chat     @relation(fields: [chatId], references: [id])
+  user     User     @relation(fields: [userId], references: [id])
+
+  @@id([chatId, userId])
+  @@map("chat_members")
+}
+
+enum ChatRole {
+  CUSTOMER
+  COURIER
+}
+
+model Message {
+  id        String        @id @default(uuid())
+  chatId    String        @map("chat_id")
+  senderId  String        @map("sender_id")
+  text      String?
+  createdAt DateTime      @default(now()) @map("created_at")
+  chat      Chat          @relation(fields: [chatId], references: [id])
+  sender    User          @relation(fields: [senderId], references: [id])
+  files     MessageFile[]
+
+  @@map("messages")
+}
+
+model MessageFile {
+  id        String   @id @default(uuid())
+  messageId String   @map("message_id")
+  url       String
+  mimeType  String   @map("mime_type")
+  fileName  String?  @map("file_name")
+  size      Int?
+  createdAt DateTime @default(now()) @map("created_at")
+  message   Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@map("message_files")
+}
+
+model Review {
+  id        String     @id @default(uuid())
+  adId      String     @map("ad_id")
+  authorId  String     @map("author_id")
+  targetId  String     @map("target_id")
+  rating    Int
+  text      String?
+  type      ReviewType
+  createdAt DateTime   @default(now()) @map("created_at")
+  ad        Ad         @relation(fields: [adId], references: [id])
+  author    User       @relation("ReviewAuthor", fields: [authorId], references: [id])
+  target    User       @relation("ReviewTarget", fields: [targetId], references: [id])
+
+  @@unique([adId, authorId, targetId, type])
+  @@map("reviews")
+}
+
+enum ReviewType {
+  CUSTOMER_TO_COURIER
+  COURIER_TO_CUSTOMER
 }

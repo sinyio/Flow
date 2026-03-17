@@ -117,6 +117,8 @@ export class AuthController {
     },
   })
   public async me() {
-    return true
+    return {
+      status: true,
+    }
   }
 }
