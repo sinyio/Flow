@@ -7,6 +7,7 @@ import { MailModule } from './mail/mail.module'
 import { EmailConfirmationModule } from './auth/email-confirmation/email-confirmation.module'
 import { AdModule } from './ad/ad.module';
 import { S3Module } from './s3/s3.module';
+import { ChatModule } from './chat/chat.module'
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { S3Module } from './s3/s3.module';
     EmailConfirmationModule,
     AdModule,
     S3Module,
+    ChatModule,
   ],
 })
 export class AppModule {}
