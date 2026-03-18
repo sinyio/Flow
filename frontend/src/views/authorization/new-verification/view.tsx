@@ -2,7 +2,7 @@
 
 import { Loader } from '@gravity-ui/uikit'
 import { useEffect } from 'react'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 
 import { useAxiosInstance } from '@api/use-axios-instance'
 import { PageContainer } from '@components/page-container/component'
@@ -18,7 +18,7 @@ export const NewVerificationView = ({ token }: { token: string }) => {
     if (typeof window !== 'undefined') {
       confirmEmail({ token }, axiosInstance).finally(() => router.push('/'))
     }
-  }, [token, axiosInstance, confirmEmail])
+  }, [token, axiosInstance, router])
 
   return (
     <PageContainer>
