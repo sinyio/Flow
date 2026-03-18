@@ -1,3 +1,5 @@
+import type { AxiosInstance } from 'axios'
+
 import {
   TEmailConfirmationRequest,
   TEmailConfirmationResponse,
@@ -8,7 +10,6 @@ import {
   TRegisterResponse,
 } from '@api/auth'
 import { IApiError } from '@api/types'
-import type { AxiosInstance } from 'axios'
 
 export const AUTHORIZATION_STEPS = ['sign-in', 'sign-up', 'forgot-password', 'check-email'] as const
 

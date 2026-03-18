@@ -1,6 +1,7 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@gravity-ui/uikit'
+import { useRouter } from 'next/navigation'
 
 import { TextLink } from '@components/text-link/component'
 import { Typography } from '@components/typography/component'
@@ -9,7 +10,6 @@ import styles from './step.module.css'
 import { CheckboxField, EmailField, PasswordField } from '@components/form'
 import { SignInFormValues } from 'src/types/authorization'
 import { useAuthorizationStore } from '@utils/stores/authorization'
-import { useRouter } from 'next/navigation'
 import { useAxiosInstance } from '@api/use-axios-instance'
 
 export const SignInStep = () => {
@@ -29,7 +29,7 @@ export const SignInStep = () => {
   const { setAuthorizationStep, login, isLoading } = useAuthorizationStore(store => store)
 
   const onSubmit = async (data: SignInFormValues) => {
-    const response = await login(data, axiosInstance)
+    const response = await login({ email: data.email, password: data.password }, axiosInstance)
 
     if ('status' in response) {
       router.push('/')

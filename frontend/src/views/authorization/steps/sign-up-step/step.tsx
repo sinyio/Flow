@@ -37,7 +37,7 @@ export const SignUpStep = () => {
   const { setAuthorizationStep, register, isLoading } = useAuthorizationStore(store => store)
 
   const onSubmit = async (data: SignUpFormValues) => {
-    await register(data, axiosInstance)
+    await register({ email: data.email, password: data.password }, axiosInstance)
   }
 
   return (
