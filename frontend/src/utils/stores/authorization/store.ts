@@ -50,11 +50,11 @@ export const useAuthorizationStore = create<TAuthorizationStore>()(set => ({
           const axiosError: AxiosError<IApiError> = error
 
           if (axiosError.response?.data.error) {
-            return axiosError.response?.data
+            throw axiosError.response?.data
           }
         }
 
-        return {
+        throw {
           message: 'Неизвестная ошибка',
           statusCode: 400,
         }
@@ -76,14 +76,11 @@ export const useAuthorizationStore = create<TAuthorizationStore>()(set => ({
           const axiosError: AxiosError<IApiError> = error
 
           if (axiosError.response?.data.error) {
-            return axiosError.response?.data
+            throw axiosError.response?.data
           }
         }
 
-        return {
-          message: 'Неизвестная ошибка',
-          statusCode: 400,
-        }
+        return new Error('Неизвестная ошибка')
       })
       .finally(() => set(state => ({ isLoading: { ...state.isLoading, register: false } })))
   },
@@ -98,11 +95,11 @@ export const useAuthorizationStore = create<TAuthorizationStore>()(set => ({
           const axiosError: AxiosError<IApiError> = error
 
           if (axiosError.response?.data.error) {
-            return axiosError.response?.data
+            throw axiosError.response?.data
           }
         }
 
-        return {
+        throw {
           message: 'Неизвестная ошибка',
           statusCode: 400,
         }
@@ -120,11 +117,11 @@ export const useAuthorizationStore = create<TAuthorizationStore>()(set => ({
           const axiosError: AxiosError<IApiError> = error
 
           if (axiosError.response?.data.error) {
-            return axiosError.response?.data
+            throw axiosError.response?.data
           }
         }
 
-        return {
+        throw {
           message: 'Неизвестная ошибка',
           statusCode: 400,
         }
@@ -144,11 +141,11 @@ export const useAuthorizationStore = create<TAuthorizationStore>()(set => ({
           const axiosError: AxiosError<IApiError> = error
 
           if (axiosError.response?.data.error) {
-            return axiosError.response?.data
+            throw axiosError.response?.data
           }
         }
 
-        return {
+        throw {
           message: 'Неизвестная ошибка',
           statusCode: 400,
         }

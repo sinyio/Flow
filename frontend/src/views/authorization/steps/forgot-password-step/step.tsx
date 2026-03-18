@@ -1,7 +1,6 @@
 import { useCallback } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button } from '@gravity-ui/uikit'
 import type { ForgotPasswordFormValues } from 'src/types/authorization'
 
 import { EmailField } from '@components/form'
@@ -9,8 +8,9 @@ import { TextLink } from '@components/text-link/component'
 import { Typography } from '@components/typography/component'
 import { useAuthorizationStore } from '@utils/stores/authorization'
 import { forgotPasswordSchema } from 'src/constants/validation-schema'
-import styles from './step.module.css'
+import styles from './step.module.scss'
 import { useAxiosInstance } from '@api/use-axios-instance'
+import { Button } from '@gravity-ui/uikit'
 
 export const ForgotPasswordStep = () => {
   const axiosInstance = useAxiosInstance()
@@ -33,7 +33,7 @@ export const ForgotPasswordStep = () => {
   return (
     <form noValidate onSubmit={handleSubmit(onSubmit)} className={styles.container}>
       <Typography variant="body1" className={styles.description}>
-        Введите email, и мы отправим ссылку для восстановления пароля
+        Введите email, который вы использовали при регистрации.
       </Typography>
 
       <EmailField<ForgotPasswordFormValues> controllerProps={{ control, name: 'email' }} />
@@ -49,8 +49,7 @@ export const ForgotPasswordStep = () => {
           <Typography variant="header1">Отправить</Typography>
         </Button>
 
-        <div className={styles.backToSignIn}>
-          <Typography variant="body1">Вспомнили пароль?</Typography>{' '}
+        <div className={styles.links}>
           <TextLink
             href="#"
             style={{ color: 'inherit' }}
@@ -60,6 +59,16 @@ export const ForgotPasswordStep = () => {
             }}
           >
             Войти
+          </TextLink>
+          <TextLink
+            href="#"
+            style={{ color: 'inherit' }}
+            onClick={e => {
+              e.preventDefault()
+              setAuthorizationStep('sign-up')
+            }}
+          >
+            Создать аккаунт
           </TextLink>
         </div>
       </div>

@@ -9,4 +9,8 @@ export const register = (
 ) =>
   typeof axiosInstance !== 'undefined'
     ? axiosInstance.post<TRegisterResponse>('/auth/register', data)
-    : axios.post<TRegisterResponse>(`${process.env.NEXT_PUBLIC_API_HOST}/auth/register`, data, config)
+    : axios.post<TRegisterResponse>(
+        `${process.env.NEXT_PUBLIC_API_HOST}/auth/register`,
+        data,
+        config
+      )

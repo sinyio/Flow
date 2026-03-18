@@ -5,7 +5,6 @@ import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
 import { useAxiosInstance } from '@api/use-axios-instance'
-import { PageContainer } from '@components/page-container/component'
 import { useAuthorizationStore } from '@utils/stores/authorization'
 
 export const NewVerificationView = ({ token }: { token: string }) => {
@@ -20,9 +19,5 @@ export const NewVerificationView = ({ token }: { token: string }) => {
     }
   }, [token, axiosInstance, router])
 
-  return (
-    <PageContainer>
-      <Loader />
-    </PageContainer>
-  )
+  return <Loader />
 }

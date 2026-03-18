@@ -1,0 +1,30 @@
+.fixedHeader {
+  position: fixed;
+  top: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  padding: 0 16px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.fixedHeader > * {
+  pointer-events: auto;
+}
+
+.stickyHeader {
+  z-index: 10;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+}
+
+.inner {
+  gap: 24px;
+}
+

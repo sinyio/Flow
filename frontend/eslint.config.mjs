@@ -25,7 +25,7 @@ export default defineConfig(
 
   // Общие настройки
   {
-    ignores: ['dist/**', '**/*.d.ts', '**/*.test.*', '**/*.spec.*'],
+    ignores: ['dist/**', '**/.next/**', '**/*.d.ts', '**/*.test.*', '**/*.spec.*'],
   },
   {
     languageOptions: {

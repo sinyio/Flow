@@ -1,0 +1,78 @@
+.hero {
+  position: relative;
+  width: 100%;
+  height: clamp(360px, 45vh, 536px);
+  overflow: hidden;
+}
+
+.heroImage {
+  object-fit: cover;
+}
+
+.heroActions {
+  position: absolute;
+  top: clamp(24px, 5vh, 52px);
+  left: 16px;
+  right: 16px;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.circleButton {
+  width: 44px;
+  height: 44px;
+  border-radius: 20px;
+  background: var(--g-color-base-light, #fff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.info {
+  margin-top: clamp(-120px, -16vh, -92px);
+  padding: clamp(16px, 3vh, 20px) 16px clamp(20px, 4vh, 28px);
+  background: linear-gradient(to bottom, rgba(112, 112, 112, 0), #f2f3f2 60%);
+  backdrop-filter: blur(20px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.name {
+  margin: 0;
+  font-family: var(--g-text-display-font-family, 'Tilda_Sans_VF', sans-serif);
+  font-size: clamp(32px, 6vw, 40px);
+  line-height: clamp(40px, 8vw, 48px);
+  font-weight: 600;
+  color: #fff;
+  text-align: center;
+}
+
+.roleRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: #fff;
+  font-family: var(--g-text-body-font-family, 'Tilda_Sans_VF', sans-serif);
+  font-size: 17px;
+  line-height: 24px;
+}
+
+.roleIcon {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.messageButton {
+  width: 100%;
+  background: #282828 !important;
+  color: #fff !important;
+  border-radius: 24px !important;
+}
+

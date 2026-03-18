@@ -1,6 +1,6 @@
 import { Typography, typographyMap } from '@components/typography/component'
 import { TextLink } from '@components/text-link/component'
-import styles from './component.module.css'
+import styles from './component.module.scss'
 
 export const LegalBlock = () => (
   <Typography variant="body1" className={styles.container}>

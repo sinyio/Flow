@@ -1,9 +1,0 @@
-.textLink {
-    display: inline-block;
-    cursor: pointer;
-    font-size: 13px;
-    line-height: 18px;
-    color: var(--g-color-text-hint);
-    text-decoration: underline;
-    font-family: 'TildaSansBold';
-}

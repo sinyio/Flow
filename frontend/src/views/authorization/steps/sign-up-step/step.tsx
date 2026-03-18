@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button } from '@gravity-ui/uikit'
+import { Button, useToaster } from '@gravity-ui/uikit'
 
 import { PasswordRequirements } from '@components/password-requirements/component'
 import { TextLink } from '@components/text-link/component'
@@ -12,7 +12,7 @@ import { LegalBlock } from '@components/legal-block/component'
 import { getPasswordRequirementItems } from '@utils/password-check'
 import { SignUpFormValues } from 'src/types/authorization'
 import { signUpSchema } from 'src/constants/validation-schema'
-import styles from './step.module.css'
+import styles from './step.module.scss'
 import { useAuthorizationStore } from '@utils/stores/authorization'
 import { useAxiosInstance } from '@api/use-axios-instance'
 
@@ -35,9 +35,18 @@ export const SignUpStep = () => {
   const axiosInstance = useAxiosInstance()
 
   const { setAuthorizationStep, register, isLoading } = useAuthorizationStore(store => store)
+  const { add } = useToaster()
 
   const onSubmit = async (data: SignUpFormValues) => {
-    await register({ email: data.email, password: data.password }, axiosInstance)
+    await register({ email: data.email, password: data.password }, axiosInstance).catch(e =>
+      add({
+        isClosable: true,
+        theme: 'warning',
+        name: 'register_error',
+        title: 'Ошибка',
+        content: e.message,
+      })
+    )
   }
 
   return (

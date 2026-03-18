@@ -18,7 +18,9 @@ export const useMediaQuery = (
       return defaultValue
     }
 
-    return window.matchMedia(query).matches
+    const matches = window.matchMedia(query).matches
+
+    return matches
   }
 
   const [matches, setMatches] = useState<boolean>(() => {

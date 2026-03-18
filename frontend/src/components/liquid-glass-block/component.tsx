@@ -1,6 +1,6 @@
 import type { HTMLAttributes, ReactNode } from 'react'
 
-import styles from './component.module.css'
+import styles from './component.module.scss'
 
 interface LiquidGlassBlockProps extends HTMLAttributes<HTMLDivElement> {
   children?: ReactNode

@@ -1,6 +1,6 @@
 import Image from 'next/image'
 
-import styles from './page.module.css'
+import styles from './page.module.scss'
 
 console.log(process.env.NEXT_PUBLIC_API_HOST)
 

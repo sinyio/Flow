@@ -1,0 +1,29 @@
+.root {
+  width: 100%;
+}
+
+.lines {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 2px 12px 12px;
+}
+
+.line {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  font-family: var(--g-text-body-font-family, 'Tilda_Sans_VF', sans-serif);
+  font-size: 15px;
+  line-height: 20px;
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.muted {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.value {
+  color: rgba(0, 0, 0, 0.85);
+}
+

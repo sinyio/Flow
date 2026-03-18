@@ -2,10 +2,10 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import '@gravity-ui/uikit/styles/fonts.css'
 import '@gravity-ui/uikit/styles/styles.css'
-import './globals.css'
+import './globals.scss'
 
 import { ApiProvider } from '@contexts/api-context'
-import { PageContainer } from '@components/page-container/component'
+import { AppShell } from '@components/app-shell'
 import { BusinessLayout } from '@utils/business-layout'
 
 const geistSans = Geist({
@@ -47,7 +47,7 @@ const RootLayout = ({
       </svg>
       <ApiProvider apiHost={process.env.NEXT_PUBLIC_API_HOST ?? ''}>
         <BusinessLayout>
-          <PageContainer>{children}</PageContainer>
+          <AppShell>{children}</AppShell>
         </BusinessLayout>
       </ApiProvider>
     </body>

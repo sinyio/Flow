@@ -1,0 +1,44 @@
+.page {
+  width: 100%;
+  background: #f2f3f2;
+}
+
+.container {
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 24px;
+  padding-bottom: 116px;
+  box-sizing: border-box;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.tabs {
+  width: 100%;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+
+.panels {
+  width: 100%;
+  padding: 0 16px 24px;
+  box-sizing: border-box;
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.empty {
+  font-family: var(--g-text-body-font-family, 'Tilda_Sans_VF', sans-serif);
+  font-size: 15px;
+  line-height: 20px;
+  color: rgba(0, 0, 0, 0.5);
+}
+

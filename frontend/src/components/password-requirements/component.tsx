@@ -1,5 +1,5 @@
 import { Typography } from '@components/typography/component'
-import styles from './component.module.css'
+import styles from './component.module.scss'
 
 export type PasswordRequirementStatus = 'unmet' | 'met' | 'error'
 
