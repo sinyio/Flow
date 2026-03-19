@@ -8,6 +8,7 @@ import { EmailConfirmationModule } from './auth/email-confirmation/email-confirm
 import { AdModule } from './ad/ad.module';
 import { S3Module } from './s3/s3.module';
 import { ChatModule } from './chat/chat.module'
+import { ReviewModule } from './review/review.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ChatModule } from './chat/chat.module'
     AdModule,
     S3Module,
     ChatModule,
+    ReviewModule,
   ],
 })
 export class AppModule {}

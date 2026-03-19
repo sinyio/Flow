@@ -14,6 +14,7 @@ import { createClient, type RedisClientType } from 'redis'
 import { ms, parseBoolean } from './utils'
 import { AdModule } from './ad/ad.module'
 import { ChatModule } from './chat/chat.module'
+import { ReviewModule } from './review/review.module'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
@@ -71,7 +72,7 @@ async function bootstrap() {
     .build()
 
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig, {
-    include: [AuthModule, EmailConfirmationModule, AdModule, ChatModule],
+    include: [AuthModule, EmailConfirmationModule, AdModule, ChatModule, ReviewModule],
   })
   SwaggerModule.setup('docs', app, swaggerDocument)
 

@@ -197,19 +197,22 @@ model MessageFile {
 }
 
 model Review {
-  id        String     @id @default(uuid())
-  adId      String     @map("ad_id")
-  authorId  String     @map("author_id")
-  targetId  String     @map("target_id")
-  rating    Int
-  text      String?
-  type      ReviewType
-  createdAt DateTime   @default(now()) @map("created_at")
-  ad        Ad         @relation(fields: [adId], references: [id])
-  author    User       @relation("ReviewAuthor", fields: [authorId], references: [id])
-  target    User       @relation("ReviewTarget", fields: [targetId], references: [id])
+  id          String     @id @default(uuid())
+  adId        String     @map("ad_id")
+  authorId    String     @map("author_id")
+  targetId    String     @map("target_id")
+  rating      Int
+  text        String?
+  type        ReviewType
+  isAnonymous Boolean    @default(false) @map("is_anonymous")
+  createdAt   DateTime   @default(now()) @map("created_at")
+  ad          Ad         @relation(fields: [adId], references: [id])
+  author      User       @relation("ReviewAuthor", fields: [authorId], references: [id])
+  target      User       @relation("ReviewTarget", fields: [targetId], references: [id])
 
   @@unique([adId, authorId, targetId, type])
+  @@index([targetId, type])
+  @@index([targetId, createdAt])
   @@map("reviews")
 }
 
