@@ -5,7 +5,7 @@ import type { AnchorHTMLAttributes, ButtonHTMLAttributes } from 'react'
 import { Button } from '@gravity-ui/uikit'
 
 import { LiquidGlassBlock } from '@components/liquid-glass-block/component'
-import styles from './component.module.scss'
+import styles from './component.module.css'
 import { Typography } from '@components/typography/component'
 
 export interface HeaderNavLink extends Omit<

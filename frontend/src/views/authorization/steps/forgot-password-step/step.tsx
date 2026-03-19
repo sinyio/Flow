@@ -8,7 +8,7 @@ import { TextLink } from '@components/text-link/component'
 import { Typography } from '@components/typography/component'
 import { useAuthorizationStore } from '@utils/stores/authorization'
 import { forgotPasswordSchema } from 'src/constants/validation-schema'
-import styles from './step.module.scss'
+import styles from './step.module.css'
 import { useAxiosInstance } from '@api/use-axios-instance'
 import { Button } from '@gravity-ui/uikit'
 

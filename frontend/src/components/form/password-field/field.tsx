@@ -4,7 +4,7 @@ import { useState } from 'react'
 
 import { EyeSlashIcon } from '@components/svgr/eye-slash-icon/icon'
 import { EyeIcon } from '@components/svgr/eye-icon/icon'
-import styles from './field.module.scss'
+import styles from './field.module.css'
 
 interface IPasswordFieldProps<T extends FieldValues> extends TextInputProps {
   controllerProps: UseControllerProps<T>

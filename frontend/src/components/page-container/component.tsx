@@ -1,6 +1,6 @@
 import { HTMLAttributes, ReactNode } from 'react'
 
-import styles from './component.module.scss'
+import styles from './component.module.css'
 
 interface IPageContainerProps {
   children?: ReactNode

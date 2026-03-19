@@ -1,6 +1,6 @@
 import { HTMLAttributes } from 'react'
 
-import styles from './component.module.scss'
+import styles from './component.module.css'
 
 export const typographyMap = {
   body1: styles.body1,

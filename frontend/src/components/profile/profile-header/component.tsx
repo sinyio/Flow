@@ -4,7 +4,7 @@ import Image from 'next/image'
 import type { ReactNode } from 'react'
 import { Button } from '@gravity-ui/uikit'
 
-import styles from './component.module.scss'
+import styles from './component.module.css'
 
 interface ProfileHeaderProps {
   name: string

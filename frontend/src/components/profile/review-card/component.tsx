@@ -2,7 +2,7 @@
 
 import { Avatar, User } from '@gravity-ui/uikit'
 
-import styles from './component.module.scss'
+import styles from './component.module.css'
 
 export interface ReviewCardProps {
   authorName: string

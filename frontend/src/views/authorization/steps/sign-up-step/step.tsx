@@ -12,7 +12,7 @@ import { LegalBlock } from '@components/legal-block/component'
 import { getPasswordRequirementItems } from '@utils/password-check'
 import { SignUpFormValues } from 'src/types/authorization'
 import { signUpSchema } from 'src/constants/validation-schema'
-import styles from './step.module.scss'
+import styles from './step.module.css'
 import { useAuthorizationStore } from '@utils/stores/authorization'
 import { useAxiosInstance } from '@api/use-axios-instance'
 

@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 
-import styles from './component.module.scss'
+import styles from './component.module.css'
 
 interface MobileBottomMenuProps {
   active?: 'home' | 'media' | 'feed' | 'ad' | 'profile'

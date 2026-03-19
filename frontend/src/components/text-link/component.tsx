@@ -1,6 +1,6 @@
 import { AnchorHTMLAttributes } from 'react'
 
-import styles from './component.module.scss'
+import styles from './component.module.css'
 
 export const TextLink = ({
   className,

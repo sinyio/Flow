@@ -2,7 +2,7 @@
 
 import { Accordion } from '@gravity-ui/uikit'
 
-import styles from './component.module.scss'
+import styles from './component.module.css'
 
 export interface ProfileDetailLine {
   labelMuted: string

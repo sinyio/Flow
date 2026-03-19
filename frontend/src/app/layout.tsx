@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import '@gravity-ui/uikit/styles/fonts.css'
 import '@gravity-ui/uikit/styles/styles.css'
-import './globals.scss'
+import './globals.css'
 
 import { ApiProvider } from '@contexts/api-context'
 import { AppShell } from '@components/app-shell'

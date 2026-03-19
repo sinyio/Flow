@@ -7,7 +7,7 @@ import { Toaster, ToasterComponent, ToasterProvider } from '@gravity-ui/uikit'
 
 import { Header } from '@components/header'
 import { useResponsive } from '@utils/hooks/use-responsive'
-import styles from './component.module.scss'
+import styles from './component.module.css'
 import { PageContainer } from '@components/page-container/component'
 
 interface AppShellProps {

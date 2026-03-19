@@ -10,7 +10,7 @@ import {
   ProfileStats,
   ReviewCard,
 } from '@components/profile'
-import styles from './view.module.scss'
+import styles from './view.module.css'
 
 const ProfileView = () => {
   const [tab, setTab] = useState<'reviews' | 'ads'>('reviews')

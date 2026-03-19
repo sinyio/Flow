@@ -1,6 +1,6 @@
 import { TextInput, TextInputProps } from '@gravity-ui/uikit'
 
-import './component.scss'
+import './component.css'
 
 const BaseTextInput = ({ ...rest }: TextInputProps) => <TextInput {...rest} />
 

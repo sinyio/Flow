@@ -1,5 +1,5 @@
-@use '../fonts.scss';
-@use '../theme.scss';
+@import '../fonts.css';
+@import '../theme.css';
 
 html,
 body {
@@ -23,13 +23,10 @@ body {
   --g-color-base-brand: rgba(98, 139, 53, 1);
   --g-color-base-brand-hover: rgba(98, 139, 53, 0.85);
 
-  /* TextInput */
   --g-text-input-border-width: 1px;
   --g-text-area-border-width: 1px;
 
   --g-text-input-background-color: var(--background-color);
-
-  /* Checkbox */
   --g-font-family-sans: 'Inter', sans-serif;
 
   --g-text-header-font-weight: 600;
@@ -38,8 +35,6 @@ body {
   --g-text-accent-font-weight: 600;
 
   --g-color-line-generic-accent: rgba(0, 0, 0, 0.15);
-
-  /* Text */
   --text-secondary: rgba(0, 0, 0, 0.5);
   --text-hint: rgba(0, 0, 0, 0.3);
 
@@ -49,4 +44,3 @@ body {
   --g-border-radius-l: 20px;
   --g-border-radius-xl: 24px;
 }
-
