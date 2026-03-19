@@ -1,59 +1,44 @@
 'use client'
 
 import Image from 'next/image'
-import type { ReactNode } from 'react'
-import { Button } from '@gravity-ui/uikit'
+import { Button, Icon } from '@gravity-ui/uikit'
 
 import styles from './component.module.css'
+import { ArrowIcon } from '@components/svgr/arrow-icon/icon'
+import { DotsIcon } from '@components/svgr/dots-icon/icon'
+import { VerifiedIcon } from '@components/svgr/verified-icon/icon'
 
 interface ProfileHeaderProps {
   name: string
-  role: string
+  subtitle: string
   onMessage?: () => void
-  leftAction?: ReactNode
-  rightAction?: ReactNode
 }
 
-export const ProfileHeader = ({
-  name,
-  role,
-  onMessage,
-  leftAction,
-  rightAction,
-}: ProfileHeaderProps) => {
-  const hasActions = Boolean(leftAction || rightAction)
+export const ProfileHeader = ({ name, subtitle, onMessage }: ProfileHeaderProps) => (
+  <section className={styles.root}>
+    <div className={styles.hero}>
+      <Image priority fill alt="" src="/profile/profile-head.png" className={styles.heroImage} />
 
-  return (
-    <section className={styles.root}>
-      <div className={styles.hero}>
-        <Image
-          priority
-          fill
-          alt=""
-          src="/profile/profile-head.png"
-          className={styles.heroImage}
-          sizes="(max-width: 500px) 100vw, 900px"
-        />
-
-        {hasActions ? (
-          <div aria-hidden className={styles.heroActions}>
-            {leftAction ? <div className={styles.circleButton}>{leftAction}</div> : <span />}
-            {rightAction ? <div className={styles.circleButton}>{rightAction}</div> : <span />}
-          </div>
-        ) : null}
-      </div>
-
-      <div className={styles.info}>
-        <h1 className={styles.name}>{name}</h1>
-        <div className={styles.roleRow}>
-          <span aria-hidden className={styles.roleIcon} />
-          <span className={styles.role}>{role}</span>
-        </div>
-
-        <Button size="xl" view="action" className={styles.messageButton} onClick={onMessage}>
-          Написать
+      <div className={styles.heroActions}>
+        <Button view="normal" size="l">
+          <Icon data={ArrowIcon} />
+        </Button>
+        <Button view="normal" size="l">
+          <Icon data={DotsIcon} />
         </Button>
       </div>
-    </section>
-  )
-}
+    </div>
+
+    <div className={styles.info}>
+      <h1 className={styles.name}>{name}</h1>
+      <div className={styles.roleRow}>
+        <Icon data={VerifiedIcon} />
+        <span className={styles.subtitle}>{subtitle}</span>
+      </div>
+
+      <Button size="xl" view="action" className={styles.messageButton} onClick={onMessage}>
+        Написать
+      </Button>
+    </div>
+  </section>
+)

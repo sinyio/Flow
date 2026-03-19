@@ -13,6 +13,10 @@
   object-fit: cover;
 }
 
+.title {
+  text-align: center;
+}
+
 .content {
   position: relative;
   z-index: 1;
@@ -20,11 +24,6 @@
   flex-direction: column;
   align-items: center;
   gap: 24px;
-}
-
-.flowImage {
-  height: 100px;
-  width: 200px;
 }
 
 .glassBlock {

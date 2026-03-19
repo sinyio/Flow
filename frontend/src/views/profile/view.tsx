@@ -18,7 +18,11 @@ const ProfileView = () => {
   return (
     <div className={styles.page}>
       <div className={styles.container}>
-        <ProfileHeader name="Иван Иванов" role="ответственный исполнитель" onMessage={() => {}} />
+        <ProfileHeader
+          name="Иван Иванов"
+          subtitle="ответственный исполнитель"
+          onMessage={() => {}}
+        />
 
         <ProfileStats
           stats={[{ label: '2 отзыва' }, { label: '4 доставки' }, { label: '1 объявление' }]}

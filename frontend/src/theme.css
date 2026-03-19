@@ -3,11 +3,13 @@ span.g-checkbox__indicator::before {
 }
 
 button.g-button_size_l {
-  --_--height: 42px;
+  --_--height: 36px;
+  min-width: 36px;
 }
 
 button.g-button_size_xl {
   --_--height: 48px;
+  min-width: 48px;
 }
 
 button.g-button_view_action {
