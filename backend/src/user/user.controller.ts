@@ -1,19 +1,23 @@
-import { Controller, Get, HttpCode, HttpStatus } from '@nestjs/common'
+import { Controller, Get, HttpCode, HttpStatus, Param, Req } from '@nestjs/common'
 import { UserService } from './user.service'
-import { Authorized } from '../auth/decorators/authorized.decorator'
 import { Authorization } from '../auth/decorators/auth.decorator'
-import { UserRole } from '@prisma/client'
-import { ApiOperation } from '@nestjs/swagger'
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { ProfileResponseDto } from './dto'
+import { type Request } from 'express'
 
+@ApiTags('Users')
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Authorization(UserRole.ADMIN)
+  @Authorization()
   @HttpCode(HttpStatus.OK)
-  @Get('profile')
-  @ApiOperation({ summary: 'Получить объявление по id' })
-  public async findProfile(@Authorized('id') userId: string) {
-    return this.userService.findById(userId)
+  @Get(':id')
+  @ApiOperation({ summary: 'Получить профиль пользователя по id' })
+  @ApiResponse({
+    status: 200, type: [ProfileResponseDto]
+  })
+  public async findProfile(@Req() req: Request, @Param('id') id: string) {
+    return this.userService.getProfile(req, id)
   }
 }

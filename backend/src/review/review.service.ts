@@ -10,7 +10,7 @@ import { type Request } from 'express'
 export class ReviewService {
   public constructor(private readonly prisma: PrismaService) {}
 
-  private mapReview(review: any) {
+  private mapReview(review: any, userId: string) {
     return {
       id: review.id,
       adId: review.adId,
@@ -21,6 +21,9 @@ export class ReviewService {
       createdAt: review.createdAt,
       author: review.isAnonymous ? null : getUserResponse(review.author),
       target: getUserResponse(review.target),
+      userState: {
+        canEdit: review.authorId === userId,
+      }
     }
   }
 
@@ -99,17 +102,19 @@ export class ReviewService {
     return getStatusOk()
   }
 
-  public async getReview(reviewId: string) {
+  public async getReview(req: Request, reviewId: string) {
+    const userId = req.session.userId
     const review = await this.prisma.review.findUnique({
       where: { id: reviewId },
       include: { author: true, target: true },
     })
 
     if (!review) throw new NotFoundException('Отзыв не найден')
-    return this.mapReview(review)
+    return this.mapReview(review, userId!)
   }
 
-  public async getReviewsByTarget(userId: string, query: ReviewListQueryDto) {
+  public async getReviewsByTarget(req: Request, userId: string, query: ReviewListQueryDto) {
+    const myUserId = req.session.userId
     const { page = 1, limit = 10, role = ReviewTargetRole.ALL } = query
     const skip = (page - 1) * limit
 
@@ -137,7 +142,7 @@ export class ReviewService {
     ])
 
     return {
-      data: items.map((r) => this.mapReview(r)),
+      data: items.map((r) => this.mapReview(r, myUserId!)),
       meta: {
         page,
         limit,
@@ -167,6 +172,6 @@ export class ReviewService {
       include: { author: true, target: true },
     })
 
-    return this.mapReview(updated)
+    return this.mapReview(updated, userId)
   }
 }

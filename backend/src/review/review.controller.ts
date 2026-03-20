@@ -25,8 +25,8 @@ export class ReviewController {
   @ApiOperation({ summary: 'Получить отзыв по id' })
   @ApiParam({ name: 'id', required: true, type: String })
   @ApiResponse({ status: 200, type: ReviewResponseDto })
-  public async getReview(@Param('id') id: string) {
-    return this.reviewService.getReview(id)
+  public async getReview(@Req() req: Request, @Param('id') id: string) {
+    return this.reviewService.getReview(req, id)
   }
 
   @Authorization()
@@ -64,9 +64,10 @@ export class ReviewController {
   })
   @ApiResponse({ status: 200, type: ReviewPaginatedResponseDto })
   public async getReviewsByUser(
+    @Req() req: Request,
     @Param('userId') userId: string,
     @Query() query: ReviewListQueryDto,
   ) {
-    return this.reviewService.getReviewsByTarget(userId, query)
+    return this.reviewService.getReviewsByTarget(req, userId, query)
   }
 }

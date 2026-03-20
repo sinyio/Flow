@@ -15,11 +15,12 @@ import { LoginDto, RegisterDto } from './dto'
 import { type Request, type Response } from 'express'
 import { ApiTags, ApiOperation, ApiBody, ApiResponse } from '@nestjs/swagger'
 import { Authorization } from './decorators/auth.decorator'
+import { UserRole } from '@prisma/client'
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  public constructor(private readonly authService: AuthService) {}
+  public constructor(private readonly authService: AuthService) { }
 
   @Post('register')
   @HttpCode(HttpStatus.OK)
@@ -103,7 +104,9 @@ export class AuthController {
   @ApiResponse({
     status: 200,
     schema: {
-      example: true,
+      example: {
+        status: true,
+      },
     },
   })
   @ApiResponse({
@@ -117,6 +120,44 @@ export class AuthController {
     },
   })
   public async me() {
+    return {
+      status: true,
+    }
+  }
+
+  @Get('admin')
+  @HttpCode(HttpStatus.OK)
+  @Authorization(UserRole.ADMIN)
+  @ApiOperation({ summary: 'Проверить, авторизован ли пользователь как админ' })
+  @ApiResponse({
+    status: 200,
+    schema: {
+      example: {
+        status: true,
+      },
+    },
+  })
+  @ApiResponse({
+    status: 401,
+    schema: {
+      example: {
+        message: 'Пользователь не авторизован',
+        error: 'Unauthorized',
+        statusCode: 401,
+      },
+    },
+  })
+  @ApiResponse({
+    status: 403,
+    schema: {
+      example: {
+        message: 'Недостаточно прав',
+        error: 'Forbidden',
+        statusCode: 403,
+      },
+    },
+  })
+  public async admin() {
     return {
       status: true,
     }

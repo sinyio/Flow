@@ -40,6 +40,15 @@ export class ReviewResponseDto {
 
   @ApiProperty({ type: ReviewUserDto })
   target: ReviewUserDto
+
+  @ApiProperty({
+    example: {
+      canEdit: false,
+    }
+  })
+  userState: {
+    canEdit: boolean
+  }
 }
 
 export class ReviewPaginatedResponseDto {
