@@ -1,3 +1,1 @@
-import ProfileView from './view'
-
-export default ProfileView
+export * from './view'

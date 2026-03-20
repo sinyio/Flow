@@ -1,27 +1,11 @@
-.root {
-  width: 100%;
-  background: var(--g-color-base-light, #fff);
-  border-radius: 16px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
 .user {
   align-items: center;
 }
 
 .status {
-  font-family: var(--g-text-body-font-family, 'Tilda_Sans_VF', sans-serif);
-  font-size: 15px;
-  line-height: 20px;
+  display: flex;
+  gap: 4px;
+  align-items: center;
   color: rgba(0, 0, 0, 0.5);
 }
 
-.text {
-  font-family: var(--g-text-body-font-family, 'Tilda_Sans_VF', sans-serif);
-  font-size: 17px;
-  line-height: 24px;
-  color: #000;
-}

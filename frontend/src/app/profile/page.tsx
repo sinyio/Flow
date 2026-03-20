@@ -1,3 +1,3 @@
-import ProfileView from '@views/profile'
+import ProfileView from '@views/profile/view'
 
 export default ProfileView

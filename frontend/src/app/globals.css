@@ -13,6 +13,16 @@ body {
   padding: 0;
 }
 
+.g-root {
+  --g-text-subheader-font-family: 'TildaSansRegular';
+  --g-text-subheader-font-weight: normal;
+
+  --g-border-radius-xs: 8px;
+  --g-border-radius-s: 12px;
+  --g-border-radius-l: 20px;
+  --g-border-radius-xl: 24px;
+}
+
 .g-root_theme_light {
   --g-color-base-generic-accent-disabled: rgba(115, 115, 115, 1);
   --background-color: rgba(255, 255, 255, 0.85);
@@ -21,6 +31,7 @@ body {
   --g-color-base-generic-hover: var(--g-color-base-light-hover);
 
   --g-color-base-brand: rgba(98, 139, 53, 1);
+  --g-color-line-brand: rgba(98, 139, 53, 1);
   --g-color-base-brand-hover: rgba(98, 139, 53, 0.85);
 
   --g-text-input-border-width: 1px;
@@ -40,7 +51,4 @@ body {
 
   --g-color-text-brand-contrast: rgba(255, 255, 255, 1);
   --g-color-text-hint: var(--text-hint);
-
-  --g-border-radius-l: 20px;
-  --g-border-radius-xl: 24px;
 }

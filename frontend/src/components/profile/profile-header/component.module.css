@@ -1,22 +1,23 @@
-.hero {
+.container {
   position: relative;
+  height: 100%;
+}
+
+.header {
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  top: 0;
   width: 100%;
-  height: clamp(360px, 45vh, 536px);
+  box-sizing: border-box;
+  height: fit-content;
+  padding: 52px 16px 0;
   overflow: hidden;
 }
 
-.heroImage {
-  object-fit: cover;
-}
-
-.heroActions {
-  position: absolute;
-  top: clamp(24px, 5vh, 52px);
-  left: 16px;
-  right: 16px;
-  display: flex;
-  justify-content: space-between;
-  pointer-events: none;
+.profileImage {
+  position: relative !important;
+  display: block;
 }
 
 .circleButton {
@@ -31,21 +32,35 @@
 }
 
 .info {
-  margin-top: clamp(-120px, -16vh, -92px);
-  padding: clamp(16px, 3vh, 20px) 16px clamp(20px, 4vh, 28px);
-  background: linear-gradient(to bottom, rgba(112, 112, 112, 0), #f2f3f2 60%);
-  backdrop-filter: blur(20px);
+  position: absolute;
+  padding: 20px 16px 28px;
+  bottom: -1;
+  width: 100%;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 16px;
 }
 
+.info::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  backdrop-filter: blur(5px);
+  mask-image: linear-gradient(to top, rgba(0, 0, 0, 1) 72%, rgba(0, 0, 0, 0) 100%);
+  background-image: linear-gradient(to top, #f2f3f2, rgba(255, 255, 255, 0));
+}
+
+.nameRow {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 1;
+}
+
 .name {
   margin: 0;
-  font-family: var(--g-text-display-font-family, 'Tilda_Sans_VF', sans-serif);
-  font-size: clamp(32px, 6vw, 40px);
-  line-height: clamp(40px, 8vw, 48px);
   font-weight: 600;
   color: #fff;
   text-align: center;
@@ -57,9 +72,6 @@
   justify-content: center;
   gap: 4px;
   color: #fff;
-  font-family: var(--g-text-body-font-family, 'Tilda_Sans_VF', sans-serif);
-  font-size: 17px;
-  line-height: 24px;
 }
 
 .roleIcon {
@@ -71,6 +83,7 @@
 
 .messageButton {
   width: 100%;
+  z-index: 1;
   background: #282828 !important;
   color: #fff !important;
   border-radius: 24px !important;
