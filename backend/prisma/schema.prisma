@@ -15,7 +15,7 @@ model User {
   phoneNumber String?  @unique @map("phone_number")
   email       String   @unique
   password    String
-  photo       String?  @default("https://xn--k1agpb.com/storage/users/default/avatar.jpg")
+  photo       String?  @default("https://xn--k1agpb.com/storage/flow/users/default/avatar.jpg")
   isVerified  Boolean  @default(false) @map("is_verified")
   role        UserRole @default(REGULAR)
 
