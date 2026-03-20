@@ -13,9 +13,9 @@ export const ArrowIcon = ({ ...rest }: HTMLAttributes<SVGSVGElement>) => (
     <path
       d="M13.3333 8H2.66666M2.66666 8L6.66666 12M2.66666 8L6.66666 4"
       stroke="black"
-      stroke-opacity="0.5"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeOpacity="0.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
   </svg>
 )

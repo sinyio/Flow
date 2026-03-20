@@ -1,44 +1,75 @@
 'use client'
 
 import Image from 'next/image'
-import { Button, Icon } from '@gravity-ui/uikit'
+import { Button, DropdownMenu, Icon } from '@gravity-ui/uikit'
 
 import styles from './component.module.css'
 import { ArrowIcon } from '@components/svgr/arrow-icon/icon'
 import { DotsIcon } from '@components/svgr/dots-icon/icon'
 import { VerifiedIcon } from '@components/svgr/verified-icon/icon'
+import { ProfileStats } from '../profile-stats/component'
+import { Typography } from '@components/typography/component'
+import { FlagIcon } from '@components/svgr/flag-icon/icon'
+import { ShareIcon } from '@components/svgr/share-icon/icon'
 
 interface ProfileHeaderProps {
   name: string
   subtitle: string
-  onMessage?: () => void
 }
 
-export const ProfileHeader = ({ name, subtitle, onMessage }: ProfileHeaderProps) => (
-  <section className={styles.root}>
-    <div className={styles.hero}>
-      <Image priority fill alt="" src="/profile/profile-head.png" className={styles.heroImage} />
+export const ProfileHeader = ({ name, subtitle }: ProfileHeaderProps) => {
+  const handleClick = () => {}
 
-      <div className={styles.heroActions}>
+  return (
+    <section className={styles.container}>
+      <Image priority fill alt="" src="/profile/profile-head.png" className={styles.profileImage} />
+
+      <div className={styles.header}>
         <Button view="normal" size="l">
           <Icon data={ArrowIcon} />
         </Button>
-        <Button view="normal" size="l">
-          <Icon data={DotsIcon} />
+        <DropdownMenu
+          size="l"
+          popupProps={{ placement: 'bottom-end', offset: 8, style: { width: '200px' } }}
+          renderSwitcher={props => (
+            <Button {...props} view="normal" size="l">
+              <Icon data={DotsIcon} />
+            </Button>
+          )}
+          items={[
+            {
+              iconStart: <FlagIcon />,
+              text: <Typography variant="body1">Пожаловаться</Typography>,
+              action: () => console.log('123'),
+            },
+            {
+              iconStart: <ShareIcon />,
+              text: <Typography variant="body1">Поделиться</Typography>,
+              action: () => console.log('123'),
+            },
+          ]}
+        />
+      </div>
+
+      <div className={styles.info}>
+        <div className={styles.nameRow}>
+          <Typography variant="display3" className={styles.name}>
+            {name}
+          </Typography>
+          <Typography variant="body3" className={styles.roleRow}>
+            <Icon data={VerifiedIcon} />
+            <span className={styles.subtitle}>{subtitle}</span>
+          </Typography>
+        </div>
+
+        <Button size="xl" view="action" className={styles.messageButton} onClick={handleClick}>
+          Написать
         </Button>
-      </div>
-    </div>
 
-    <div className={styles.info}>
-      <h1 className={styles.name}>{name}</h1>
-      <div className={styles.roleRow}>
-        <Icon data={VerifiedIcon} />
-        <span className={styles.subtitle}>{subtitle}</span>
+        <ProfileStats
+          stats={[{ label: '2 отзыва' }, { label: '4 доставки' }, { label: '1 объявление' }]}
+        />
       </div>
-
-      <Button size="xl" view="action" className={styles.messageButton} onClick={onMessage}>
-        Написать
-      </Button>
-    </div>
-  </section>
-)
+    </section>
+  )
+}

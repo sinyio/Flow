@@ -24,6 +24,7 @@
   flex-direction: column;
   align-items: center;
   gap: 24px;
+  padding-top: 100px;
 }
 
 .glassBlock {

@@ -26,6 +26,10 @@
   justify-content: center;
 }
 
-.inner {
-  gap: 24px;
+.profilePage {
+  background-color: #F2F3F2;
+}
+
+.authPage {
+  padding: 0 16px;
 }

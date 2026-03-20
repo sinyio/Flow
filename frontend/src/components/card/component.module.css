@@ -1,0 +1,10 @@
+.container {
+  width: 100%;
+  background: var(--g-color-base-light, #fff);
+  border-radius: 16px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+}

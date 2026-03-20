@@ -11,7 +11,7 @@
 .innerContainer {
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: fit-content;
+  max-width: 450px;
   height: fit-content;
-  padding: 0 16px;
 }

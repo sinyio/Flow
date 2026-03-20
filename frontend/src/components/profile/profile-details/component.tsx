@@ -1,27 +1,37 @@
 'use client'
 
 import { Accordion } from '@gravity-ui/uikit'
+import { ReactNode } from 'react'
 
 import styles from './component.module.css'
+import { Typography } from '@components/typography/component'
 
-export interface ProfileDetailLine {
-  labelMuted: string
+export type TProfileDetailLine = {
+  label: string
   value: string
+  icon: ReactNode
 }
 
-interface ProfileDetailsProps {
-  lines: ProfileDetailLine[]
+interface IProfileDetailsProps {
+  lines: TProfileDetailLine[]
 }
 
-export const ProfileDetails = ({ lines }: ProfileDetailsProps) => (
-  <Accordion view="top-bottom" className={styles.root}>
-    <Accordion.Item defaultExpanded summary="Подробнее" value="details">
+export const ProfileDetails = ({ lines }: IProfileDetailsProps) => (
+  <Accordion view="top-bottom" size="l" arrowPosition="end" className={styles.root}>
+    <Accordion.Item
+      defaultExpanded
+      summary={<Typography variant="subheader3">Подробнее</Typography>}
+      value="details"
+    >
       <div className={styles.lines}>
         {lines.map(line => (
-          <div key={`${line.labelMuted}-${line.value}`} className={styles.line}>
-            <span className={styles.muted}>{line.labelMuted}</span>
-            <span className={styles.value}>{line.value}</span>
-          </div>
+          <Typography variant="body2" key={`${line.label}-${line.value}`} className={styles.line}>
+            {line.icon}
+            <p>
+              <span className={styles.muted}>{line.label}</span>{' '}
+              <span className={styles.value}>{line.value}</span>
+            </p>
+          </Typography>
         ))}
       </div>
     </Accordion.Item>
