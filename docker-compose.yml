@@ -76,6 +76,23 @@ services:
     networks:
       - flow-backend
 
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - flow-backend
+    profiles:
+    - prod
+
 volumes:
   postgres_data:
   redis_data:
