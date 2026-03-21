@@ -119,9 +119,9 @@ export class AuthController {
       },
     },
   })
-  public async me() {
+  public async me(@Req() req: Request) {
     return {
-      status: true,
+      userId: req.session.userId,
     }
   }
 
@@ -157,9 +157,9 @@ export class AuthController {
       },
     },
   })
-  public async admin() {
+  public async admin(@Req() req: Request) {
     return {
-      status: true,
+      userId: req.session.userId,
     }
   }
 }

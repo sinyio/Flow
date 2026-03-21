@@ -15,7 +15,7 @@ export class UserController {
   @Get(':id')
   @ApiOperation({ summary: 'Получить профиль пользователя по id' })
   @ApiResponse({
-    status: 200, type: [ProfileResponseDto]
+    status: 200, type: ProfileResponseDto
   })
   public async findProfile(@Req() req: Request, @Param('id') id: string) {
     return this.userService.getProfile(req, id)

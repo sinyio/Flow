@@ -43,13 +43,13 @@ export class AuthService {
     const user = await this.userService.findByEmail(dto.email)
 
     if (!user) {
-      throw new NotFoundException('Пользователь не найден')
+      throw new NotFoundException('Неверное сочетание логина и пароля')
     }
 
     const isValidPassword = await verify(user.password, dto.password)
 
     if (!isValidPassword) {
-      throw new UnauthorizedException('Неверный пароль')
+      throw new UnauthorizedException('Неверное сочетание логина и пароля')
     }
 
     if (!user.isVerified) {
@@ -59,7 +59,11 @@ export class AuthService {
       )
     }
 
-    return this.saveSession(req, user)
+    await this.saveSession(req, user)
+
+    return {
+      userId: user.id,
+    }
   }
 
   public async logout(req: Request, res: Response) {
