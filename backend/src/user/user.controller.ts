@@ -10,7 +10,6 @@ import { type Request } from 'express'
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Authorization()
   @HttpCode(HttpStatus.OK)
   @Get(':id')
   @ApiOperation({ summary: 'Получить профиль пользователя по id' })
