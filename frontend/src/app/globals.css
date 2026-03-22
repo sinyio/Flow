@@ -14,8 +14,45 @@ body {
 }
 
 .g-root {
+  --g-text-body-font-family: 'TildaSansRegular';
+
+  --g-text-body1-font-family: 'TildaSansRegular';
+
+  --g-text-body1short-font-family: 'TildaSansRegular';
+
+  --g-text-body2-font-family: 'TildaSansRegular';
+
+  --g-text-body3-font-family: 'TildaSansRegular';
+
+  --g-text-header-font-family: 'TildaSansRegular';
+
+  --g-text-header1-font-family: 'TildaSansRegular';
+
+  --g-text-header2-font-family: 'TildaSansRegular';
+
   --g-text-subheader-font-family: 'TildaSansRegular';
-  --g-text-subheader-font-weight: normal;
+
+  --g-text-subheader1-font-family: 'TildaSansRegular';
+
+  --g-text-subheader2-font-family: 'TildaSansRegular';
+
+  --g-text-subheader3-font-family: 'TildaSansRegular';
+
+  --g-text-display-font-family: 'TildaSansBold';
+
+  --g-text-display1-font-family: 'TildaSansBold';
+
+  --g-text-display2-font-family: 'TildaSansBold';
+
+  --g-text-display3-font-family: 'TildaSansBold';
+
+  --g-text-display4-font-family: 'TildaSansBold';
+  
+  --g-text-caption-font-family: 'TildaSansRegular';
+
+  --g-text-caption1-font-family: 'TildaSansRegular';
+
+  --g-text-caption2-font-family: 'TildaSansRegular';
 
   --g-border-radius-xs: 8px;
   --g-border-radius-s: 12px;

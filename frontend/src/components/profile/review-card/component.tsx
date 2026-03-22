@@ -1,24 +1,42 @@
-import { Avatar, User } from '@gravity-ui/uikit'
+import { Avatar, Button, Icon, User } from '@gravity-ui/uikit'
 
 import styles from './component.module.css'
 import { TReview } from './types'
 import { Typography } from '@components/typography/component'
 import { StarFilledIcon } from '@components/svgr/star-filled-icon/icon'
 import { Card } from '@components/card/component'
+import { FlagIcon } from '@components/svgr/flag-icon/icon'
 
-export const ReviewCard = ({ name, role, status, description, date, rate }: TReview) => (
+export interface IReviewCardProps extends TReview {
+  canReport: boolean
+}
+
+export const ReviewCard = ({
+  canReport,
+  name,
+  role,
+  status,
+  description,
+  date,
+  rate,
+}: IReviewCardProps) => (
   <Card>
-    <User
-      size="l"
-      name={<Typography variant="body1short">{name}</Typography>}
-      description={
-        <Typography variant="body1short">
-          {date} | {role}
-        </Typography>
-      }
-      avatar={<Avatar size="l" imgUrl="/profile/avatar.png" />}
-      className={styles.user}
-    />
+    <div className={styles.topContainer}>
+      <User
+        size="l"
+        name={name}
+        description={`${date} | ${role}`}
+        avatar={<Avatar size="l" imgUrl="/profile/avatar.png" />}
+        className={styles.user}
+      />
+
+      {canReport && (
+        <Button view="flat-danger" size="xs">
+          <Icon data={FlagIcon} />
+          Пожаловаться
+        </Button>
+      )}
+    </div>
 
     <Typography variant="body2" className={styles.status}>
       {Array.from(Array(5)).map((_, index) => (

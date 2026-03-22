@@ -2,7 +2,6 @@ import { Tab, TabList, TabPanel, TabProvider } from '@gravity-ui/uikit'
 import { useState } from 'react'
 
 import styles from './component.module.css'
-import { Typography } from '@components/typography/component'
 import { TabsProps } from './types'
 
 export const Tabs = ({ tabs }: TabsProps) => {
@@ -13,7 +12,7 @@ export const Tabs = ({ tabs }: TabsProps) => {
       <TabList size="xl">
         {tabs.map((tab, index) => (
           <Tab key={'tab-' + tab.value + index} value={tab.value} counter={tab.counter}>
-            <Typography variant="subheader3">{tab.label}</Typography>
+            {tab.label}
           </Tab>
         ))}
       </TabList>

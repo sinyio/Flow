@@ -1,25 +1,19 @@
 import Image from 'next/image'
-import { Label, LabelProps } from '@gravity-ui/uikit'
+import { Button, Label } from '@gravity-ui/uikit'
 
 import styles from './component.module.css'
 import { Typography } from '@components/typography/component'
 import { Card } from '@components/card/component'
-import { TAd, TStatus } from './types'
+import { statusesMap, TAd } from './types'
 
-const statusesMap: Record<TStatus, { title: string; theme?: LabelProps['theme'] }> = {
-  active: {
-    title: 'Активно',
-    theme: 'success',
-  },
-  finished: {
-    title: 'Завершено',
-  },
+export interface IAdCardProps extends TAd {
+  canEdit?: boolean
 }
 
-export const AdCard = ({ status, price, route, date, imageUrl }: TAd) => (
+export const AdCard = ({ status, price, route, date, imageUrl, canEdit }: IAdCardProps) => (
   <Card className={styles.container}>
     <Label size="xs" {...statusesMap[status]}>
-      <Typography variant="body1">{statusesMap[status].title}</Typography>
+      {statusesMap[status].title}
     </Label>
 
     <div className={styles.content}>
@@ -43,5 +37,10 @@ export const AdCard = ({ status, price, route, date, imageUrl }: TAd) => (
         </Typography>
       </div>
     </div>
+    {canEdit && status === 'active' ? (
+      <Button view="action" size="l" style={{ width: '100%', marginTop: '8px' }}>
+        Редактировать
+      </Button>
+    ) : null}
   </Card>
 )

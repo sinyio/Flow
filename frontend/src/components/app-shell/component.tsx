@@ -9,6 +9,7 @@ import { useResponsive } from '@utils/hooks/use-responsive'
 import styles from './component.module.css'
 import { PageContainer } from '@components/page-container/component'
 import { MobileBottomMenu } from '@components/profile'
+import { useAuthorizationStore } from '@utils/stores/authorization'
 
 import { mobileNavMocks } from '@views/profile/mocks'
 
@@ -19,6 +20,8 @@ interface AppShellProps {
 export const AppShell = ({ children }: AppShellProps) => {
   const { vw } = useResponsive()
   const pathname = usePathname()
+
+  const { isAuth } = useAuthorizationStore(store => store)
 
   const pageStyles = useMemo(() => {
     const path = pathname.split('/')[1]
@@ -52,7 +55,7 @@ export const AppShell = ({ children }: AppShellProps) => {
           </div>
         )
       ) : (
-        <MobileBottomMenu items={mobileNavMocks} />
+        (isAuth ?? <MobileBottomMenu items={mobileNavMocks} />)
       )}
 
       <PageContainer inner={{ className: pageStyles }}>

@@ -3,11 +3,14 @@ import '@gravity-ui/uikit/styles/fonts.css'
 import '@gravity-ui/uikit/styles/styles.css'
 import './globals.css'
 
+import { ErrorBoundary } from 'next/dist/client/components/error-boundary'
+
 import { ApiProvider } from '@contexts/api-context'
 import { AppShell } from '@components/app-shell'
 import { BusinessLayout } from '@utils/business-layout'
 import { Metrika } from '@utils/yandex-metrika'
 import { GlassEffect } from '@utils/glass-effect'
+import Error from './error'
 
 export const metadata: Metadata = {
   title: 'Флоу',
@@ -26,7 +29,9 @@ const RootLayout = ({
 
       <ApiProvider apiHost={process.env.NEXT_PUBLIC_API_HOST ?? ''}>
         <BusinessLayout>
-          <AppShell>{children}</AppShell>
+          <AppShell>
+            <ErrorBoundary errorComponent={Error}>{children}</ErrorBoundary>
+          </AppShell>
         </BusinessLayout>
       </ApiProvider>
     </body>

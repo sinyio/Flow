@@ -1,3 +1,8 @@
+button.g-button {
+  font-family: 'TildaSansSemibold';
+  font-weight: 600;
+}
+
 span.g-checkbox__indicator::before {
   background-color: var(--background-color);
 }
