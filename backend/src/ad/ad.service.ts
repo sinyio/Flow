@@ -129,7 +129,7 @@ export class AdService {
       )
     }
 
-    const imagePath = imageKey = `${this.configService.getOrThrow('MINIO_HOST')}/${this.configService.getOrThrow('MINIO_BUCKET')}/${imageKey}`
+    const imagePath = `${this.configService.getOrThrow('MINIO_PUBLIC_BASE')}/${this.configService.getOrThrow('MINIO_BUCKET')}/${imageKey}`
 
     await this.prisma.ad.create({
       data: {
