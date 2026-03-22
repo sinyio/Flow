@@ -2,6 +2,12 @@
   align-items: center;
 }
 
+.topContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .status {
   display: flex;
   gap: 4px;

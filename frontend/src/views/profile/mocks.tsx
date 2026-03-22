@@ -88,12 +88,17 @@ export const mobileNavMocks = [
   },
 ]
 
-export const mockTabs = [
+export const mockTabs = (canEdit: boolean) => [
   {
     label: 'Отзывы',
     value: 'reviews',
     counter: reviews.length,
-    content: <Reviews reviews={reviews} />,
+    content: <Reviews reviews={reviews} canReport={canEdit} />,
   },
-  { label: 'Объявления', value: 'ads', counter: ads.length, content: <Ads ads={ads} /> },
+  {
+    label: 'Объявления',
+    value: 'ads',
+    counter: ads.length,
+    content: <Ads ads={ads} canEdit={canEdit} />,
+  },
 ]

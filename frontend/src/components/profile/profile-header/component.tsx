@@ -11,13 +11,15 @@ import { ProfileStats } from '../profile-stats/component'
 import { Typography } from '@components/typography/component'
 import { FlagIcon } from '@components/svgr/flag-icon/icon'
 import { ShareIcon } from '@components/svgr/share-icon/icon'
+import { PenIcon } from '@components/svgr/pen-icon/icon'
 
 interface ProfileHeaderProps {
   name: string
   subtitle: string
+  canEdit: boolean
 }
 
-export const ProfileHeader = ({ name, subtitle }: ProfileHeaderProps) => {
+export const ProfileHeader = ({ canEdit, name, subtitle }: ProfileHeaderProps) => {
   const handleClick = () => {}
 
   return (
@@ -39,12 +41,12 @@ export const ProfileHeader = ({ name, subtitle }: ProfileHeaderProps) => {
           items={[
             {
               iconStart: <FlagIcon />,
-              text: <Typography variant="body1">Пожаловаться</Typography>,
+              text: 'Пожаловаться',
               action: () => console.log('123'),
             },
             {
               iconStart: <ShareIcon />,
-              text: <Typography variant="body1">Поделиться</Typography>,
+              text: 'Поделиться',
               action: () => console.log('123'),
             },
           ]}
@@ -62,9 +64,15 @@ export const ProfileHeader = ({ name, subtitle }: ProfileHeaderProps) => {
           </Typography>
         </div>
 
-        <Button size="xl" view="action" className={styles.messageButton} onClick={handleClick}>
-          Написать
-        </Button>
+        {canEdit ? (
+          <Button size="xl" view="normal" className={styles.messageButton} onClick={handleClick}>
+            <Icon data={PenIcon} /> <Typography variant="header1">Редактировать</Typography>
+          </Button>
+        ) : (
+          <Button size="xl" view="action" className={styles.messageButton} onClick={handleClick}>
+            <Typography variant="header1">Написать</Typography>
+          </Button>
+        )}
 
         <ProfileStats
           stats={[{ label: '2 отзыва' }, { label: '4 доставки' }, { label: '1 объявление' }]}

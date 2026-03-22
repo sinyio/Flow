@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import type { ForgotPasswordFormValues } from 'src/types/authorization'
+import { Button } from '@gravity-ui/uikit'
 
 import { EmailField } from '@components/form'
 import { TextLink } from '@components/text-link/component'
@@ -10,7 +11,6 @@ import { useAuthorizationStore } from '@utils/stores/authorization'
 import { forgotPasswordSchema } from 'src/constants/validation-schema'
 import styles from './step.module.css'
 import { useAxiosInstance } from '@api/use-axios-instance'
-import { Button } from '@gravity-ui/uikit'
 
 export const ForgotPasswordStep = () => {
   const axiosInstance = useAxiosInstance()
