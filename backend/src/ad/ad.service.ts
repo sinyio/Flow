@@ -100,6 +100,42 @@ export class AdService {
     }
   }
 
+  public async findAdsByAuthorId(
+    req: Request,
+    userId: string,
+    page = 1,
+    limit = 10,
+  ): Promise<PaginatedResponse<ReturnType<typeof getAdResponse>>> {
+    const skip = (page - 1) * limit
+
+    const where = { authorId: userId }
+
+    const [ads, total] = await this.prisma.$transaction([
+      this.prisma.ad.findMany({
+        where,
+        include: { author: true, sender: true, recipient: true, courier: true },
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: limit,
+      }),
+      this.prisma.ad.count({ where }),
+    ])
+
+    const sessionUserId = req.session.userId
+
+    const data = ads.map((ad) => getAdResponse(ad, sessionUserId))
+
+    return {
+      data,
+      meta: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit),
+      },
+    }
+  }
+
   public async create(req: Request, ad: AdDto, file) {
     const { role, ...data } = ad
 

@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post
 import { AdService } from './ad.service';
 import { Authorization } from '../auth/decorators/auth.decorator';
 import { ApiBody, ApiConsumes, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { AdDto, AdFilterDto, AdPaginatedResponseDto, AdResponseDto, AdUpdateDto, PopularRoutesResponseDto } from './dto';
+import { AdByUserQueryDto, AdDto, AdFilterDto, AdPaginatedResponseDto, AdResponseDto, AdUpdateDto, PopularRoutesResponseDto } from './dto';
 import { type Request } from 'express';
 import { getStatusOk } from '../common/helpers';
 import { CanEditAd } from './guards';
@@ -21,6 +21,39 @@ export class AdController {
   })
   public getPopularRoutes(@Req() req: Request) {
     return this.adService.getPopularRoutes(req)
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Get('user/:userId')
+  @ApiOperation({ summary: 'Получить объявления пользователя' })
+  @ApiParam({
+    name: 'userId',
+    required: true,
+    description: 'Id пользователя (автор объявлений)',
+    type: String,
+  })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    description: 'Номер страницы (по умолчанию 1)',
+    type: Number,
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    description: 'Размер страницы (по умолчанию 10)',
+    type: Number,
+  })
+  @ApiResponse({
+    status: 200,
+    type: AdPaginatedResponseDto,
+  })
+  public getAdsByUser(
+    @Req() req: Request,
+    @Param('userId') userId: string,
+    @Query() query: AdByUserQueryDto,
+  ) {
+    return this.adService.findAdsByAuthorId(req, userId, query.page ?? 1, query.limit ?? 10)
   }
 
   // @Authorization()
