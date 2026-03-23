@@ -12,12 +12,17 @@ model User {
   firstName String?
   lastName  String?
 
-  phoneNumber String?  @unique @map("phone_number")
-  email       String   @unique
+  phoneNumber String?   @unique @map("phone_number")
+  email       String?    @unique
   password    String
-  photo       String?  @default("https://xn--k1agpb.com/storage/flow/users/default/avatar.jpg")
-  isVerified  Boolean  @default(false) @map("is_verified")
-  role        UserRole @default(REGULAR)
+  photo       String?
+  isVerified  Boolean   @default(false) @map("is_verified")
+  role        UserRole  @default(REGULAR)
+  gender      Gender?
+  dateOfBirth DateTime? @map("date_of_birth")
+  contacts    String?
+
+  deletedAt DateTime? @map("deleted_at")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -34,6 +39,11 @@ model User {
   reviewsReceived Review[]     @relation("ReviewTarget")
 
   @@map("users")
+}
+
+enum Gender {
+  MALE
+  FEMALE
 }
 
 enum UserRole {
@@ -59,29 +69,31 @@ enum TokenType {
 model Ad {
   id String @id @default(uuid())
 
-  title       String
+  title       String?
   image       String?
   description String?
 
   status AdStatus @default(ACTIVE)
 
-  startDate DateTime @map("start_date")
-  endDate   DateTime @map("end_date")
+  startDate DateTime? @map("start_date")
+  endDate   DateTime? @map("end_date")
 
-  fromCity String @map("from_city")
-  toCity   String @map("to_city")
+  fromCity String? @map("from_city")
+  toCity   String? @map("to_city")
 
-  price  Float
-  weight Float
+  price  Float?
+  weight Float?
 
-  isFragile  Boolean @default(false) @map("is_fragile")
-  isDocument Boolean @default(false) @map("is_document")
+  isFragile  Boolean? @default(false) @map("is_fragile")
+  isDocument Boolean? @default(false) @map("is_document")
 
-  packaging Packaging
+  packaging Packaging?
 
-  length Float
-  width  Float
-  height Float
+  length Float?
+  width  Float?
+  height Float?
+
+  deletedAt DateTime? @map("deleted_at")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

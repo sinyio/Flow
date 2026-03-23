@@ -2,10 +2,20 @@ import { Injectable, NotFoundException } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
 import { hash } from 'argon2'
 import { type Request } from 'express'
+import { UpdateProfileDto } from './dto/update-profile.dto'
+import { ConfigService } from '@nestjs/config'
+import { S3Service } from '../s3/s3.service'
+import sharp from 'sharp'
+import { filterEmptyValues, getStatusOk } from '../common/helpers'
+import { nanoid } from 'nanoid'
 
 @Injectable()
 export class UserService {
-  public constructor(private readonly prismaService: PrismaService) { }
+  public constructor(
+    private readonly prismaService: PrismaService,
+    private readonly s3: S3Service,
+    private readonly configService: ConfigService
+  ) { }
 
   public async findById(id: string) {
     const user = await this.prismaService.user.findUnique({
@@ -28,10 +38,14 @@ export class UserService {
   }
 
   public async create(email: string, password: string) {
+    const userId = nanoid(12)
+
     const user = await this.prismaService.user.create({
       data: {
+        id: userId,
         email,
         password: await hash(password),
+        photo: `${this.configService.getOrThrow('MINIO_PUBLIC_BASE')}/${this.configService.getOrThrow('MINIO_BUCKET')}/users/default/avatar.svg`,
       },
     })
 
@@ -52,6 +66,7 @@ export class UserService {
         // isVerified: true,
         // role: true,
         createdAt: true,
+        deletedAt: true,
         // updatedAt: true,
         _count: {
           select: {
@@ -82,6 +97,7 @@ export class UserService {
       // isVerified: user.isVerified,
       // role: user.role,
       registeredAt: user.createdAt,
+      deletedAt: user.deletedAt,
       // updatedAt: user.updatedAt,
       successfulDeliveriesCount: user._count.deliveredAds,
       authoredAdsCount: user._count.authoredAds,
@@ -91,5 +107,63 @@ export class UserService {
         canEdit: userId === id
       }
     }
+  }
+
+  public async updateProfile(req: Request, dto: UpdateProfileDto, file) {
+    console.log(dto)
+    console.log(file)
+    const userId = req.session.userId
+
+    const data = filterEmptyValues(dto)
+    console.log(data)
+
+    let imageKey: string | undefined
+    if (file) {
+      const originalBuffer = file.buffer
+      imageKey = `users/${userId}/avatar`
+
+      const thumb250 = await sharp(originalBuffer)
+        .resize(250, 250, { fit: 'cover' })
+        .jpeg({ quality: 85 })
+        .toBuffer()
+
+      await this.s3.upload(
+        this.configService.getOrThrow('MINIO_BUCKET'),
+        imageKey,
+        thumb250,
+        'image/jpeg'
+      )
+    }
+
+    const imagePath = `${this.configService.getOrThrow('MINIO_PUBLIC_BASE')}/${this.configService.getOrThrow('MINIO_BUCKET')}/${imageKey}`
+
+    await this.prismaService.user.update({
+      where: { id: userId },
+      data: {
+        ...data,
+        ...(imageKey && { photo: imagePath }),
+      }
+    })
+
+    return getStatusOk()
+  }
+
+  public async delete(req: Request) {
+    const userId = req.session.userId
+
+    await this.prismaService.user.update({
+      where: { id: userId },
+      data: {
+        deletedAt: new Date(),
+        email: null,
+        phoneNumber: null,
+        firstName: null,
+        lastName: null,
+        photo: null,
+        gender: null,
+        dateOfBirth: null,
+        contacts: null,
+      }
+    })
   }
 }

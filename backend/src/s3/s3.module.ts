@@ -4,5 +4,6 @@ import { AdService } from '../ad/ad.service';
 
 @Module({
   providers: [AdService, S3Service],
+  exports: [S3Service],
 })
 export class S3Module {}

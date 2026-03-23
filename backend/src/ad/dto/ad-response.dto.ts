@@ -107,6 +107,7 @@ export class AdPaginatedResponseDto {
 
 export const getAdResponse = (ad: AdWithUsers, userId?: string) => ({
     id: ad.id,
+    deletedAt: ad.deletedAt,
     title: ad.title,
     image: ad.image,
     description: ad.description,

@@ -2,7 +2,7 @@ import { ApiPropertyOptional } from '@nestjs/swagger'
 import { IsOptional, IsString, IsNumber, IsBoolean, IsEnum } from 'class-validator'
 import { AdDtoRoles } from '../types'
 import { Packaging } from '@prisma/client'
-import { Type } from 'class-transformer'
+import { Transform, Type } from 'class-transformer'
 
 export class AdUpdateDto {
   @ApiPropertyOptional({ description: 'Название объявления', example: '' })
@@ -58,23 +58,25 @@ export class AdUpdateDto {
   @Type(() => Number)
   price?: number
 
-  @ApiPropertyOptional({ description: 'Вид упаковки', example: '', enum: Packaging })
+  @ApiPropertyOptional({ description: 'Вид упаковки', example: 'BOX', enum: Packaging })
   @IsOptional()
   @IsEnum(Packaging)
+  @Transform(({ value }) => value === '' ? undefined : value)
   packaging?: Packaging
 
-  @ApiPropertyOptional({ description: 'Роль', example: '', enum: AdDtoRoles })
+  @ApiPropertyOptional({ description: 'Роль', example: 'sender', enum: AdDtoRoles })
   @IsOptional()
   @IsEnum(AdDtoRoles)
+  @Transform(({ value }) => value === '' ? undefined : value)
   role?: AdDtoRoles
 
-  @ApiPropertyOptional({ description: 'Хрупкое', example: '' })
+  @ApiPropertyOptional({ description: 'Хрупкое', example: true })
   @IsOptional()
   @IsBoolean()
   @Type(() => Boolean)
   isFragile?: boolean
 
-  @ApiPropertyOptional({ description: 'Документ', example: '' })
+  @ApiPropertyOptional({ description: 'Документ', example: true })
   @IsOptional()
   @IsBoolean()
   @Type(() => Boolean)

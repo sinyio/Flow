@@ -226,9 +226,31 @@ export class AdService {
   public async delete(id: string) {
     if (!id || Array.isArray(id)) throw new BadRequestException('Invalid ID');
 
-    await this.prisma.ad.delete({
-      where: {
-        id
+    await this.prisma.ad.update({
+      where: { id },
+      data: {
+        deletedAt: new Date(),
+        senderId: null,
+        recipientId: null,
+        courierId: null,
+        image: null,
+        title: null,
+        description: null,
+        price: null,
+        weight: null,
+        isFragile: false,
+        isDocument: false,
+        packaging: null,
+        length: null,
+        width: null,
+        height: null,
+        startDate: null,
+        endDate: null,
+        fromCity: null,
+        toCity: null,
+        status: 'COMPLETED',
+        createdAt: new Date(),
+        updatedAt: new Date(),
       }
     })
 

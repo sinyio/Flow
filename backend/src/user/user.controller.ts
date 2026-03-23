@@ -1,14 +1,17 @@
-import { Controller, Get, HttpCode, HttpStatus, Param, Req } from '@nestjs/common'
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Req, UploadedFile, UseInterceptors } from '@nestjs/common'
 import { UserService } from './user.service'
 import { Authorization } from '../auth/decorators/auth.decorator'
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { ProfileResponseDto } from './dto'
 import { type Request } from 'express'
+import { UpdateProfileDto } from './dto/update-profile.dto'
+import { FileInterceptor } from '@nestjs/platform-express'
+import { getStatusOk } from '../common/helpers'
 
 @ApiTags('Users')
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   @HttpCode(HttpStatus.OK)
   @Get(':id')
@@ -18,5 +21,32 @@ export class UserController {
   })
   public async findProfile(@Req() req: Request, @Param('id') id: string) {
     return this.userService.getProfile(req, id)
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Patch()
+  @ApiOperation({ summary: 'Обновить профиль' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({ type: UpdateProfileDto })
+  @ApiResponse({
+    status: 200, schema: {
+      example: getStatusOk(),
+    }
+  })
+  @UseInterceptors(FileInterceptor('photo'))
+  public async updateProfile(@Req() req: Request, @Body() dto: UpdateProfileDto, @UploadedFile() file) {
+    return this.userService.updateProfile(req, dto, file)
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Delete()
+  @ApiOperation({ summary: 'Удалить профиль' })
+  @ApiResponse({
+    status: 200, schema: {
+      example: getStatusOk(),
+    }
+  })
+  public async deleteProfile(@Req() req: Request) {
+    return this.userService.delete(req)
   }
 }

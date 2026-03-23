@@ -7,6 +7,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 import { getRecaptchaConfig } from '../config/recaptcha.config'
 import { EmailConfirmationModule } from './email-confirmation/email-confirmation.module'
 import { MailService } from '../mail/mail.service'
+import { S3Service } from '../s3/s3.service'
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { MailService } from '../mail/mail.service'
     forwardRef(() => EmailConfirmationModule),
   ],
   controllers: [AuthController],
-  providers: [AuthService, UserService, MailService],
+  providers: [AuthService, UserService, MailService, S3Service],
   exports: [AuthService],
 })
 export class AuthModule {}
