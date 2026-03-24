@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { render } from '@react-email/components'
 import { ConfirmationTemplate } from './templates/confirmation.template'
+import { PasswordResetTemplate } from './templates/password-reset.template'
 
 @Injectable()
 export class MailService {
@@ -24,5 +25,12 @@ export class MailService {
       subject,
       html,
     })
+  }
+
+  public async sendPasswordResetEmail(email: string, token: string) {
+    const domain = this.configService.getOrThrow('FRONT_DOMAIN')
+    const html = await render(PasswordResetTemplate({ domain, token }))
+
+    return this.sendMail(email, 'Восстановление пароля', html)
   }
 }
