@@ -51,8 +51,7 @@ jobs:
             git pull
 
             # ОБНОВЛЯЕМ ТОЛЬКО backend
-            docker-compose down backend || true
-            docker-compose build backend
+            docker-compose build backend || exit 1
             docker-compose up -d backend
 
             # Prisma (внутри backend-контейнера)
@@ -84,8 +83,7 @@ jobs:
             git pull
 
             # ОБНОВЛЯЕМ ТОЛЬКО frontend
-            docker-compose down frontend || true
-            docker-compose build frontend
+            docker-compose build frontend || exit 1
             docker-compose up -d frontend
 
             docker system prune -af
