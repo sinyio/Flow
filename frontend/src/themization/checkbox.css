@@ -1,0 +1,3 @@
+span.g-checkbox__indicator::before {
+  background-color: var(--background-color);
+}

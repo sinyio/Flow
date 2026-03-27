@@ -1,6 +1,7 @@
 'use client'
 
 import { useMemo } from 'react'
+import Image from 'next/image'
 
 import { ProfileDetails, ProfileHeader } from '@components/profile'
 import { Tabs } from '@components/tabs/component'
@@ -11,19 +12,25 @@ import { StarIcon } from '@components/svgr/star-icon/icon'
 import { VerifiedIcon } from '@components/svgr/verified-icon/icon'
 import { getNoun } from '@utils/get-noun'
 import { getDate } from '@utils/get-date'
+import { ProfileName } from '@components/profile/profile-name/component'
+import { useResponsive } from '@utils/hooks/use-responsive'
+import styles from './view.module.css'
+import { PageContainer } from '@components/global/page-container'
 
 export interface IProfileViewProps {
   user?: TUser
 }
 
 const ProfileView = ({ user }: IProfileViewProps) => {
+  const { device } = useResponsive()
+
   const name = useMemo(() => {
     if (user?.firstName && !user?.lastName) {
       return user.firstName
     } else if (user?.firstName && user?.lastName) {
       return `${user?.firstName} ${user?.lastName}`
     } else {
-      return 'Неизвестный пользователь'
+      return 'Дмитрий Смотряев'
     }
   }, [user?.firstName, user?.lastName])
 
@@ -52,17 +59,66 @@ const ProfileView = ({ user }: IProfileViewProps) => {
         },
       ]
 
-  const canEdit = true
+  const canEdit = false
 
   return (
     <>
-      <ProfileHeader canEdit={canEdit} name={name} subtitle="ответственный исполнитель" />
+      {device === 'mobile' ? (
+        <PageContainer inner={{ className: styles.profilePageInner }}>
+          <>
+            <ProfileHeader canEdit={canEdit} name={name} subtitle="ответственный исполнитель" />
 
-      <ProfileDetails lines={profileDetails} />
+            <div className={styles.profileDetails}>
+              <ProfileDetails lines={profileDetails} />
+            </div>
 
-      <div style={{ margin: '0 16px' }}>
-        <Tabs tabs={mockTabs(canEdit)} />
-      </div>
+            <div className={styles.profileTabs}>
+              <Tabs tabs={mockTabs(canEdit)} />
+            </div>
+          </>
+        </PageContainer>
+      ) : (
+        <>
+          <div className={styles.hero}>
+            <div className={styles.heroInner}>
+              <div className={styles.profileName}>
+                <ProfileName
+                  canEdit={canEdit}
+                  name={name}
+                  subtitle="ответственный исполнитель"
+                  isBackdrop={false}
+                />
+              </div>
+            </div>
+            <Image
+              priority
+              fill
+              alt=""
+              src="/profile/profile-head.png"
+              className={styles.backgroundImage}
+            />
+          </div>
+          <PageContainer inner={{ className: styles.profilePageInner }}>
+            <Image
+              priority
+              width={455}
+              height={606}
+              alt=""
+              src="/profile/profile-head.png"
+              className={styles.profileImage}
+            />
+            <div className={styles.rightSide}>
+              <div className={styles.profileDetails}>
+                <ProfileDetails lines={profileDetails} />
+              </div>
+
+              <div className={styles.profileTabs}>
+                <Tabs tabs={mockTabs(canEdit)} />
+              </div>
+            </div>
+          </PageContainer>
+        </>
+      )}
     </>
   )
 }

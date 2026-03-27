@@ -1,0 +1,42 @@
+.outer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--g-spacing-2, 8px) var(--g-spacing-6, 24px);
+  border-radius: var(--g-border-radius-2xl, 32px);
+  overflow: hidden;
+  width: 100%;
+  max-width: 698px;
+  box-sizing: border-box;
+}
+
+.logo {
+  width: 96px;
+  height: 48px;
+  flex: 0 0 auto;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: var(--g-spacing-4, 16px);
+  white-space: nowrap;
+  list-style: none;
+}
+
+.navLink:hover {
+  text-decoration: underline;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--g-spacing-2, 8px);
+  white-space: nowrap;
+}

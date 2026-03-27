@@ -14,6 +14,12 @@ body {
 }
 
 .g-root {
+  --background-color: rgba(255, 255, 255, 0.85);
+
+  --page-color: #f2f3f2;
+  
+  background-color: var(--page-color);
+
   --g-text-body-font-family: 'TildaSansRegular';
 
   --g-text-body1-font-family: 'TildaSansRegular';
@@ -62,7 +68,6 @@ body {
 
 .g-root_theme_light {
   --g-color-base-generic-accent-disabled: rgba(115, 115, 115, 1);
-  --background-color: rgba(255, 255, 255, 0.85);
 
   --g-color-base-generic: var(--g-color-base-light);
   --g-color-base-generic-hover: var(--g-color-base-light-hover);
@@ -70,6 +75,9 @@ body {
   --g-color-base-brand: rgba(98, 139, 53, 1);
   --g-color-line-brand: rgba(98, 139, 53, 1);
   --g-color-base-brand-hover: rgba(98, 139, 53, 0.85);
+
+  --g-color-base-selection: rgba(98, 139, 53, 0.25);
+  --g-color-base-selection-hover: rgba(98, 139, 53, 0.35);
 
   --g-text-input-border-width: 1px;
   --g-text-area-border-width: 1px;

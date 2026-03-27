@@ -1,0 +1,50 @@
+.form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+.section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sectionTitleBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.passwordBlock {
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.7);
+  padding: 0 0 8px;
+}
+
+.saveButton {
+  width: min(455px, 100%);
+}
+
+.managementButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.actionButton {
+  width: min(455px, 100%);
+}
+
+@media (max-width: 700px) {
+  .form {
+    gap: 32px;
+  }
+
+  .saveButton,
+  .actionButton {
+    width: 100%;
+  }
+}

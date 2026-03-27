@@ -1,23 +1,20 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button, useToaster } from '@gravity-ui/uikit'
+import { Button, Link, Text, useToaster } from '@gravity-ui/uikit'
 
-import { PasswordRequirements } from '@components/password-requirements/component'
-import { TextLink } from '@components/text-link/component'
-import { Typography } from '@components/typography/component'
+import { PasswordRequirements } from '@components/templates/password-requirements'
+import { LegalBlock } from '@components/templates/legal-block'
 import { EmailField } from '@components/form/email-field/field'
 import { PasswordField } from '@components/form/password-field/field'
 import { CheckboxField } from '@components/form/checkbox-field/field'
-import { LegalBlock } from '@components/legal-block/component'
-import { getPasswordRequirementItems } from '@utils/password-check'
 import { SignUpFormValues } from 'src/types/authorization'
-import { signUpSchema } from 'src/constants/validation-schema'
 import styles from './step.module.css'
 import { useAuthorizationStore } from '@utils/stores/authorization'
 import { useAxiosInstance } from '@api/use-axios-instance'
+import { signUpSchema } from './validation-schema'
 
 export const SignUpStep = () => {
-  const { control, handleSubmit, formState, watch } = useForm<SignUpFormValues>({
+  const { control, handleSubmit, formState } = useForm<SignUpFormValues>({
     defaultValues: {
       email: '',
       password: '',
@@ -27,10 +24,6 @@ export const SignUpStep = () => {
     mode: 'onChange',
     resolver: zodResolver(signUpSchema),
   })
-
-  const passwordValue = watch('password')
-  const passwordHasError = Boolean(formState.errors.password)
-  const requirementItems = getPasswordRequirementItems(passwordValue ?? '', passwordHasError)
 
   const axiosInstance = useAxiosInstance()
 
@@ -65,15 +58,15 @@ export const SignUpStep = () => {
         />
 
         <div className={styles.reqirementsAndCheckbox}>
-          <PasswordRequirements items={requirementItems} />
+          <PasswordRequirements control={control} />
           <CheckboxField controllerProps={{ control, name: 'rememberMe' }} />
         </div>
       </div>
       <div className={styles.actions}>
         {formState.errors.root?.message && (
-          <Typography variant="body1" style={{ color: 'var(--g-color-text-danger)' }}>
+          <Text variant="body-1" style={{ color: 'var(--g-color-text-danger)' }}>
             {formState.errors.root.message}
-          </Typography>
+          </Text>
         )}
         <Button
           type="submit"
@@ -82,23 +75,23 @@ export const SignUpStep = () => {
           style={{ width: '100%', marginBottom: '8px' }}
           disabled={!formState.isValid || isLoading.register}
         >
-          <Typography variant="header1">Создать аккаунт</Typography>
+          <Text variant="header-1">Создать аккаунт</Text>
         </Button>
 
         <LegalBlock />
 
         <div className={styles.hasAccount}>
-          <Typography variant="body1">Уже есть аккаунт?</Typography>{' '}
-          <TextLink
-            style={{ color: 'inherit' }}
+          <Text variant="body-1">Уже есть аккаунт?</Text>{' '}
+          <Link
             href="#"
+            view="secondary"
             onClick={e => {
               e.preventDefault()
               setAuthorizationStep('sign-in')
             }}
           >
             Войти
-          </TextLink>
+          </Link>
         </div>
       </div>
     </form>

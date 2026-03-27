@@ -1,9 +1,8 @@
 import Image from 'next/image'
-import { Button, Label } from '@gravity-ui/uikit'
+import { Button, Label, Text } from '@gravity-ui/uikit'
 
+import { Card } from '../../templates/card'
 import styles from './component.module.css'
-import { Typography } from '@components/typography/component'
-import { Card } from '@components/card/component'
 import { statusesMap, TAd } from './types'
 
 export interface IAdCardProps extends TAd {
@@ -21,20 +20,20 @@ export const AdCard = ({ status, price, route, date, imageUrl, canEdit }: IAdCar
 
       <div className={styles.rightContainer}>
         <div className={styles.priceAndRoute}>
-          <Typography variant="display1" className={styles.text}>
+          <Text variant="display-1" className={styles.text}>
             {price}
-          </Typography>
-          <Typography variant="subheader3" className={styles.status}>
+          </Text>
+          <Text variant="subheader-3" className={styles.status}>
             {route}
-          </Typography>
+          </Text>
         </div>
-        <Typography
-          variant="body1"
+        <Text
+          variant="body-1"
           style={{ color: 'var(--g-color-text-secondary)' }}
           className={styles.status}
         >
           {date}
-        </Typography>
+        </Text>
       </div>
     </div>
     {canEdit && status === 'active' ? (

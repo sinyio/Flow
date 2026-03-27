@@ -1,0 +1,16 @@
+button.g-tab-list_size_xl {
+  --_--item-gap: 0;
+}
+
+button.g-tab {
+  width: 100%;
+}
+
+div.g-tab-list {
+  flex-wrap: nowrap;
+  gap: 20px;
+}
+
+div.g-tab-list_size_xl {
+  --_--item-gap: 0;
+}

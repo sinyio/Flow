@@ -1,0 +1,7 @@
+a.g-link_view_secondary:hover {
+    color: var(--g-color-text-complementary);
+}
+
+a.g-link_view_primary:hover {
+    color: var(--g-color-text-complementary);
+}

@@ -1,7 +1,7 @@
 import { IApiError } from '@api/types'
 
 export type TMeSuccessfullResponse = {
-  status: true
+  userId: string
 }
 
 export type TMeResponse = TMeSuccessfullResponse | IApiError

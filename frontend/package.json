@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@gravity-ui/date-utils": "^2.7.0",
     "@hookform/resolvers": "^5.2.2",
     "axios": "^1.13.6",
     "next": "16.2.1",
@@ -19,6 +20,7 @@
     "zustand": "^5.0.12"
   },
   "devDependencies": {
+    "@gravity-ui/date-components": "^3.4.2",
     "@gravity-ui/uikit": "^7.33.0",
     "@types/node": "^20",
     "@types/react": "^19",

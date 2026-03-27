@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 
 import { useMediaQuery } from './use-media-query'
+import { useServerData } from '@utils/server-data-provider'
 
 export const useResponsive = (): {
   device: 'mobile' | 'tablet' | 'desktop'
@@ -11,15 +12,17 @@ export const useResponsive = (): {
   // On server we can't evaluate `window.matchMedia`, so we render with `defaultValue=false`,
   // then update after hydration.
 
+  const data = useServerData()
+
   const [vw, setVw] = useState<number | undefined>()
   const [vh, setVh] = useState<number | undefined>()
 
-  const isMobile = useMediaQuery('(max-width: 500px)', {
-    defaultValue: false,
+  const isTablet = useMediaQuery('(min-width: 834px)', {
+    defaultValue: data?.deviceType === 'tablet' ? true : false,
     initializeWithValue: false,
   })
-  const isTablet = useMediaQuery('(max-width: 1200px)', {
-    defaultValue: false,
+  const isDesktop = useMediaQuery('(min-width: 1280px)', {
+    defaultValue: data?.deviceType === 'desktop' ? true : false,
     initializeWithValue: false,
   })
 
@@ -41,14 +44,14 @@ export const useResponsive = (): {
   }, [])
 
   const device = useMemo(() => {
-    if (isMobile) {
-      return 'mobile'
+    if (isDesktop) {
+      return 'desktop'
     } else if (isTablet) {
       return 'tablet'
     } else {
-      return 'desktop'
+      return 'mobile'
     }
-  }, [isMobile, isTablet])
+  }, [isTablet, isDesktop])
 
   return { device, vw, vh }
 }

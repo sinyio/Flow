@@ -1,0 +1,55 @@
+.gap {
+  height: 86px;
+  width: 100%;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  margin: 0 16px;
+}
+
+.topRow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.backButton {
+  flex-shrink: 0;
+}
+
+.title {
+  margin: 0;
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.avatarWrap {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.editAvatarButton {
+  position: absolute;
+  top: 28px;
+  left: calc(50% + 34px);
+}
+
+@media (min-width: 834px) {
+  .page {
+    gap: 20px;
+  }
+
+  .divider {
+    display: none;
+  }
+}

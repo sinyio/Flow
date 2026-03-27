@@ -1,5 +1,6 @@
 'use client'
 
+import { Button } from '@gravity-ui/uikit'
 import { useRouter } from 'next/navigation'
 
 const shellStyles = {
@@ -18,9 +19,9 @@ const ErrorFallbackShell = ({ title, message, onRetry }: IShellProps) => (
   <div style={shellStyles.root}>
     <h2 style={shellStyles.title}>{title}</h2>
     <p style={shellStyles.text}>{message}</p>
-    <button type="button" onClick={onRetry}>
+    <Button size="xl" view="action" onClick={onRetry}>
       Попробовать снова
-    </button>
+    </Button>
   </div>
 )
 

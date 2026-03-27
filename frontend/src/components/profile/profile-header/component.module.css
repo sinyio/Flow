@@ -1,86 +1,17 @@
 .container {
   position: relative;
-  height: 100%;
-}
-
-.header {
-  position: absolute;
-  display: flex;
-  justify-content: space-between;
-  top: 0;
-  width: 100%;
-  box-sizing: border-box;
-  height: fit-content;
-  padding: 52px 16px 0;
+  height: 536px;
   overflow: hidden;
 }
 
 .profileImage {
-  position: relative !important;
   display: block;
+  object-fit: cover;
 }
 
-.circleButton {
-  width: 44px;
-  height: 44px;
-  border-radius: 20px;
-  background: var(--g-color-base-light, #fff);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: auto;
-}
-
-.info {
-  position: absolute;
+.profileName {
+  position: absolute !important;
   padding: 20px 16px 28px;
-  bottom: -1;
-  width: 100%;
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-}
-
-.info::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  backdrop-filter: blur(5px);
-  mask-image: linear-gradient(to top, rgba(0, 0, 0, 1) 72%, rgba(0, 0, 0, 0) 100%);
-  background-image: linear-gradient(to top, #f2f3f2, rgba(255, 255, 255, 0));
-}
-
-.nameRow {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  z-index: 1;
-}
-
-.name {
-  margin: 0;
-  font-weight: 600;
-  color: #fff;
-  text-align: center;
-}
-
-.roleRow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  color: #fff;
-}
-
-.roleIcon {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.35);
-}
-
-.messageButton {
-  width: 100%;
+  bottom: 0px;
 }

@@ -2,14 +2,15 @@
 
 import Image from 'next/image'
 import { ReactNode } from 'react'
+import { Text } from '@gravity-ui/uikit'
 
-import { LiquidGlassBlock } from '@components/liquid-glass-block/component'
-import { Typography } from '@components/typography/component'
+import { LiquidGlassBlock } from '@components/global/liquid-glass-block'
 import { TAuthorizationStep, useAuthorizationStore } from '@utils/stores/authorization'
 import { ForgotPasswordStep } from './steps/forgot-password-step/step'
 import { SignInStep } from './steps/sign-in-step/step'
 import { SignUpStep } from './steps/sign-up-step/step'
 import styles from './view.module.css'
+import { PageContainer } from '@components/global/page-container'
 
 const headerMap: Record<TAuthorizationStep, string> = {
   'sign-up': 'Регистрация',
@@ -29,7 +30,7 @@ const AuthorizationView = () => {
   const { authorizationStep } = useAuthorizationStore(store => store)
 
   return (
-    <>
+    <PageContainer>
       <div aria-hidden="true" className={styles.background}>
         <Image
           priority
@@ -41,16 +42,16 @@ const AuthorizationView = () => {
       </div>
       <div className={styles.content}>
         <LiquidGlassBlock className={styles.glassBlock}>
-          <Typography variant="display3" className={styles.title}>
+          <Text variant="display-3" className={styles.title}>
             {headerMap[authorizationStep]}
-          </Typography>
+          </Text>
 
           <div className={styles.divider} />
 
           {stepsMap[authorizationStep]}
         </LiquidGlassBlock>
       </div>
-    </>
+    </PageContainer>
   )
 }
 

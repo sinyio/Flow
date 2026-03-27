@@ -2,8 +2,6 @@ import Image from 'next/image'
 
 import styles from './page.module.css'
 
-console.log(process.env.NEXT_PUBLIC_API_HOST)
-
 export const Home = () => (
   <div className={styles.page}>
     <main className={styles.main}>

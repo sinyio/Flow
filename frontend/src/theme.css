@@ -1,70 +1,11 @@
-button.g-button {
-  font-family: 'TildaSansSemibold';
-  font-weight: 600;
-}
-
-span.g-checkbox__indicator::before {
-  background-color: var(--background-color);
-}
-
-button.g-button_size_l {
-  --_--height: 36px;
-  min-width: 36px;
-}
-
-button.g-button_size_xl {
-  --_--height: 48px;
-  min-width: 48px;
-}
-
-button.g-button_view_action {
-  --_--background-color: rgba(38, 38, 38, 1);
-  --_--background-color-hover: rgba(38, 38, 38, 0.85);
-}
-
-button.g-button_view_action::before {
-  box-shadow: 0px 1px 1px 0px rgba(255, 255, 255, 0.3) inset;
-  box-shadow: 0px 1px 1px 0px rgba(255, 255, 255, 0.3) inset;
-  box-shadow: 0px -1px 1px 0px rgba(255, 255, 255, 0.3) inset;
-}
-
-button.g-button_view_flat {
-  --_--border-radius: 50%;
-}
-
-div.g-text-input__additional-content.g-text-input__additional-content_placement_end {
-  padding-inline-end: 8px;
-}
-
-input.g-text-input__control::placeholder {
-  font-size: 15px;
-  line-height: 20px;
-}
-
-div.g-label_theme_normal {
-  --_--bg-color: var(--g-color-private-black-50);
-  --_--text-color: var(--g-color-text-complementary);
-}
-
-div.g-label_size_s {
-  --_--height: 26px;
-}
-
-button.g-tab-list_size_xl {
-  --_--item-gap: 0;
-}
-
-button.g-tab {
-  width: 100%;
-}
-
-div.g-tab-list {
-  flex-wrap: nowrap;
-  gap: 20px;
-}
-
-div.g-tab-list_size_xl {
-  --_--item-gap: 0;
-}
-
+@import url('./themization/select.css');
+@import url('./themization/button.css');
+@import url('./themization/tab.css');
+@import url('./themization/checkbox.css');
+@import url('./themization/text-input.css');
+@import url('./themization/label.css');
+@import url('./themization/date-picker.css');
+@import url('./themization/avatar.css');
+@import url('./themization/accordion.css');
+@import url('./themization/link.css');
 

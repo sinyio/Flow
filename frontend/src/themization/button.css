@@ -1,0 +1,29 @@
+button.g-button {
+  font-family: 'TildaSansSemibold';
+  font-weight: 600;
+}
+
+button.g-button_size_l {
+  --_--height: 36px;
+  min-width: 36px;
+}
+
+button.g-button_size_xl {
+  --_--height: 48px;
+  min-width: 48px;
+}
+
+button.g-button_view_action {
+  --_--background-color: rgba(38, 38, 38, 1);
+  --_--background-color-hover: rgba(38, 38, 38, 0.85);
+}
+
+button.g-button_view_action::before {
+  box-shadow: 0px 1px 1px 0px rgba(255, 255, 255, 0.3) inset;
+  box-shadow: 0px 1px 1px 0px rgba(255, 255, 255, 0.3) inset;
+  box-shadow: 0px -1px 1px 0px rgba(255, 255, 255, 0.3) inset;
+}
+
+button.g-button_view_flat {
+  --_--border-radius: 50%;
+}

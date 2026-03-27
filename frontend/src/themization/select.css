@@ -1,0 +1,19 @@
+button.g-select-control__button::before {
+  background-color: var(--g-text-input-background-color);
+}
+
+button.g-select-control__button:hover::before {
+  background-color: var(--g-text-input-background-color);
+}
+
+span.g-select-control__label {
+  z-index: 1;
+}
+
+span.g-select-control__option-text {
+  z-index: 1;
+}
+
+svg.g-select-control__chevron-icon {
+  z-index: 1;
+}

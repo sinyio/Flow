@@ -1,13 +1,8 @@
 import z from 'zod'
 
-import { forgotPasswordSchema, signInSchema, signUpSchema } from 'src/constants/validation-schema'
-
-export type PasswordRequirementStatus = 'unmet' | 'met' | 'error'
-
-export interface PasswordRequirementItem {
-  label: string
-  status: PasswordRequirementStatus
-}
+import { forgotPasswordSchema } from '@views/authorization/steps/forgot-password-step/validation-schema'
+import { signInSchema } from '@views/authorization/steps/sign-in-step/validation-schema'
+import { signUpSchema } from '@views/authorization/steps/sign-up-step/validation-schema'
 
 export type SignUpFormValues = z.infer<typeof signUpSchema>
 

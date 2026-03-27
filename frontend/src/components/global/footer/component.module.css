@@ -1,0 +1,16 @@
+.container {
+    padding: 28px 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--g-color-base-background);
+    border-top: 1px solid var(--g-color-line-generic);
+    color: var(--g-color-text-secondary);
+}
+
+.linksContainer {
+    display: flex;
+    gap: 20px;
+    justify-content: flex-start;
+    align-items: center;
+}

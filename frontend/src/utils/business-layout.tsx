@@ -6,12 +6,14 @@ import { redirect, usePathname } from 'next/navigation'
 
 import { me } from '@api/auth'
 import { isProtectedPath } from './is-protected-path'
+import { ServerData, TServerData } from './server-data-provider'
 
 interface BusinessLayoutProps {
   children?: ReactNode
+  serverData: TServerData
 }
 
-export const BusinessLayout = ({ children }: BusinessLayoutProps) => {
+export const BusinessLayout = ({ children, serverData }: BusinessLayoutProps) => {
   const pathname = usePathname()
 
   useEffect(() => {
@@ -23,8 +25,10 @@ export const BusinessLayout = ({ children }: BusinessLayoutProps) => {
   }, [])
 
   return (
-    <ThemeProvider scoped theme="light">
-      {children}
-    </ThemeProvider>
+    <ServerData.Provider value={serverData}>
+      <ThemeProvider scoped theme="light">
+        {children}
+      </ThemeProvider>
+    </ServerData.Provider>
   )
 }

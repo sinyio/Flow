@@ -1,9 +1,8 @@
 'use client'
 
-import { Label } from '@gravity-ui/uikit'
+import { Label, Text } from '@gravity-ui/uikit'
 
 import styles from './component.module.css'
-import { Typography } from '@components/typography/component'
 
 export interface ProfileStat {
   label: string
@@ -14,10 +13,10 @@ interface ProfileStatsProps {
 }
 
 export const ProfileStats = ({ stats }: ProfileStatsProps) => (
-  <div className={styles.root}>
+  <div className={styles.container}>
     {stats.map((stat, index) => (
       <Label key={stat.label + index} size="s">
-        <Typography variant="body2">{stat.label}</Typography>
+        <Text variant="body-2">{stat.label}</Text>
       </Label>
     ))}
   </div>

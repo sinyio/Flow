@@ -1,10 +1,9 @@
-import { Avatar, Button, Icon, User } from '@gravity-ui/uikit'
+import { Avatar, Button, Icon, Text, User } from '@gravity-ui/uikit'
 
+import { Card } from '../../templates/card'
 import styles from './component.module.css'
 import { TReview } from './types'
-import { Typography } from '@components/typography/component'
 import { StarFilledIcon } from '@components/svgr/star-filled-icon/icon'
-import { Card } from '@components/card/component'
 import { FlagIcon } from '@components/svgr/flag-icon/icon'
 
 export interface IReviewCardProps extends TReview {
@@ -38,7 +37,7 @@ export const ReviewCard = ({
       )}
     </div>
 
-    <Typography variant="body2" className={styles.status}>
+    <Text variant="body-2" className={styles.status}>
       {Array.from(Array(5)).map((_, index) => (
         <StarFilledIcon
           key={'star-' + index}
@@ -46,10 +45,10 @@ export const ReviewCard = ({
         />
       ))}
       {status}
-    </Typography>
+    </Text>
 
-    <Typography variant="body3" className={styles.text}>
+    <Text variant="body-3" className={styles.text}>
       {description}
-    </Typography>
+    </Text>
   </Card>
 )
