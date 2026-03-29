@@ -19,7 +19,6 @@ import { UserModule } from './user/user.module'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
-  app.setGlobalPrefix('api')
 
   const config = app.get(ConfigService)
   const logger = new Logger()
@@ -59,6 +58,7 @@ async function bootstrap() {
         httpOnly: parseBoolean(config.getOrThrow('SESSION_HTTP_ONLY')),
         secure: parseBoolean(config.getOrThrow('SESSION_SECURE')),
         sameSite: 'lax',
+        domain: config.getOrThrow('SESSION_DOMAIN')
       },
       store: new RedisStore({
         client: redisClient,
