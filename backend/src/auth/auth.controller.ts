@@ -57,7 +57,7 @@ export class AuthController {
     status: 200,
     schema: {
       example: {
-        status: 'ok',
+        userId: 'id_123',
       },
     },
   })
@@ -105,7 +105,7 @@ export class AuthController {
     status: 200,
     schema: {
       example: {
-        status: true,
+        userId: 'id_123',
       },
     },
   })
@@ -133,7 +133,7 @@ export class AuthController {
     status: 200,
     schema: {
       example: {
-        status: true,
+        userId: 'id_123',
       },
     },
   })
