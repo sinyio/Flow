@@ -12,6 +12,8 @@ export type TUser = {
   authoredAdsCount: number
   receivedReviewsCount: number
   authoredReviewsCount: number
+  dateOfBirth: string
+  gender: 'MALE' | 'FEMALE'
   userState: {
     canEdit: boolean
   }

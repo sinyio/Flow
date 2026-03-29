@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm, type SubmitHandler } from 'react-hook-form'
 import { Button, Text } from '@gravity-ui/uikit'
 
+import { deleteUser } from '@api/user/delete-user'
 import { TSettingsFormValues } from './types'
 import { TextField } from '@components/form/text-field/field'
 import { SelectField } from '@components/form/select-field/field'
@@ -12,15 +13,23 @@ import { PasswordField } from '@components/form/password-field/field'
 import { PasswordRequirements } from '@components/templates/password-requirements'
 import { sex } from './constants'
 import styles from './component.module.css'
+import { TUser } from '@api/user/get-user'
+import { logout } from '@api/auth'
+import { useAxiosInstance } from '@api/use-axios-instance'
+import { updateUser } from '@api/user/update-user'
 
-export const SettingsForm = () => {
+export interface ISettingsFormProps {
+  user: TUser
+}
+
+export const SettingsForm = ({ user }: ISettingsFormProps) => {
   const { control, handleSubmit, formState } = useForm<TSettingsFormValues>({
     defaultValues: {
-      firstName: '',
-      lastName: '',
-      sex: '',
-      dateOfBirth: '',
-      email: '',
+      firstName: user.firstName || '',
+      lastName: user.lastName || '',
+      sex: user.gender,
+      dateOfBirth: user.dateOfBirth,
+      contacts: '',
       currentPassword: '',
       password: '',
     },
@@ -28,11 +37,15 @@ export const SettingsForm = () => {
     resolver: zodResolver(settingsSchema),
   })
 
-  const onSubmit: SubmitHandler<TSettingsFormValues> = () => {}
+  const axiosInstance = useAxiosInstance()
+
+  const onSubmit: SubmitHandler<TSettingsFormValues> = async data => {
+    await updateUser(data, axiosInstance)
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-      <div className={styles.section}>
+      <div className={styles.fields}>
         <TextField size="xl" label="Имя:" controllerProps={{ control, name: 'firstName' }} />
 
         <TextField size="xl" label="Фамилия:" controllerProps={{ control, name: 'lastName' }} />
@@ -59,8 +72,12 @@ export const SettingsForm = () => {
             Другие пользователи не увидят ваши контакты, пока вы ими не поделитесь
           </Text>
         </div>
-        <EmailField size="xl" controllerProps={{ control, name: 'email' }} />
+        <EmailField size="xl" controllerProps={{ control, name: 'contacts' }} />
       </div>
+
+      <Button type="submit" size="xl" className={styles.saveButton} disabled={!formState.isValid}>
+        Сохранить
+      </Button>
 
       <div className={styles.section}>
         <div className={styles.sectionTitleBlock}>
@@ -70,19 +87,23 @@ export const SettingsForm = () => {
           </Text>
         </div>
 
-        <PasswordField
-          size="xl"
-          placeholder="Введите текущий пароль"
-          controllerProps={{ control, name: 'currentPassword' }}
-        />
-
-        <div className={styles.passwordBlock}>
+        <div className={styles.fields}>
           <PasswordField
             size="xl"
-            placeholder="Введите новый пароль"
-            controllerProps={{ control, name: 'password' }}
+            placeholder="Введите текущий пароль"
+            controllerProps={{ control, name: 'currentPassword' }}
           />
-          <PasswordRequirements control={control} />
+
+          <div>
+            <PasswordField
+              size="xl"
+              placeholder="Введите новый пароль"
+              controllerProps={{ control, name: 'password' }}
+            />
+            <div className={styles.requirementsBlock}>
+              <PasswordRequirements control={control} />
+            </div>
+          </div>
         </div>
 
         <Button type="submit" size="xl" className={styles.saveButton} disabled={!formState.isValid}>
@@ -93,10 +114,21 @@ export const SettingsForm = () => {
       <div className={styles.section}>
         <Text variant="header-2">Управление</Text>
         <div className={styles.managementButtons}>
-          <Button type="button" size="xl" className={styles.actionButton}>
+          <Button
+            type="button"
+            size="xl"
+            onClick={() => logout(axiosInstance)}
+            className={styles.actionButton}
+          >
             Выйти
           </Button>
-          <Button type="button" size="xl" view="outlined-danger" className={styles.actionButton}>
+          <Button
+            type="button"
+            size="xl"
+            onClick={() => deleteUser(axiosInstance)}
+            view="outlined-danger"
+            className={styles.actionButton}
+          >
             Удалить профиль
           </Button>
         </div>

@@ -1,5 +1,6 @@
 import { dateTime, dateTimeParse } from '@gravity-ui/date-utils'
 import { z } from 'zod'
+
 import { signUpPasswordFieldSchema } from '@views/authorization/steps/sign-up-step/validation-schema'
 
 const trim = (value: string) => value.trim()
@@ -53,20 +54,22 @@ const optionalEmail = z
 
 const optionalPassword = z.union([z.literal(''), signUpPasswordFieldSchema])
 
-export const settingsSchema = z.object({
-  firstName: optionalProfileText('Укажите имя'),
-  lastName: optionalProfileText('Укажите фамилию'),
-  sex: z.union([z.literal(''), z.enum(['male', 'female'])]),
-  dateOfBirth: dateOfBirthOrEmpty,
-  email: optionalEmail,
-  currentPassword: z.string(),
-  password: optionalPassword,
-}).refine(
-  data =>
-    (data.currentPassword === '' && data.password === '') ||
-    (data.currentPassword.length > 0 && data.password.length > 0),
-  {
-    path: ['password'],
-    message: 'Чтобы сменить пароль, заполните оба поля',
-  }
-)
+export const settingsSchema = z
+  .object({
+    firstName: optionalProfileText('Укажите имя'),
+    lastName: optionalProfileText('Укажите фамилию'),
+    sex: z.union([z.literal(''), z.enum(['MALE', 'FEMALE'])]),
+    dateOfBirth: dateOfBirthOrEmpty,
+    contacts: optionalEmail,
+    currentPassword: z.string(),
+    password: optionalPassword,
+  })
+  .refine(
+    data =>
+      (data.currentPassword === '' && data.password === '') ||
+      (data.currentPassword.length > 0 && data.password.length > 0),
+    {
+      path: ['password'],
+      message: 'Чтобы сменить пароль, заполните оба поля',
+    }
+  )

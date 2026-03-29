@@ -4,13 +4,13 @@ import { Avatar, Button, Icon, Text } from '@gravity-ui/uikit'
 
 import { TUser } from '@api/user/get-user'
 import { SettingsForm } from './form/component'
-import { ArrowIcon } from '@components/svgr/arrow-icon/icon'
 import { Pen2Icon } from '@components/svgr/pen-2-icon/icon'
 import styles from './view.module.css'
 import { useResponsive } from '@utils/hooks/use-responsive'
+import { PageContainer } from '@components/global/page-container'
 
 export interface IProfileViewProps {
-  user?: TUser
+  user: TUser
 }
 
 const ProfileSettings = ({ user }: IProfileViewProps) => {
@@ -19,7 +19,7 @@ const ProfileSettings = ({ user }: IProfileViewProps) => {
   return (
     <>
       <div className={styles.gap} />
-      <section className={styles.page}>
+      <PageContainer inner={{ className: styles.page }}>
         <div className={styles.topRow}>
           <Text variant="display-1" className={styles.title}>
             Настройки профиля
@@ -40,8 +40,8 @@ const ProfileSettings = ({ user }: IProfileViewProps) => {
           </div>
         </div>
 
-        <SettingsForm />
-      </section>
+        <SettingsForm user={user} />
+      </PageContainer>
     </>
   )
 }

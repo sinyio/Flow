@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button, Link, Text } from '@gravity-ui/uikit'
+import { Button, Link, Text, useToaster } from '@gravity-ui/uikit'
 import { useRouter } from 'next/navigation'
 
 import { signInSchema } from './validation-schema'
@@ -24,14 +24,26 @@ export const SignInStep = () => {
   const axiosInstance = useAxiosInstance()
   const router = useRouter()
 
+  const { add } = useToaster()
+
   const { setAuthorizationStep, login, isLoading } = useAuthorizationStore(store => store)
 
   const onSubmit = async (data: SignInFormValues) => {
-    const response = await login({ email: data.email, password: data.password }, axiosInstance)
-
-    if ('status' in response) {
-      router.push('/')
-    }
+    await login({ email: data.email, password: data.password }, axiosInstance)
+      .then(response => {
+        if ('status' in response) {
+          router.push('/')
+        }
+      })
+      .catch(e =>
+        add({
+          isClosable: true,
+          theme: 'warning',
+          name: 'register_error',
+          title: 'Ошибка',
+          content: e.message,
+        })
+      )
   }
 
   return (

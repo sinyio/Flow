@@ -20,7 +20,7 @@ interface IPasswordRequirementsProps<T extends FieldValues> {
 export const PasswordRequirements = <T extends FieldValues>({
   control,
 }: IPasswordRequirementsProps<T>) => {
-  const password = useWatch({ control, name: 'password' as T['name'] }) ?? ''
+  const password = useWatch({ control, name: 'password' as T['password'] }) ?? ''
 
   const items = useMemo(() => buildPasswordRequirementItems(password), [password])
 

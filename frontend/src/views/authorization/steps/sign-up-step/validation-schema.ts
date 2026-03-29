@@ -1,4 +1,4 @@
-import type { IPasswordRequirement } from '@components/password-requirements/component'
+import type { IPasswordRequirement } from '@components/templates/password-requirements'
 import { z } from 'zod'
 
 export const passwordRequirementChecks = {
@@ -36,7 +36,8 @@ function statusFor(met: boolean, hasSchemaError: boolean): IPasswordRequirement[
 
 /** Статусы строк подсказок — из той же схемы, что и resolver, без дублирования логики из формы */
 export function buildPasswordRequirementItems(password: string): IPasswordRequirement[] {
-  const hasSchemaError = !signUpPasswordFieldSchema.safeParse(password).success
+  const shouldValidate = password.length > 0
+  const hasSchemaError = shouldValidate && !signUpPasswordFieldSchema.safeParse(password).success
 
   return [
     {

@@ -18,11 +18,15 @@
   padding: 0 16px;
 }
 
+div.profilePageOuter {
+  height: fit-content;
+  min-height: unset;
+}
+
 div.profilePageInner {
   box-sizing: border-box;
   width: 100%;
   background: var(--page-color);
-  min-height: 100vh;
 }
 
 @media (min-width: 834px) {

@@ -8,11 +8,12 @@ interface ProfileHeaderProps {
   name: string
   subtitle: string
   canEdit: boolean
+  photoUrl: string
 }
 
-export const ProfileHeader = ({ canEdit, name, subtitle }: ProfileHeaderProps) => (
+export const ProfileHeader = ({ canEdit, name, subtitle, photoUrl }: ProfileHeaderProps) => (
   <section className={styles.container}>
-    <Image priority fill alt="" src="/profile/profile-head.png" className={styles.profileImage} />
+    <Image priority fill alt="" src={photoUrl} className={styles.profileImage} />
 
     <Header />
 

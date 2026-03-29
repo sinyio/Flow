@@ -9,6 +9,7 @@ import { useAuthorizationStore } from '@utils/stores/authorization'
 import styles from './step.module.css'
 import { useAxiosInstance } from '@api/use-axios-instance'
 import { forgotPasswordSchema } from './validation-schema'
+import { sendPasswordResetToken } from '@api/auth/send-password-reset-token'
 
 export const ForgotPasswordStep = () => {
   const axiosInstance = useAxiosInstance()
@@ -23,7 +24,7 @@ export const ForgotPasswordStep = () => {
   const onSubmit = useCallback(
     (data: ForgotPasswordFormValues) => {
       void checkIsAuth(axiosInstance)
-      console.log(data)
+      void sendPasswordResetToken({ email: data.email }, axiosInstance)
     },
     [axiosInstance, checkIsAuth]
   )

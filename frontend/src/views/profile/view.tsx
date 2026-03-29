@@ -18,7 +18,7 @@ import styles from './view.module.css'
 import { PageContainer } from '@components/global/page-container'
 
 export interface IProfileViewProps {
-  user?: TUser
+  user: TUser
 }
 
 const ProfileView = ({ user }: IProfileViewProps) => {
@@ -30,7 +30,7 @@ const ProfileView = ({ user }: IProfileViewProps) => {
     } else if (user?.firstName && user?.lastName) {
       return `${user?.firstName} ${user?.lastName}`
     } else {
-      return 'Дмитрий Смотряев'
+      return 'Неизвестный пользователь'
     }
   }, [user?.firstName, user?.lastName])
 
@@ -66,7 +66,12 @@ const ProfileView = ({ user }: IProfileViewProps) => {
       {device === 'mobile' ? (
         <PageContainer inner={{ className: styles.profilePageInner }}>
           <>
-            <ProfileHeader canEdit={canEdit} name={name} subtitle="ответственный исполнитель" />
+            <ProfileHeader
+              canEdit={canEdit}
+              name={name}
+              subtitle="ответственный исполнитель"
+              photoUrl={user?.photo || ''}
+            />
 
             <div className={styles.profileDetails}>
               <ProfileDetails lines={profileDetails} />
@@ -90,21 +95,18 @@ const ProfileView = ({ user }: IProfileViewProps) => {
                 />
               </div>
             </div>
-            <Image
-              priority
-              fill
-              alt=""
-              src="/profile/profile-head.png"
-              className={styles.backgroundImage}
-            />
+            <Image priority fill alt="" src={user?.photo} className={styles.backgroundImage} />
           </div>
-          <PageContainer inner={{ className: styles.profilePageInner }}>
+          <PageContainer
+            outer={{ className: styles.profilePageOuter }}
+            inner={{ className: styles.profilePageInner }}
+          >
             <Image
               priority
               width={455}
               height={606}
               alt=""
-              src="/profile/profile-head.png"
+              src={user?.photo}
               className={styles.profileImage}
             />
             <div className={styles.rightSide}>
