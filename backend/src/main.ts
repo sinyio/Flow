@@ -57,7 +57,7 @@ async function bootstrap() {
         maxAge: ms(config.getOrThrow('SESSION_MAX_AGE')),
         httpOnly: parseBoolean(config.getOrThrow('SESSION_HTTP_ONLY')),
         secure: parseBoolean(config.getOrThrow('SESSION_SECURE')),
-        sameSite: 'lax',
+        sameSite: 'none',
         domain: config.getOrThrow('SESSION_DOMAIN')
       },
       store: new RedisStore({
