@@ -23,6 +23,8 @@ export interface ISettingsFormProps {
 }
 
 export const SettingsForm = ({ user }: ISettingsFormProps) => {
+  console.log(user)
+
   const { control, handleSubmit, formState } = useForm<TSettingsFormValues>({
     defaultValues: {
       firstName: user.firstName || '',

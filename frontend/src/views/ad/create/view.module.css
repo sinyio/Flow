@@ -1,0 +1,51 @@
+.gap {
+  height: 24px;
+  width: 100%;
+}
+
+.page {
+  width: 100%;
+  padding: 0 16px 48px;
+  box-sizing: border-box;
+  max-width: 740px;
+}
+
+.headerRow {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.backButton {
+  border-radius: 20px;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  flex: 0 0 auto;
+}
+
+.title {
+  margin: 0;
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background-color: rgba(0, 0, 0, 0.1);
+  margin-bottom: 36px;
+}
+
+@media (min-width: 834px) {
+  .gap {
+    height: 136px;
+    margin-bottom: 48px;
+    background-color: var(--g-color-base-selection);
+  }
+
+  .page {
+    padding: 0 0 72px;
+  }
+}
+

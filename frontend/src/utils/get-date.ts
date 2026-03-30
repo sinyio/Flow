@@ -13,14 +13,21 @@ const months: Record<string, string> = {
   декабрь: 'декабря',
 }
 
-export const getDate = (datetime?: string): string => {
+export type TDateType = 'from' | 'before'
+
+export const getDate = (datetime?: string, dateType: TDateType = 'from'): string => {
   if (!datetime) {
     return 'неизвестная дата'
   }
   const parsedDate = new Date(datetime)
-  const day = parsedDate.getDay()
+  const day = parsedDate.getDate()
   const month = parsedDate.toLocaleDateString('ru-RU', { month: 'long' })
   const year = parsedDate.getFullYear()
 
-  return `с ${day} ${months[month]} ${year} года`
+  const date = {
+    from: `с ${day} ${months[month]} ${year} года`,
+    before: `до ${day} ${months[month]}`,
+  }
+
+  return date[dateType]
 }

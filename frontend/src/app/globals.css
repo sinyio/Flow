@@ -62,6 +62,7 @@ body {
 
   --g-border-radius-xs: 8px;
   --g-border-radius-s: 12px;
+  --g-border-radius-m: 16px;
   --g-border-radius-l: 20px;
   --g-border-radius-xl: 24px;
 }

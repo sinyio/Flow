@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import { Button, Link, Text } from '@gravity-ui/uikit'
+import { redirect } from 'next/navigation'
 
 import { LiquidGlassBlock } from '@components/global/liquid-glass-block'
 import styles from './component.module.css'
@@ -12,12 +13,12 @@ export const Header = () => (
       <nav aria-label="Навигация">
         <ul className={styles.nav}>
           <li>
-            <Link view="primary" className={styles.navLink} href="#">
+            <Link view="primary" className={styles.navLink} href="/">
               <Text variant="subheader-2">Лента объявлений</Text>
             </Link>
           </li>
           <li>
-            <Link view="primary" className={styles.navLink} href="#">
+            <Link view="primary" className={styles.navLink} href="/">
               <Text variant="subheader-2">Наше медиа</Text>
             </Link>
           </li>
@@ -25,10 +26,10 @@ export const Header = () => (
       </nav>
 
       <div className={styles.actions}>
-        <Button view="normal" size="l" onClick={() => console.log(123)}>
+        <Button view="normal" size="l" onClick={() => redirect('/ads')}>
           Создать объявление
         </Button>
-        <Button view="outlined" size="l" onClick={() => console.log(123)}>
+        <Button view="outlined" size="l" onClick={() => redirect('/auth?action=login')}>
           Войти
         </Button>
       </div>

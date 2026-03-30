@@ -1,0 +1,56 @@
+.adDetails {
+  padding: 20px 16px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.adDescriptionBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.statsContainer {
+    width: fit-content !important;
+}
+
+.statsChip {
+    width: fit-content !important;
+}
+
+.adMetaGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.adMetaRow {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.dashedLine {
+    display: block;
+    height: 100%;
+    width: 100%;
+    padding-bottom: 7px;
+    border-top: 1px dashed gray;
+}
+
+.adMetaLabel {
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.adMetaValue {
+    flex-shrink: 0;
+    text-align: right;
+}
+
+@media (min-width: 834px) {
+    .adDetails {
+        padding: 24px 0 0;
+    }
+}

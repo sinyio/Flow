@@ -1,3 +1,7 @@
 div.g-avatar_size_xl {
     --_--size: 100px;
 }
+
+div.g-avatar_size_l {
+    --_--size: 50px;
+}

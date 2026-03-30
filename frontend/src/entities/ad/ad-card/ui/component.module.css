@@ -1,0 +1,22 @@
+.container {
+  align-items: flex-start;
+}
+
+.content {
+  display: flex;
+  gap: 16px;
+}
+
+.priceAndRoute {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rightContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+

@@ -1,8 +1,17 @@
-div.g-label_theme_normal {
+div.g-label_theme_unknown {
   --_--bg-color: var(--g-color-private-black-50);
   --_--text-color: var(--g-color-text-complementary);
 }
 
+div.g-label_theme_normal {
+  --_--bg-color: var(--g-color-base-float);
+  --_--text-color: var(--g-color-text-secondary);
+}
+
 div.g-label_size_s {
   --_--height: 26px;
+}
+
+div.g-label_size_m {
+  --_--height: 34px;
 }

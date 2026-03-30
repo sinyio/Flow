@@ -70,8 +70,8 @@ div.profilePageInner {
   }
 
   .profileImage {
-    position: relative;
-    bottom: 194px;
+    position: absolute;
+    top: -194px;
     width: 265px;
     height: 351px;
     object-fit: cover;
@@ -112,11 +112,7 @@ div.profilePageInner {
   .profileImage {
     width: 455px;
     height: 606px;
-    bottom: 284px;
-  }
-
-  .tabsContainer {
-    margin-top: 4px;
+    top: -284px;
   }
 
   .profileName {

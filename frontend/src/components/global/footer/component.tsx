@@ -11,6 +11,15 @@ export const Footer = () => (
       <Link href="/" view="secondary">
         <Text>Помощь</Text>
       </Link>
+      <Link href="/" view="secondary">
+        <Text>Сообщить о проблеме</Text>
+      </Link>
+      <Link href="/" view="secondary">
+        <Text>Контакты</Text>
+      </Link>
+      <Link href="/" view="secondary">
+        <Text>Политика конфиденциальности</Text>
+      </Link>
     </nav>
     <Text variant="body-short">© 2026 Флоу</Text>
   </footer>
