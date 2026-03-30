@@ -1,7 +1,7 @@
-import { TPackageType } from '@entities/ad'
+import { TPackaging } from '@api/ads'
 
-export const getPackageType = (packageType: TPackageType) => {
-  const packages: Record<TPackageType, string> = {
+export const getPackageType = (packageType: TPackaging) => {
+  const packages: Record<TPackaging, string> = {
     BOX: 'Коробка',
     ENVELOPE: 'Конверт',
     FILM: 'Пакет',

@@ -5,11 +5,11 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { Button, Icon, Label, Text, TextInput } from '@gravity-ui/uikit'
+import { AdCard } from '@entities/ad'
 
 import { getPopularRoutes } from '@api/ads'
 import { PageContainer } from '@components/global/page-container'
 import { ArrowIcon } from '@components/svgr/arrow-icon/icon'
-import { AdCard } from '@entities/ad'
 import { useResponsive } from '@utils/hooks/use-responsive'
 import styles from './view.module.css'
 import { useAxiosInstance } from '@api/use-axios-instance'
@@ -213,7 +213,7 @@ export const FeedView = ({ initial, query, isSearch }: IFeedViewProps) => {
                     <div className={styles.popularIcon} aria-hidden="true" />
                     <div className={styles.popularText}>
                       <Text variant="subheader-2">{r.content}</Text>
-                      <Text variant="caption" color="secondary">
+                      <Text variant="caption-1" color="secondary">
                         {r.count} объявлений
                       </Text>
                     </div>
@@ -350,7 +350,7 @@ const HeroSearch = ({ routes }: { routes: TRoutesOption[] }) => {
 
       {routes.length ? (
         <div className={styles.searchHint}>
-          <Text variant="caption" color="secondary">
+          <Text variant="caption-1" color="secondary">
             Например: {routes[0]?.content}
           </Text>
         </div>

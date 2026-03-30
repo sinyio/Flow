@@ -37,7 +37,7 @@ export type TAd = {
   title: string
   image: string | null
   description: string
-  status: string
+  status: TStatus
   startDate: string
   endDate: string
   fromCity: string

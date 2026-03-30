@@ -26,10 +26,10 @@ export const Header = () => (
       </nav>
 
       <div className={styles.actions}>
-        <Button view="normal" size="l" onClick={() => redirect('/ads')}>
+        <Button view="normal" size="xl" onClick={() => redirect('/ads')}>
           Создать объявление
         </Button>
-        <Button view="outlined" size="l" onClick={() => redirect('/auth?action=login')}>
+        <Button view="outlined" size="xl" onClick={() => redirect('/auth?action=login')}>
           Войти
         </Button>
       </div>
