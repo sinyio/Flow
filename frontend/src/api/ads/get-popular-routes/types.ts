@@ -1,5 +1,12 @@
 import { IApiError } from '@api/types'
 
-import { TPopularRoutesResponse } from '../types'
+import { TAd } from '../types'
 
-export type TGetPopularRoutesResponse = TPopularRoutesResponse | IApiError
+export type TRoute = {
+  fromCity: string
+  toCity: string
+  totalAds: number
+  latestAds: TAd[]
+}
+
+export type TGetPopularRoutesResponse = TRoute[] | IApiError

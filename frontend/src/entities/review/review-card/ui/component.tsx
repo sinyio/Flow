@@ -1,10 +1,12 @@
 import { Avatar, Button, Icon, Text, User } from '@gravity-ui/uikit'
 
-import { Card } from '@components/templates/card'
-import styles from './component.module.css'
-import { StarFilledIcon } from '@components/svgr/star-filled-icon/icon'
-import { FlagIcon } from '@components/svgr/flag-icon/icon'
 import { TReview } from '@api/reviews'
+
+import { FlagIcon } from '@components/svgr/flag-icon/icon'
+import { StarFilledIcon } from '@components/svgr/star-filled-icon/icon'
+import { Card } from '@components/templates/card'
+
+import styles from './component.module.css'
 
 export interface IReviewCardProps {
   review: TReview

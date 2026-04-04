@@ -1,17 +1,19 @@
 'use client'
 
+import { Toaster, ToasterComponent, ToasterProvider } from '@gravity-ui/uikit'
 import { usePathname } from 'next/navigation'
 import { type ReactNode } from 'react'
-import { Toaster, ToasterComponent, ToasterProvider } from '@gravity-ui/uikit'
+
+import { useResponsive } from '@utils/hooks/use-responsive'
+import { useAuthorizationStore } from '@utils/stores/authorization'
 
 import { MobileBottomMenu } from '@components/global/mobile-bottom-menu'
-import { Header } from '../header'
-import { useResponsive } from '@utils/hooks/use-responsive'
-import styles from './component.module.css'
-import { useAuthorizationStore } from '@utils/stores/authorization'
-import { Footer } from '../footer'
+import { Footer } from '@components/organisms/footer'
+import { Header } from '@components/organisms/header'
 
 import { mobileNavMocks } from '@views/profile/mocks'
+
+import styles from './component.module.css'
 
 interface AppShellProps {
   children?: ReactNode

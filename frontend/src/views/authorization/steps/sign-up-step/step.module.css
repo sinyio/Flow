@@ -5,11 +5,6 @@
   width: 100%;
 }
 
-.title {
-  text-align: center;
-  margin-bottom: 8px;
-}
-
 .fields {
   display: flex;
   flex-direction: column;

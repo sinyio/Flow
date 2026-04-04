@@ -15,4 +15,3 @@ export type TCreateAdFormValues = {
   description: string
   image: File | null
 }
-

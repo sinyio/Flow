@@ -2,9 +2,9 @@ import { Text } from '@gravity-ui/uikit'
 import { useMemo } from 'react'
 import { Control, FieldValues, useWatch } from 'react-hook-form'
 
-import styles from './component.module.css'
-
 import { buildPasswordRequirementItems } from '@views/authorization/steps/sign-up-step/validation-schema'
+
+import styles from './component.module.css'
 
 export type PasswordRequirementStatus = 'unmet' | 'met' | 'error'
 

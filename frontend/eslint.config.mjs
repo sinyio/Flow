@@ -1,12 +1,12 @@
 import js from '@eslint/js'
+import { defineConfig } from 'eslint/config'
 import eslintConfigPrettier from 'eslint-config-prettier'
-import tseslint from 'typescript-eslint'
-import reactPlugin from 'eslint-plugin-react'
-import reactHooksPlugin from 'eslint-plugin-react-hooks'
 import importPlugin from 'eslint-plugin-import'
 import jsxA11yPlugin from 'eslint-plugin-jsx-a11y'
 import eslintPluginPrettier from 'eslint-plugin-prettier'
-import { defineConfig } from 'eslint/config'
+import reactPlugin from 'eslint-plugin-react'
+import reactHooksPlugin from 'eslint-plugin-react-hooks'
+import tseslint from 'typescript-eslint'
 
 export default defineConfig(
   js.configs.recommended,
@@ -25,7 +25,7 @@ export default defineConfig(
 
   // Общие настройки
   {
-    ignores: ['dist/**', '**/.next/**', '**/*.d.ts', '**/*.test.*', '**/*.spec.*'],
+    ignores: ['dist/**', '**/.next/**', '**/*.d.ts', '**/*.test.*', '**/*.spec.*', 'scripts/**'],
   },
   {
     languageOptions: {
@@ -79,18 +79,27 @@ export default defineConfig(
         'warn',
         {
           'newlines-between': 'always',
+          alphabetize: {
+            order: 'asc',
+            caseInsensitive: true,
+          },
           pathGroups: [
-            { pattern: '@public/**', group: 'external', position: 'after' },
-            { pattern: '@views/**', group: 'internal', position: 'after' },
+            { pattern: '@api/**', group: 'internal', position: 'after' },
+            { pattern: '@contexts/**', group: 'internal', position: 'after' },
+            { pattern: '@utils/**', group: 'internal', position: 'after' },
+            { pattern: '@entities/**', group: 'internal', position: 'after' },
+            { pattern: '@components/**', group: 'internal', position: 'after' },
             { pattern: '@widgets/**', group: 'internal', position: 'after' },
+            { pattern: '@views/**', group: 'internal', position: 'after' },
+            { pattern: '@public/**', group: 'external', position: 'after' },
           ],
           pathGroupsExcludedImportTypes: [],
           groups: [
             'builtin',
             ['external', 'type'],
             'unknown',
-            ['internal', 'sibling', 'parent'],
-            'index',
+            'internal',
+            ['parent', 'sibling', 'index'],
             'object',
           ],
         },

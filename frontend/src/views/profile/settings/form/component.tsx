@@ -1,22 +1,24 @@
+import { Button, Text } from '@gravity-ui/uikit'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm, type SubmitHandler } from 'react-hook-form'
-import { Button, Text } from '@gravity-ui/uikit'
 
-import { deleteUser } from '@api/user/delete-user'
-import { TSettingsFormValues } from './types'
-import { TextField } from '@components/form/text-field/field'
-import { SelectField } from '@components/form/select-field/field'
-import { settingsSchema } from './validation-schema'
-import { DatePickerField } from '@components/form/date-picker-field/field'
-import { EmailField } from '@components/form'
-import { PasswordField } from '@components/form/password-field/field'
-import { PasswordRequirements } from '@components/templates/password-requirements'
-import { sex } from './constants'
-import styles from './component.module.css'
-import { TUser } from '@api/user/get-user'
 import { logout } from '@api/auth'
 import { useAxiosInstance } from '@api/use-axios-instance'
+import { deleteUser } from '@api/user/delete-user'
+import { TUser } from '@api/user/get-user'
 import { updateUser } from '@api/user/update-user'
+
+import { EmailField } from '@components/form'
+import { DatePickerField } from '@components/form/date-picker-field/field'
+import { PasswordField } from '@components/form/password-field/field'
+import { SelectField } from '@components/form/select-field/field'
+import { TextField } from '@components/form/text-field/field'
+import { PasswordRequirements } from '@components/templates/password-requirements'
+
+import styles from './component.module.css'
+import { sex } from './constants'
+import { TSettingsFormValues } from './types'
+import { settingsSchema } from './validation-schema'
 
 export interface ISettingsFormProps {
   user: TUser

@@ -36,4 +36,3 @@ export const ProfileDetails = ({ lines }: IProfileDetailsProps) => (
     </Accordion.Item>
   </Accordion>
 )
-

@@ -1,19 +1,21 @@
 'use client'
 
+import type { TCreateAdFormValues } from './types'
+import { Button, Switch, Text } from '@gravity-ui/uikit'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useForm, type SubmitHandler } from 'react-hook-form'
-import { Button, Switch, Text } from '@gravity-ui/uikit'
 
 import { createAd, getPopularRoutes, type TPackaging } from '@api/ads'
 import { useAxiosInstance } from '@api/use-axios-instance'
-import { SelectField } from '@components/form/select-field/field'
-import { TextField } from '@components/form/text-field/field'
+
 import { DatePickerField } from '@components/form/date-picker-field/field'
+import { SelectField } from '@components/form/select-field/field'
 import { TextAreaField } from '@components/form/text-area-field/field'
-import { createAdSchema } from './validation-schema'
-import type { TCreateAdFormValues } from './types'
+import { TextField } from '@components/form/text-field/field'
+
 import styles from './component.module.css'
+import { createAdSchema } from './validation-schema'
 
 const packagingOptions: Array<{ value: TPackaging; content: string }> = [
   { value: 'BOX', content: 'Коробка' },
@@ -63,6 +65,7 @@ export const CreateAdForm = () => {
     getPopularRoutes(axiosInstance)
       .then(res => {
         const data = res.data
+
         if (!alive) return
 
         if (Array.isArray(data)) {
@@ -213,15 +216,11 @@ export const CreateAdForm = () => {
             accept="image/*"
             onChange={e => {
               const file = e.target.files?.[0] ?? null
+
               setValue('image', file, { shouldValidate: true })
             }}
           />
-          <Button
-            type="button"
-            view="action"
-            size="xl"
-            onClick={() => fileRef.current?.click()}
-          >
+          <Button type="button" view="action" size="xl" onClick={() => fileRef.current?.click()}>
             {image ? 'Фото добавлено' : 'Добавить фото'}
           </Button>
         </div>
@@ -235,10 +234,26 @@ export const CreateAdForm = () => {
             width="max"
           />
 
-          <TextField label="Вес посылки:" placeholder="кг" controllerProps={{ control, name: 'weight' }} />
-          <TextField label="Длина:" placeholder="см" controllerProps={{ control, name: 'length' }} />
-          <TextField label="Ширина:" placeholder="см" controllerProps={{ control, name: 'width' }} />
-          <TextField label="Высота:" placeholder="см" controllerProps={{ control, name: 'height' }} />
+          <TextField
+            label="Вес посылки:"
+            placeholder="кг"
+            controllerProps={{ control, name: 'weight' }}
+          />
+          <TextField
+            label="Длина:"
+            placeholder="см"
+            controllerProps={{ control, name: 'length' }}
+          />
+          <TextField
+            label="Ширина:"
+            placeholder="см"
+            controllerProps={{ control, name: 'width' }}
+          />
+          <TextField
+            label="Высота:"
+            placeholder="см"
+            controllerProps={{ control, name: 'height' }}
+          />
         </div>
       </div>
 
@@ -279,4 +294,3 @@ export const CreateAdForm = () => {
     </form>
   )
 }
-

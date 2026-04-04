@@ -1,7 +1,8 @@
-import { ReactNode } from 'react'
 import { Link, Text } from '@gravity-ui/uikit'
+import { ReactNode } from 'react'
 
 import { LiquidGlassBlock } from '@components/global/liquid-glass-block'
+
 import styles from './component.module.css'
 
 export type TMobileNavItem = {

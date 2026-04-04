@@ -1,47 +1,124 @@
-import type { TAdPaginatedResponse, TGetAdsParams } from '@api/ads'
+import { getPopularRoutes, TGetPopularRoutesResponse } from '@api/ads'
 
-import { getAds } from '@api/ads'
 import { loadApiResource } from '@utils/load-api-resource'
 
 import { LoadErrorFallback } from '@views/error-fallback'
 import { FeedView } from '@views/feed'
 
-type TSearchParams = Record<string, string | string[] | undefined>
-
-const toBool = (v: string | undefined) => (v === 'true' ? true : v === 'false' ? false : undefined)
-const toNumber = (v: string | undefined) => (v && !Number.isNaN(Number(v)) ? Number(v) : undefined)
-
-const pickFirst = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v)
-
-const Page = async ({ searchParams }: { searchParams?: Promise<TSearchParams> }) => {
-  const sp = (await searchParams) ?? {}
-
-  const params: TGetAdsParams = {
-    page: toNumber(pickFirst(sp.page)) ?? 1,
-    limit: 9,
-    fromCity: pickFirst(sp.fromCity),
-    toCity: pickFirst(sp.toCity),
-    startDate: pickFirst(sp.startDate),
-    endDate: pickFirst(sp.endDate),
-    minPrice: toNumber(pickFirst(sp.minPrice)),
-    maxWeight: toNumber(pickFirst(sp.maxWeight)),
-    isDocument: toBool(pickFirst(sp.isDocument)),
-    isFragile: toBool(pickFirst(sp.isFragile)),
-  }
-
-  const result = await loadApiResource<TAdPaginatedResponse>(
-    () => getAds(params),
-    (data): data is TAdPaginatedResponse =>
-      typeof data === 'object' && data !== null && 'data' in data
+const Page = async () => {
+  const response = await loadApiResource<TGetPopularRoutesResponse>(
+    () => getPopularRoutes(),
+    (data): data is TGetPopularRoutesResponse => Array.isArray(data)
   )
 
-  if (!result.ok) {
-    return <LoadErrorFallback message={result.message} />
+  // const mock: TGetPopularRoutesResponse = [
+  //   {
+  //     fromCity: 'Москва',
+  //     toCity: 'Магадан',
+  //     totalAds: 10,
+  //     latestAds: [
+  //       {
+  //         id: '22222222-2222-2222-2222-222222222222',
+  //         title: 'Новое объявление',
+  //         image: '/ads/item.png',
+  //         description: 'Нужно доставить аккуратно',
+  //         status: 'ACTIVE',
+  //         startDate: '2026-03-12T00:00:00.000Z',
+  //         endDate: '2026-03-20T00:00:00.000Z',
+  //         fromCity: 'Москва',
+  //         toCity: 'Саратов',
+  //         price: 2000,
+  //         weight: 0.5,
+  //         isFragile: true,
+  //         isDocument: false,
+  //         packaging: 'BOX',
+  //         length: 40,
+  //         width: 30,
+  //         height: 20,
+  //         userState: {
+  //           canEdit: false,
+  //           role: 'viewer',
+  //         },
+  //         author: {
+  //           id: '123321-12dd1923-d13i-13f5v413',
+  //           fullName: 'Иван Иванов',
+  //           photo: '/profile/avatar.png',
+  //         },
+  //         sender: {
+  //           id: '123321-12dd1923-d13i-13f5v413',
+  //           fullName: 'Иван Иванов',
+  //           photo: '/profile/avatar.png',
+  //         },
+  //         recipient: {
+  //           id: '123321-12dd1923-d13i-13f5v413',
+  //           fullName: 'Иван Иванов',
+  //           photo: '/profile/avatar.png',
+  //         },
+  //         courier: {
+  //           id: '123321-12dd1923-d13i-13f5v413',
+  //           fullName: 'Иван Иванов',
+  //           photo: '/profile/avatar.png',
+  //         },
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     fromCity: 'Магадан',
+  //     toCity: 'Москва',
+  //     totalAds: 10,
+  //     latestAds: [
+  //       {
+  //         id: '22222222-2222-2222-2222-222222222222',
+  //         title: 'Новое объявление',
+  //         image: '/ads/item.png',
+  //         description: 'Нужно доставить аккуратно',
+  //         status: 'ACTIVE',
+  //         startDate: '2026-03-12T00:00:00.000Z',
+  //         endDate: '2026-03-20T00:00:00.000Z',
+  //         fromCity: 'Москва',
+  //         toCity: 'Саратов',
+  //         price: 2000,
+  //         weight: 0.5,
+  //         isFragile: true,
+  //         isDocument: false,
+  //         packaging: 'BOX',
+  //         length: 40,
+  //         width: 30,
+  //         height: 20,
+  //         userState: {
+  //           canEdit: false,
+  //           role: 'viewer',
+  //         },
+  //         author: {
+  //           id: '123321-12dd1923-d13i-13f5v413',
+  //           fullName: 'Иван Иванов',
+  //           photo: '/profile/avatar.png',
+  //         },
+  //         sender: {
+  //           id: '123321-12dd1923-d13i-13f5v413',
+  //           fullName: 'Иван Иванов',
+  //           photo: '/profile/avatar.png',
+  //         },
+  //         recipient: {
+  //           id: '123321-12dd1923-d13i-13f5v413',
+  //           fullName: 'Иван Иванов',
+  //           photo: '/profile/avatar.png',
+  //         },
+  //         courier: {
+  //           id: '123321-12dd1923-d13i-13f5v413',
+  //           fullName: 'Иван Иванов',
+  //           photo: '/profile/avatar.png',
+  //         },
+  //       },
+  //     ],
+  //   },
+  // ]
+
+  if (!response.ok) {
+    return <LoadErrorFallback message={response.message} />
   }
 
-  const isSearch = Boolean(params.fromCity || params.toCity || params.startDate || params.endDate)
-
-  return <FeedView initial={result.data} query={params} isSearch={isSearch} />
+  return <FeedView routes={response.data} />
 }
 
 export default Page

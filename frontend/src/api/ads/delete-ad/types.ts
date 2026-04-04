@@ -1,5 +1,5 @@
-import { TAdsMutationResponse } from '../types'
+import { IApiError, IStatusOk } from '@api/types'
 
 export type TDeleteAdRequest = string
 
-export type TDeleteAdResponse = TAdsMutationResponse
+export type TDeleteAdResponse = IStatusOk | IApiError

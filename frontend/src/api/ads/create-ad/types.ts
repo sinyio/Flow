@@ -1,4 +1,6 @@
-import { TAdDtoRole, TPackaging, TAdsMutationResponse } from '../types'
+import { IApiError, IStatusOk } from '@api/types'
+
+import { TAd, TPackaging } from '../types'
 
 export type TCreateAdRequest = {
   title: string
@@ -12,11 +14,11 @@ export type TCreateAdRequest = {
   height: number
   price: number
   packaging: TPackaging
-  role: TAdDtoRole
+  role: TAd['userState']['role']
   isFragile: boolean
   isDocument: boolean
   description?: string
   image: File
 }
 
-export type TCreateAdResponse = TAdsMutationResponse
+export type TCreateAdResponse = IStatusOk | IApiError

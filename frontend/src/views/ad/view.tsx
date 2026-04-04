@@ -1,15 +1,17 @@
 'use client'
 
 import Image from 'next/image'
-import { Text } from '@gravity-ui/uikit'
+
+import { TAd } from '@api/ads'
+
+import { useResponsive } from '@utils/hooks/use-responsive'
 
 import { PageContainer } from '@components/global/page-container'
-import { useResponsive } from '@utils/hooks/use-responsive'
-import styles from './view.module.css'
-import { TAd } from '@api/ads'
 
 import { AdHeader, AdName } from '@widgets/ad'
 import { AdDetails } from '@widgets/ad/ad-details'
+
+import styles from './view.module.css'
 
 export interface IAdViewProps {
   ad: TAd

@@ -2,18 +2,20 @@ import type { Metadata } from 'next'
 import '@gravity-ui/uikit/styles/fonts.css'
 import '@gravity-ui/uikit/styles/styles.css'
 import './globals.css'
-
 import { ErrorBoundary } from 'next/dist/client/components/error-boundary'
 import { headers } from 'next/headers'
 import { userAgent } from 'next/server'
 
-import { AppShell } from '@components/global/app-shell'
 import { ApiProvider } from '@contexts/api-context'
+
 import { BusinessLayout } from '@utils/business-layout'
-import { Metrika } from '@utils/yandex-metrika'
 import { GlassEffect } from '@utils/glass-effect'
-import Error from './error'
 import { TServerData } from '@utils/server-data-provider'
+import { Metrika } from '@utils/yandex-metrika'
+
+import { AppShell } from '@components/global/app-shell'
+
+import Error from './error'
 
 export const metadata: Metadata = {
   title: 'Флоу',

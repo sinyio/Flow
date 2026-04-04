@@ -1,6 +1,6 @@
 import { IApiError } from '@api/types'
 
-import { TAdPaginatedResponse } from '../types'
+import { TAd, TPaginationMeta } from '../types'
 
 export type TGetAdsParams = {
   page?: number
@@ -15,4 +15,4 @@ export type TGetAdsParams = {
   endDate?: string
 }
 
-export type TGetAdsResponse = TAdPaginatedResponse | IApiError
+export type TGetAdsResponse = { data: TAd[]; meta: TPaginationMeta } | IApiError

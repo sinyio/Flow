@@ -1,11 +1,8 @@
-import { IApiError } from '@api/types'
+import { IApiError, IStatusOk } from '@api/types'
 
 export type TLoginRequest = {
   email: string
   password: string
 }
 
-export type TLoginSuccessfullResponse = {
-  status: 'ok'
-}
-export type TLoginResponse = TLoginSuccessfullResponse | IApiError
+export type TLoginResponse = IStatusOk | IApiError

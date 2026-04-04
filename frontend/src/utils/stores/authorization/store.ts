@@ -1,6 +1,6 @@
-import { create } from 'zustand'
 import type { IAuthorizationState, TAuthorizationStep, TAuthorizationStore } from './types'
 import { AxiosError, isAxiosError } from 'axios'
+import { create } from 'zustand'
 
 import {
   me,

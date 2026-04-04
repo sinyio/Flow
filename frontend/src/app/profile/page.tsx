@@ -1,6 +1,7 @@
-import { loadApiResource } from '@utils/load-api-resource'
 import { me, TMeResponse } from '@api/auth'
 import { getUser, TUser } from '@api/user/get-user'
+
+import { loadApiResource } from '@utils/load-api-resource'
 
 import { LoadErrorFallback } from '@views/error-fallback'
 import ProfileView from '@views/profile/view'

@@ -1,7 +1,8 @@
 import { redirect } from 'next/navigation'
 
-import { loadApiResource } from '@utils/load-api-resource'
 import { me, TMeResponse } from '@api/auth'
+
+import { loadApiResource } from '@utils/load-api-resource'
 
 import { LoadErrorFallback } from '@views/error-fallback'
 

@@ -1,10 +1,11 @@
 'use client'
 
 import { ThemeProvider } from '@gravity-ui/uikit'
-import { useEffect, type ReactNode } from 'react'
 import { redirect, usePathname } from 'next/navigation'
+import { useEffect, type ReactNode } from 'react'
 
 import { me } from '@api/auth'
+
 import { isProtectedPath } from './is-protected-path'
 import { ServerData, TServerData } from './server-data-provider'
 

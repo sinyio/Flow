@@ -11,6 +11,7 @@ const toFormData = (data: Omit<TUpdateAdRequest, 'id'>) => {
     if (typeof value === 'undefined') return
     if (value instanceof Blob) {
       form.append(key, value)
+
       return
     }
     form.append(key, String(value))

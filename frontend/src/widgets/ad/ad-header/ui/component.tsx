@@ -1,9 +1,9 @@
 import Image from 'next/image'
 
-import styles from './component.module.css'
-
-import { Header } from '@widgets/profile/profile-header'
 import { AdName } from '@widgets/ad/ad-name'
+import { Header } from '@widgets/profile/profile-header'
+
+import styles from './component.module.css'
 
 export interface IAdHeaderProps {
   imageUrl: string

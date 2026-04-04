@@ -1,12 +1,11 @@
-import { IApiError } from '@api/types'
+import { IApiError, IStatusOk } from '@api/types'
 
 export type TSendPasswordResetTokenRequest = {
   email: string
 }
 
 export type TSendPasswordResetTokenSuccessfullResponse = {
-  status: 'ok'
   message: string
-}
+} & IStatusOk
 
 export type TSendPasswordResetTokenResponse = TSendPasswordResetTokenSuccessfullResponse | IApiError

@@ -1,10 +1,11 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import { Button, Icon, Text } from '@gravity-ui/uikit'
+import { useRouter } from 'next/navigation'
 
-import { ArrowIcon } from '@components/svgr/arrow-icon/icon'
 import { PageContainer } from '@components/global/page-container'
+import { ArrowIcon } from '@components/svgr/arrow-icon/icon'
+
 import { CreateAdForm } from './form/component'
 import styles from './view.module.css'
 
@@ -41,4 +42,3 @@ export const CreateAdView = () => {
 }
 
 export default CreateAdView
-

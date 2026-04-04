@@ -1,5 +1,6 @@
-import type { IPasswordRequirement } from '@components/templates/password-requirements'
 import { z } from 'zod'
+
+import type { IPasswordRequirement } from '@components/templates/password-requirements'
 
 export const passwordRequirementChecks = {
   hasUpperLower: (s: string) => /[A-ZА-ЯЁ]/.test(s) && /[a-zа-яё]/.test(s),

@@ -1,8 +1,9 @@
-import Image from 'next/image'
 import { Button, Link, Text } from '@gravity-ui/uikit'
+import Image from 'next/image'
 import { redirect } from 'next/navigation'
 
 import { LiquidGlassBlock } from '@components/global/liquid-glass-block'
+
 import styles from './component.module.css'
 
 export const Header = () => (

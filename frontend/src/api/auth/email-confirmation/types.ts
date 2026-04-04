@@ -1,11 +1,7 @@
-import { IApiError } from '@api/types'
+import { IApiError, IStatusOk } from '@api/types'
 
 export type TEmailConfirmationRequest = {
   token: string
 }
 
-export type TEmailConfirmationSuccessfullResponse = {
-  status: 'ok'
-}
-
-export type TEmailConfirmationResponse = TEmailConfirmationSuccessfullResponse | IApiError
+export type TEmailConfirmationResponse = IStatusOk | IApiError

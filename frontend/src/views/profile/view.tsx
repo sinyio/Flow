@@ -1,23 +1,26 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
-import Image from 'next/image'
 import { useToaster } from '@gravity-ui/uikit'
+import Image from 'next/image'
+import { useEffect, useMemo, useState } from 'react'
 
-import { Tabs } from '@components/tabs/component'
+import { getAdsByUser, TAd } from '@api/ads'
+import { getReviewsByUser, TReview } from '@api/reviews'
 import { TUser } from '@api/user/get-user'
+
+import { getDate } from '@utils/get-date'
+import { getNoun } from '@utils/get-noun'
+import { useResponsive } from '@utils/hooks/use-responsive'
+
+import { PageContainer } from '@components/global/page-container'
 import { ClockIcon } from '@components/svgr/clock-icon/icon'
 import { StarIcon } from '@components/svgr/star-icon/icon'
 import { VerifiedIcon } from '@components/svgr/verified-icon/icon'
-import { getNoun } from '@utils/get-noun'
-import { getDate } from '@utils/get-date'
-import { useResponsive } from '@utils/hooks/use-responsive'
-import styles from './view.module.css'
-import { PageContainer } from '@components/global/page-container'
-import { getReviewsByUser, TReview } from '@api/reviews'
-import { getAdsByUser, TAd } from '@api/ads'
+import { Tabs } from '@components/tabs/component'
 
 import { Ads, ProfileDetails, ProfileHeader, ProfileName, Reviews } from '@widgets/profile'
+
+import styles from './view.module.css'
 
 export interface IProfileViewProps {
   user: TUser
@@ -121,7 +124,7 @@ const ProfileView = ({ user }: IProfileViewProps) => {
           add({
             isClosable: true,
             theme: 'warning',
-            name: 'register_error',
+            name: 'fetch_ads_error',
             title: 'Ошибка',
             content: response.data.message,
           })

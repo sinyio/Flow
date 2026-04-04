@@ -3,11 +3,14 @@
 import { Avatar, Button, Icon, Text } from '@gravity-ui/uikit'
 
 import { TUser } from '@api/user/get-user'
-import { SettingsForm } from './form/component'
-import { Pen2Icon } from '@components/svgr/pen-2-icon/icon'
-import styles from './view.module.css'
+
 import { useResponsive } from '@utils/hooks/use-responsive'
+
 import { PageContainer } from '@components/global/page-container'
+import { Pen2Icon } from '@components/svgr/pen-2-icon/icon'
+
+import { SettingsForm } from './form/component'
+import styles from './view.module.css'
 
 export interface IProfileViewProps {
   user: TUser

@@ -1,21 +1,8 @@
-import { IApiError } from '@api/types'
+import { IApiError, IStatusOk } from '@api/types'
 
-export type TReviewsStatusOk = {
-  status: 'ok'
-}
-
-export type TReviewsMutationResponse = TReviewsStatusOk | IApiError
-
-export type TPaginationMeta = {
-  page: number
-  limit: number
-  total: number
-  pages: number
-}
+export type TReviewsMutationResponse = IStatusOk | IApiError
 
 export type TReviewType = 'CUSTOMER_TO_COURIER' | 'COURIER_TO_CUSTOMER'
-
-export type TReviewTargetRoleQuery = 'courier' | 'customer' | 'all'
 
 export type TReviewUserSnippet = {
   id: string
@@ -36,9 +23,4 @@ export type TReview = {
   userState: {
     canEdit: boolean
   }
-}
-
-export type TReviewPaginatedResponse = {
-  data: TReview[]
-  meta: TPaginationMeta
 }

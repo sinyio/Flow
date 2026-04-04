@@ -1,11 +1,14 @@
 import { Text } from '@gravity-ui/uikit'
 import { useMemo } from 'react'
 
-import styles from './component.module.css'
-import { getPackageType } from '@utils/get-package-type'
 import { TAd } from '@api/ads'
-import { Stats } from '@components/stats'
+
 import { getDate } from '@utils/get-date'
+import { getPackageType } from '@utils/get-package-type'
+
+import { Stats } from '@components/stats'
+
+import styles from './component.module.css'
 
 export interface IAdHeaderProps {
   ad: TAd

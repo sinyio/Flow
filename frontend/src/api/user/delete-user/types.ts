@@ -1,7 +1,3 @@
-import { IApiError } from '@api/types'
+import { IApiError, IStatusOk } from '@api/types'
 
-export type TDeleteUserSuccessfullResponse = {
-  status: 'ok'
-}
-
-export type TDeleteUserResponse = TDeleteUserSuccessfullResponse | IApiError
+export type TDeleteUserResponse = IStatusOk | IApiError

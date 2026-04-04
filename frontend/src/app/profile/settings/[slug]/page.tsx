@@ -1,6 +1,6 @@
 import type { TUser } from '@api/user/get-user'
-
 import { getUser } from '@api/user/get-user'
+
 import { loadApiResource } from '@utils/load-api-resource'
 
 import { LoadErrorFallback } from '@views/error-fallback'

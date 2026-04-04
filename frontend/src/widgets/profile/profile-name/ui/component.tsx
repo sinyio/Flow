@@ -3,10 +3,11 @@
 import { Button, Icon, Text } from '@gravity-ui/uikit'
 import { HTMLAttributes } from 'react'
 
+import { Stats } from '@components/stats'
 import { PenIcon } from '@components/svgr/pen-icon/icon'
 import { VerifiedIcon } from '@components/svgr/verified-icon/icon'
+
 import styles from './component.module.css'
-import { Stats } from '@components/stats'
 
 export interface IProfileNameProps extends HTMLAttributes<HTMLDivElement> {
   name: string

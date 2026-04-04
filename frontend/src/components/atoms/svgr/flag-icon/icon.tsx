@@ -1,7 +1,7 @@
 'use no memo'
 import { HTMLAttributes } from 'react'
 
-export const FlagIcon = ({ color = 'gray', ...rest }: HTMLAttributes<SVGSVGElement>) => (
+export const FlagIcon = ({ ...rest }: HTMLAttributes<SVGSVGElement>) => (
   <svg
     width="16"
     height="16"

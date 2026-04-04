@@ -1,10 +1,11 @@
 'use client'
 
 import { Loader } from '@gravity-ui/uikit'
-import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 
 import { useAxiosInstance } from '@api/use-axios-instance'
+
 import { useAuthorizationStore } from '@utils/stores/authorization'
 
 export const NewVerificationView = ({ token }: { token: string }) => {

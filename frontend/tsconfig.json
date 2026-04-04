@@ -30,6 +30,36 @@
       "@api/*": [
         "./src/api/*"
       ],
+      "@components/svgr/*": [
+        "./src/components/atoms/svgr/*"
+      ],
+      "@components/form": [
+        "./src/components/atoms/form"
+      ],
+      "@components/form/*": [
+        "./src/components/atoms/form/*"
+      ],
+      "@components/templates/card": [
+        "./src/components/molecules/card"
+      ],
+      "@components/templates/password-requirements": [
+        "./src/components/molecules/password-requirements"
+      ],
+      "@components/templates/legal-block": [
+        "./src/components/atoms/legal-block"
+      ],
+      "@components/global/liquid-glass-block": [
+        "./src/components/atoms/liquid-glass-block"
+      ],
+      "@components/global/mobile-bottom-menu": [
+        "./src/components/organisms/mobile-bottom-menu"
+      ],
+      "@components/stats": [
+        "./src/components/atoms/stats"
+      ],
+      "@components/tabs/*": [
+        "./src/components/molecules/tabs/*"
+      ],
       "@components/*": [
         "./src/components/*"
       ],

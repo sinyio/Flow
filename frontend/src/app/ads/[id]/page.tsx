@@ -6,7 +6,7 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params
 
   const ad: TAd = {
-    id: '22222222-2222-2222-2222-222222222222',
+    id,
     title: 'Новое объявление',
     image: '',
     description: 'Нужно доставить аккуратно',

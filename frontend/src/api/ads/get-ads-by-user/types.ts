@@ -1,6 +1,6 @@
 import { IApiError } from '@api/types'
 
-import { TAdPaginatedResponse } from '../types'
+import { TAd, TPaginationMeta } from '../types'
 
 export type TGetAdsByUserRequest = {
   userId: string
@@ -8,4 +8,4 @@ export type TGetAdsByUserRequest = {
   limit?: number
 }
 
-export type TGetAdsByUserResponse = TAdPaginatedResponse | IApiError
+export type TGetAdsByUserResponse = { data: TAd[]; meta: TPaginationMeta } | IApiError

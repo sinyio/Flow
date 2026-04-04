@@ -1,0 +1,20 @@
+.container {
+    display: flex;
+    gap: 12px;
+}
+
+.routeCircle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: var(--g-color-base-light);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.textContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}

@@ -1,5 +1,6 @@
-import { ReviewCard } from '@entities/review'
 import { TReview } from '@api/reviews'
+
+import { ReviewCard } from '@entities/review'
 
 export interface IReviewsProps {
   reviews: TReview[]

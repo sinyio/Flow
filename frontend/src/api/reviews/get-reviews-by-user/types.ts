@@ -1,5 +1,9 @@
+import { TPaginationMeta } from '@api/ads'
 import { IApiError } from '@api/types'
-import { TReviewPaginatedResponse, TReviewTargetRoleQuery } from '../types'
+
+import { TReview } from '../types'
+
+export type TReviewTargetRoleQuery = 'courier' | 'customer' | 'all'
 
 export type TGetReviewsByUserRequest = {
   userId: string
@@ -8,4 +12,4 @@ export type TGetReviewsByUserRequest = {
   role?: TReviewTargetRoleQuery
 }
 
-export type TGetReviewsByUserResponse = TReviewPaginatedResponse | IApiError
+export type TGetReviewsByUserResponse = { data: TReview[]; meta: TPaginationMeta } | IApiError

@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 
-import { useMediaQuery } from './use-media-query'
 import { useServerData } from '@utils/server-data-provider'
+
+import { useMediaQuery } from './use-media-query'
 
 export const useResponsive = (): {
   device: 'mobile' | 'tablet' | 'desktop'

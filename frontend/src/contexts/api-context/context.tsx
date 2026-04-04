@@ -1,7 +1,7 @@
 'use client'
 
-import { createContext, useContext, useMemo, type ReactNode } from 'react'
 import { type AxiosInstance } from 'axios'
+import { createContext, useContext, useMemo, type ReactNode } from 'react'
 
 import { createApiClient } from '@api/client'
 

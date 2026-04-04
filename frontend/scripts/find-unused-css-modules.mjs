@@ -34,6 +34,29 @@ const codeFiles = allFiles.filter(
     f.endsWith('.mdx')
 )
 
+function resolveRelativeImport(fromFile, spec) {
+  if (!spec.startsWith('.')) return null
+  const base = path.join(path.dirname(fromFile), spec)
+  const normalized = path.normalize(base)
+  return normalized.endsWith('.module.css') ? normalized : `${normalized}.module.css`
+}
+
+/** cssAbsPath -> importer files */
+const cssToImporters = new Map()
+const importRe = /from\s+['"]([^'"]+\.module\.css)['"]/g
+
+for (const f of codeFiles) {
+  const c = readFileSafe(f)
+  if (!c) continue
+  let m
+  while ((m = importRe.exec(c))) {
+    const resolved = resolveRelativeImport(f, m[1])
+    if (!resolved || !fs.existsSync(resolved)) continue
+    if (!cssToImporters.has(resolved)) cssToImporters.set(resolved, [])
+    cssToImporters.get(resolved).push(f)
+  }
+}
+
 // Preload code into a single string to enable fast substring checks.
 const codeConcat = codeFiles
   .map(f => readFileSafe(f) ?? '')
@@ -68,18 +91,8 @@ for (const cssFile of cssModuleFiles) {
   const classes = extractClassNames(css)
   if (classes.length === 0) continue
 
-  // Find all TS/TSX that import this CSS module.
   const relFromSrc = path.relative(ROOT, cssFile).split(path.sep).join('/')
-  const importNeedle1 = `./${path.basename(cssFile)}`
-  const importNeedle2 = relFromSrc
-
-  const importers = codeFiles.filter(f => {
-    const c = readFileSafe(f)
-    if (!c) return false
-    if (c.includes(importNeedle1) && c.includes('module.css')) return true
-    if (c.includes(importNeedle2)) return true
-    return false
-  })
+  const importers = cssToImporters.get(cssFile) ?? []
 
   const importerConcat = importers.map(f => readFileSafe(f) ?? '').join('\n')
   const dynamic = hasDynamicStylesAccess(importerConcat)

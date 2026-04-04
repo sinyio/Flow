@@ -1,7 +1,3 @@
-import { IApiError } from '@api/types'
+import { IApiError, IStatusOk } from '@api/types'
 
-export type TLogoutSuccessfullResponse = {
-  status: 'ok'
-}
-
-export type TLogoutResponse = TLogoutSuccessfullResponse | IApiError
+export type TLogoutResponse = IStatusOk | IApiError

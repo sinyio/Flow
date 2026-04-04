@@ -3,3 +3,7 @@ export interface IApiError {
   error?: string
   statusCode?: number
 }
+
+export type IStatusOk = {
+  status: 'ok'
+}

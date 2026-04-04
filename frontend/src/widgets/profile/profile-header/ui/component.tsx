@@ -1,9 +1,9 @@
 import Image from 'next/image'
 
+import { ProfileName } from '@widgets/profile/profile-name'
+
 import styles from './component.module.css'
 import { Header } from './header'
-
-import { ProfileName } from '@widgets/profile/profile-name'
 
 interface ProfileHeaderProps {
   name: string

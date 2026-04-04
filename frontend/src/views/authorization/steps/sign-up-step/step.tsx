@@ -1,16 +1,20 @@
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Link, Text, useToaster } from '@gravity-ui/uikit'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
 
-import { PasswordRequirements } from '@components/templates/password-requirements'
-import { LegalBlock } from '@components/templates/legal-block'
+import { SignUpFormValues } from 'src/types/authorization'
+
+import { useAxiosInstance } from '@api/use-axios-instance'
+
+import { useAuthorizationStore } from '@utils/stores/authorization'
+
+import { CheckboxField } from '@components/form/checkbox-field/field'
 import { EmailField } from '@components/form/email-field/field'
 import { PasswordField } from '@components/form/password-field/field'
-import { CheckboxField } from '@components/form/checkbox-field/field'
-import { SignUpFormValues } from 'src/types/authorization'
+import { LegalBlock } from '@components/templates/legal-block'
+import { PasswordRequirements } from '@components/templates/password-requirements'
+
 import styles from './step.module.css'
-import { useAuthorizationStore } from '@utils/stores/authorization'
-import { useAxiosInstance } from '@api/use-axios-instance'
 import { signUpSchema } from './validation-schema'
 
 export const SignUpStep = () => {

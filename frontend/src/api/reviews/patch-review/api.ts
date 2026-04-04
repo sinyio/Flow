@@ -9,4 +9,8 @@ export const patchReview = (
 ) =>
   typeof axiosInstance !== 'undefined'
     ? axiosInstance.patch<TPatchReviewResponse>(`/review/${id}`, body, config)
-    : axios.patch<TPatchReviewResponse>(`${process.env.NEXT_PUBLIC_API_HOST}/review/${id}`, body, config)
+    : axios.patch<TPatchReviewResponse>(
+        `${process.env.NEXT_PUBLIC_API_HOST}/review/${id}`,
+        body,
+        config
+      )

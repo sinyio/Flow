@@ -1,6 +1,7 @@
-import { notFound } from 'next/navigation'
 import { isAxiosError } from 'axios'
 import type { AxiosError, AxiosResponse } from 'axios'
+import { notFound } from 'next/navigation'
+
 import type { IApiError } from '@api/types'
 
 export type LoadApiResourceResult<T> = { ok: true; data: T } | { ok: false; message: string }
@@ -24,6 +25,8 @@ export const loadApiResource = async <T>(
       }
 
       const message = axiosError.response?.data?.message ?? axiosError.message
+
+      console.error(error)
 
       return { ok: false, message: message || DEFAULT_MESSAGE }
     }

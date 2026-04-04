@@ -8,7 +8,10 @@ export const getAds = (
   config?: AxiosRequestConfig
 ) =>
   typeof axiosInstance !== 'undefined'
-    ? axiosInstance.get<TGetAdsResponse>('/ads', { ...config, params: { ...config?.params, ...params } })
+    ? axiosInstance.get<TGetAdsResponse>('/ads', {
+        ...config,
+        params: { ...config?.params, ...params },
+      })
     : axios.get<TGetAdsResponse>(`${process.env.NEXT_PUBLIC_API_HOST}/ads`, {
         ...config,
         params: { ...config?.params, ...params },

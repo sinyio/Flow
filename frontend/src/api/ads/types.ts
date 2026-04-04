@@ -1,10 +1,8 @@
-import { IApiError } from '@api/types'
+export type TPackaging = 'PACKAGE' | 'BOX' | 'ENVELOPE' | 'FILM' | 'NO_PACKAGING' | 'OTHER'
 
-export type TAdsStatusOk = {
-  status: 'ok'
-}
+export type TRole = 'sender' | 'recipient' | 'viewer'
 
-export type TAdsMutationResponse = TAdsStatusOk | IApiError
+export type TStatus = 'ACTIVE' | 'FINISHED'
 
 export type TPaginationMeta = {
   page: number
@@ -19,17 +17,6 @@ export type TUserSnippet = {
   photo: string | null
   deletedAt?: string | null
 }
-
-export type TViewerRole = 'viewer' | 'sender' | 'recipient'
-
-export type TPackaging = 'PACKAGE' | 'BOX' | 'ENVELOPE' | 'FILM' | 'NO_PACKAGING' | 'OTHER'
-
-export type TRole = 'sender' | 'recipient'
-
-// DTO role used in ads mutations (create/update)
-export type TAdDtoRole = TRole
-
-export type TStatus = 'ACTIVE' | 'FINISHED'
 
 export type TAd = {
   id: string
@@ -59,15 +46,3 @@ export type TAd = {
   recipient: TUserSnippet | null
   courier: TUserSnippet | null
 }
-
-export type TAdPaginatedResponse = {
-  data: TAd[]
-  meta: TPaginationMeta
-}
-
-export type TPopularRoutesResponse = Array<{
-  fromCity: string
-  toCity: string
-  totalAds: number
-  latestAds: TAd[]
-}>

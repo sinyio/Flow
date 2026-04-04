@@ -4,6 +4,7 @@ import { ArrowIcon } from '@components/svgr/arrow-icon/icon'
 import { DotsIcon } from '@components/svgr/dots-icon/icon'
 import { FlagIcon } from '@components/svgr/flag-icon/icon'
 import { ShareIcon } from '@components/svgr/share-icon/icon'
+
 import styles from './header.module.css'
 
 export const Header = () => (

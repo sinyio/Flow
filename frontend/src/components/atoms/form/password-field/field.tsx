@@ -1,9 +1,10 @@
 import { Button, Icon, TextInput, TextInputProps } from '@gravity-ui/uikit'
-import { FieldValues, useController, UseControllerProps } from 'react-hook-form'
 import { useState } from 'react'
+import { FieldValues, useController, UseControllerProps } from 'react-hook-form'
 
-import { EyeSlashIcon } from '@components/svgr/eye-slash-icon/icon'
 import { EyeIcon } from '@components/svgr/eye-icon/icon'
+import { EyeSlashIcon } from '@components/svgr/eye-slash-icon/icon'
+
 import styles from './field.module.css'
 
 interface IPasswordFieldProps<T extends FieldValues> extends TextInputProps {

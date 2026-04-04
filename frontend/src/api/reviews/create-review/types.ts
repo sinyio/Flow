@@ -7,5 +7,4 @@ export type TCreateReviewRequest = {
   isAnonymous?: boolean
 }
 
-/** Backend `putReview` возвращает `getStatusOk()`, не созданный отзыв */
 export type TCreateReviewResponse = TReviewsMutationResponse

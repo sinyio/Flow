@@ -1,4 +1,4 @@
-import { IApiError } from '@api/types'
+import { IApiError, IStatusOk } from '@api/types'
 
 export type TUpdateUserRequest = {
   firstName?: string
@@ -9,8 +9,4 @@ export type TUpdateUserRequest = {
   photo?: File
 }
 
-export type TUpdateUserSuccessfullResponse = {
-  status: 'ok'
-}
-
-export type TUpdateUserResponse = TUpdateUserSuccessfullResponse | IApiError
+export type TUpdateUserResponse = IStatusOk | IApiError

@@ -1,16 +1,18 @@
 'use client'
 
+import { Text } from '@gravity-ui/uikit'
 import Image from 'next/image'
 import { ReactNode } from 'react'
-import { Text } from '@gravity-ui/uikit'
+
+import { TAuthorizationStep, useAuthorizationStore } from '@utils/stores/authorization'
 
 import { LiquidGlassBlock } from '@components/global/liquid-glass-block'
-import { TAuthorizationStep, useAuthorizationStore } from '@utils/stores/authorization'
+import { PageContainer } from '@components/global/page-container'
+
 import { ForgotPasswordStep } from './steps/forgot-password-step/step'
 import { SignInStep } from './steps/sign-in-step/step'
 import { SignUpStep } from './steps/sign-up-step/step'
 import styles from './view.module.css'
-import { PageContainer } from '@components/global/page-container'
 
 const headerMap: Record<TAuthorizationStep, string> = {
   'sign-up': 'Регистрация',

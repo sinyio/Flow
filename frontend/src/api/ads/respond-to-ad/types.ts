@@ -1,5 +1,5 @@
-import { TAdsMutationResponse } from '../types'
+import { IApiError, IStatusOk } from '@api/types'
 
 export type TRespondToAdRequest = string
 
-export type TRespondToAdResponse = TAdsMutationResponse
+export type TRespondToAdResponse = IStatusOk | IApiError

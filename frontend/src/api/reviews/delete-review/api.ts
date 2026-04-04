@@ -9,4 +9,7 @@ export const deleteReview = (
 ) =>
   typeof axiosInstance !== 'undefined'
     ? axiosInstance.delete<TDeleteReviewResponse>(`/review/${id}`, config)
-    : axios.delete<TDeleteReviewResponse>(`${process.env.NEXT_PUBLIC_API_HOST}/review/${id}`, config)
+    : axios.delete<TDeleteReviewResponse>(
+        `${process.env.NEXT_PUBLIC_API_HOST}/review/${id}`,
+        config
+      )

@@ -28,4 +28,3 @@ export const createAdSchema = z.object({
     .nullable()
     .refine(v => v !== null, { message: 'Добавьте фото' }),
 })
-
