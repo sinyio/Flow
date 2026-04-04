@@ -3,13 +3,14 @@
 import type { TAdPaginatedResponse, TGetAdsParams, TGetPopularRoutesResponse } from '@api/ads'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Button, Icon, Label, Text, TextInput } from '@gravity-ui/uikit'
-import { AdCard } from '@entities/ad'
 
+import { Card } from '@components/templates/card'
 import { getPopularRoutes } from '@api/ads'
 import { PageContainer } from '@components/global/page-container'
 import { ArrowIcon } from '@components/svgr/arrow-icon/icon'
+import { CompassIcon } from '@components/svgr/compass-icon/icon'
 import { useResponsive } from '@utils/hooks/use-responsive'
 import styles from './view.module.css'
 import { useAxiosInstance } from '@api/use-axios-instance'
@@ -27,6 +28,23 @@ type TRoutesOption = {
   fromCity: string
   toCity: string
 }
+
+const fallbackRoutes: TRoutesOption[] = [
+  {
+    value: 'moscow__tbilisi',
+    content: 'Москва – Тбилиси',
+    count: 5,
+    fromCity: 'Москва',
+    toCity: 'Тбилиси',
+  },
+  {
+    value: 'tbilisi__moscow',
+    content: 'Тбилиси – Москва',
+    count: 2,
+    fromCity: 'Тбилиси',
+    toCity: 'Москва',
+  },
+]
 
 const buildSearchUrl = (params: Record<string, string | number | boolean | undefined>) => {
   const sp = new URLSearchParams()
@@ -51,6 +69,7 @@ export const FeedView = ({ initial, query, isSearch }: IFeedViewProps) => {
 
   const canPrev = data.meta.page > 1
   const canNext = data.meta.page < data.meta.pages
+  const routeItems = routes.length ? routes : fallbackRoutes
 
   useEffect(() => {
     let alive = true
@@ -90,12 +109,22 @@ export const FeedView = ({ initial, query, isSearch }: IFeedViewProps) => {
       ? `${query.fromCity} – ${query.toCity}`
       : 'Лента объявлений'
 
+  const routeMeta = [
+    query.startDate && query.endDate ? `${query.startDate} – ${query.endDate}` : null,
+  ]
+    .concat(typeof query.minPrice === 'number' ? [`от ${query.minPrice} ₽`] : [])
+    .filter(Boolean)
+    .join('  ')
+
   return (
     <>
       <div className={styles.hero}>
         <div className={styles.heroImage} aria-hidden="true" />
 
         <div className={styles.heroInner}>
+          <Text variant="caption-2" className={styles.heroPageTitle}>
+            Лента
+          </Text>
           {isSearch ? (
             <div className={styles.heroCard}>
               <Button
@@ -115,18 +144,13 @@ export const FeedView = ({ initial, query, isSearch }: IFeedViewProps) => {
                 >
                   {title}
                 </Text>
-                <Text variant="body-2" color="secondary">
-                  {query.startDate && query.endDate
-                    ? `${query.startDate} – ${query.endDate}`
-                    : null}
-                </Text>
-                <Text variant="body-2" color="secondary">
-                  {typeof query.minPrice === 'number' ? `от ${query.minPrice} ₽` : null}
+                <Text variant="caption-2" className={styles.heroMeta}>
+                  {routeMeta || 'Параметры не выбраны'}
                 </Text>
               </div>
             </div>
           ) : (
-            <HeroSearch routes={routes} />
+            <HeroSearch routes={routeItems} />
           )}
         </div>
       </div>
@@ -135,32 +159,33 @@ export const FeedView = ({ initial, query, isSearch }: IFeedViewProps) => {
         {isSearch ? (
           <>
             <div className={styles.filtersRow}>
-              <Label size="xs" theme="info" className={styles.filtersIcon}>
-                1f
-              </Label>
+              <div className={styles.filtersUser}>JT</div>
 
               <div className={styles.filters}>
                 {typeof query.maxWeight === 'number' ? (
                   <Label size="xs" theme="success">
-                    До {query.maxWeight}кг
+                    До {query.maxWeight} кг
                   </Label>
                 ) : null}
+                <Label size="xs" theme="success">
+                  Проверенный отправитель
+                </Label>
                 {query.isDocument ? (
-                  <Label size="xs" theme="info">
-                    Документы
+                  <Label size="xs" theme="success">
+                    До 5кг
                   </Label>
                 ) : null}
                 {query.isFragile ? (
-                  <Label size="xs" theme="warning">
+                  <Label size="xs" theme="success">
                     Хрупкое
                   </Label>
                 ) : null}
               </div>
             </div>
 
-            <div className={styles.list}>
+            <div className={styles.searchList}>
               {data.data.map(ad => (
-                <AdCard key={ad.id} {...ad} />
+                <DeliveryPreviewCard withBadges key={ad.id} ad={ad} />
               ))}
             </div>
 
@@ -191,6 +216,18 @@ export const FeedView = ({ initial, query, isSearch }: IFeedViewProps) => {
                 ›
               </Button>
             </div>
+
+            <section className={styles.subscribeSection}>
+              <Text variant="header-2" className={styles.subscribeTitle}>
+                Не нашли подходящее объявление?
+              </Text>
+              <Text variant="body-2" color="secondary" className={styles.subscribeText}>
+                Подпишитесь на email уведомления по выбранному направлению
+              </Text>
+              <Button view="action" size="xl" className={styles.subscribeButton}>
+                Подписаться
+              </Button>
+            </section>
           </>
         ) : (
           <>
@@ -199,7 +236,7 @@ export const FeedView = ({ initial, query, isSearch }: IFeedViewProps) => {
                 Популярные
               </Text>
               <div className={styles.popular}>
-                {routes.slice(0, 2).map(r => (
+                {routeItems.slice(0, 2).map(r => (
                   <button
                     key={r.value}
                     className={styles.popularItem}
@@ -210,7 +247,9 @@ export const FeedView = ({ initial, query, isSearch }: IFeedViewProps) => {
                     }
                     type="button"
                   >
-                    <div className={styles.popularIcon} aria-hidden="true" />
+                    <span className={styles.popularIcon} aria-hidden="true">
+                      <Icon data={CompassIcon} />
+                    </span>
                     <div className={styles.popularText}>
                       <Text variant="subheader-2">{r.content}</Text>
                       <Text variant="caption-1" color="secondary">
@@ -228,7 +267,7 @@ export const FeedView = ({ initial, query, isSearch }: IFeedViewProps) => {
                 <MediaCard title="Сколько стоит услуга?" />
               </div>
               <div className={styles.mediaActions}>
-                <Button view="outlined" size="l">
+                <Button view="action" size="xl">
                   Читать больше в нашем медиа
                 </Button>
               </div>
@@ -240,8 +279,8 @@ export const FeedView = ({ initial, query, isSearch }: IFeedViewProps) => {
               </Text>
 
               <div className={styles.list}>
-                {data.data.slice(0, 6).map(ad => (
-                  <AdCard key={ad.id} {...ad} />
+                {data.data.slice(0, 2).map(ad => (
+                  <DeliveryPreviewCard key={ad.id} ad={ad} />
                 ))}
               </div>
 
@@ -260,14 +299,71 @@ export const FeedView = ({ initial, query, isSearch }: IFeedViewProps) => {
 
 export default FeedView
 
+const formatDate = (value?: string) => {
+  if (!value) return ''
+
+  const date = new Date(value)
+
+  if (Number.isNaN(date.getTime())) return ''
+
+  return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' })
+}
+
+const formatRange = (startDate?: string, endDate?: string) => {
+  const start = formatDate(startDate)
+  const end = formatDate(endDate)
+
+  if (!start && !end) return 'Дата не указана'
+  if (!start) return end
+  if (!end) return start
+
+  const year = endDate ? new Date(endDate).getFullYear() : ''
+
+  return `${start} – ${end}${year ? ` ${year}` : ''}`
+}
+
+const DeliveryPreviewCard = ({
+  ad,
+  withBadges = false,
+}: {
+  ad: TAdPaginatedResponse['data'][number]
+  withBadges?: boolean
+}) => (
+  <Card className={styles.deliveryCard}>
+    <div className={styles.deliveryInner}>
+      {withBadges ? (
+        <div className={styles.deliveryBadges}>
+          <Label size="xs" theme="success">
+            Проверенный отправитель
+          </Label>
+        </div>
+      ) : null}
+
+      <div className={styles.deliveryRow}>
+        <div className={styles.deliveryImage}>
+          <Image fill alt="" src={ad.image || '/profile/item.png'} />
+        </div>
+
+        <div className={styles.deliveryContent}>
+          <Text variant="display-1" className={styles.deliveryPrice}>
+            {ad.price} ₽
+          </Text>
+          <Text variant="subheader-2" className={styles.deliveryRoute}>
+            {ad.fromCity} – {ad.toCity}
+          </Text>
+          <Text variant="body-2" color="secondary">
+            {formatRange(ad.startDate, ad.endDate)}
+          </Text>
+        </div>
+      </div>
+    </div>
+  </Card>
+)
+
 const MediaCard = ({ title }: { title: string }) => (
   <div className={styles.mediaCard}>
     <div className={styles.mediaImage}>
-      <Image
-        fill
-        alt=""
-        src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="
-      />
+      <Image fill alt="" src="/profile/item.png" />
     </div>
     <Text variant="subheader-2" className={styles.mediaTitle}>
       {title}
@@ -279,11 +375,41 @@ const HeroSearch = ({ routes }: { routes: TRoutesOption[] }) => {
   const router = useRouter()
   const { device } = useResponsive()
 
-  const [fromCity, setFromCity] = useState('')
-  const [toCity, setToCity] = useState('')
-  const [startDate, setStartDate] = useState('')
-  const [endDate, setEndDate] = useState('')
-  const [minPrice, setMinPrice] = useState('')
+  const [routeQuery, setRouteQuery] = useState('')
+  const [selectedRoute, setSelectedRoute] = useState<TRoutesOption | null>(null)
+  const [isRouteDropdownOpen, setIsRouteDropdownOpen] = useState(false)
+  const [dateRange, setDateRange] = useState('08.04 - 14.04')
+  const [minPrice, setMinPrice] = useState('500')
+
+  const filteredRoutes = useMemo(() => {
+    const q = routeQuery.trim().toLowerCase()
+
+    if (!q) return routes.slice(0, 6)
+
+    return routes.filter(route => route.content.toLowerCase().includes(q)).slice(0, 6)
+  }, [routes, routeQuery])
+
+  const splitDateRange = (value: string) => {
+    const [start = '', end = ''] = value.split('-').map(part => part.trim())
+
+    return { startDate: start || undefined, endDate: end || undefined }
+  }
+
+  const submitSearch = () => {
+    const routeToSearch = selectedRoute ?? filteredRoutes[0]
+    const parsedDates = splitDateRange(dateRange)
+
+    router.push(
+      buildSearchUrl({
+        fromCity: routeToSearch?.fromCity || undefined,
+        toCity: routeToSearch?.toCity || undefined,
+        startDate: parsedDates.startDate,
+        endDate: parsedDates.endDate,
+        minPrice: minPrice || undefined,
+        page: 1,
+      })
+    )
+  }
 
   return (
     <div className={styles.heroCard}>
@@ -294,56 +420,67 @@ const HeroSearch = ({ routes }: { routes: TRoutesOption[] }) => {
       <div className={styles.searchGrid}>
         <TextInput
           size="xl"
-          placeholder="Откуда"
-          value={fromCity}
-          onUpdate={setFromCity}
+          placeholder="Найти направление"
+          value={routeQuery}
+          onUpdate={value => {
+            setRouteQuery(value)
+            setIsRouteDropdownOpen(true)
+          }}
+          onFocus={() => setIsRouteDropdownOpen(true)}
           className={styles.searchInput}
         />
-        <TextInput
-          size="xl"
-          placeholder="Куда"
-          value={toCity}
-          onUpdate={setToCity}
-          className={styles.searchInput}
-        />
-        <TextInput
-          size="xl"
-          placeholder="Дата"
-          value={startDate}
-          onUpdate={setStartDate}
-          className={styles.searchInput}
-        />
-        <TextInput
-          size="xl"
-          placeholder="Дата"
-          value={endDate}
-          onUpdate={setEndDate}
-          className={styles.searchInput}
-        />
-        <TextInput
-          size="xl"
-          placeholder="Сколько"
-          value={minPrice}
-          onUpdate={setMinPrice}
-          className={styles.searchInput}
-        />
-        <Button
-          view="action"
-          size="xl"
-          className={styles.searchButton}
-          onClick={() =>
-            router.push(
-              buildSearchUrl({
-                fromCity: fromCity || undefined,
-                toCity: toCity || undefined,
-                startDate: startDate || undefined,
-                endDate: endDate || undefined,
-                minPrice: minPrice || undefined,
-                page: 1,
-              })
-            )
-          }
-        >
+
+        {isRouteDropdownOpen && filteredRoutes.length ? (
+          <div className={styles.routesDropdown}>
+            {filteredRoutes.map(route => (
+              <button
+                key={route.value}
+                type="button"
+                className={styles.routesDropdownItem}
+                onClick={() => {
+                  setSelectedRoute(route)
+                  setRouteQuery(route.content)
+                }}
+              >
+                {route.content}
+              </button>
+            ))}
+
+            <div className={styles.routesDropdownActions}>
+              <Button
+                view="flat"
+                size="m"
+                onClick={() => {
+                  setSelectedRoute(null)
+                  setIsRouteDropdownOpen(false)
+                }}
+              >
+                Отмена
+              </Button>
+              <Button view="action" size="m" onClick={() => setIsRouteDropdownOpen(false)}>
+                Выбрать
+              </Button>
+            </div>
+          </div>
+        ) : null}
+
+        <div className={styles.searchMetaRow}>
+          <TextInput
+            size="xl"
+            placeholder="Дата"
+            value={dateRange}
+            onUpdate={setDateRange}
+            className={styles.searchInput}
+          />
+          <TextInput
+            size="xl"
+            placeholder="Оплата"
+            value={minPrice}
+            onUpdate={setMinPrice}
+            className={styles.searchInput}
+          />
+        </div>
+        <Button view="action" size="xl" className={styles.searchButton} onClick={submitSearch}>
           Найти
         </Button>
       </div>
