@@ -14,7 +14,7 @@ services:
       - flow-backend
 
   redis:
-    image: redis:8
+    image: redis:7
     restart: always
     ports:
       - 6379:6379
