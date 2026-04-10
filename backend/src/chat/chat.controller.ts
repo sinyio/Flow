@@ -1,6 +1,16 @@
-import { Controller, Get, HttpCode, HttpStatus, Param, Query, Req, UseGuards } from '@nestjs/common'
+import {
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Query,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common'
 import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { type Request } from 'express'
+import { type Request, type Response } from 'express'
 import { AuthGuard } from '@/src/auth/guards/auth.guard'
 import { ChatService } from './chat.service'
 import { ChatPaginatedResponseDto, ChatPaginationDto, MessagePaginatedResponseDto, MessagePaginationDto } from './dto'
@@ -38,6 +48,30 @@ export class ChatController {
   ) {
     const userId = req.session.userId
     return this.chatService.getChatMessages(userId, chatId, query.page ?? 1, query.limit ?? 50)
+  }
+
+  @Get(':chatId/files/:fileId')
+  @UseGuards(AuthGuard)
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Скачать вложение из чата (только для участников)' })
+  @ApiParam({ name: 'chatId', required: true, type: String, description: 'Id чата' })
+  @ApiParam({ name: 'fileId', required: true, type: String, description: 'Id файла' })
+  public async getChatFile(
+    @Req() req: Request,
+    @Param('chatId') chatId: string,
+    @Param('fileId') fileId: string,
+    @Res() res: Response,
+  ) {
+    const userId = req.session.userId
+    const file = await this.chatService.getChatFile(userId, chatId, fileId)
+
+    if (file.fileName) {
+      res.setHeader('Content-Disposition', `inline; filename="${encodeURIComponent(file.fileName)}"`)
+    }
+
+    res.setHeader('Content-Type', file.mimeType)
+    res.setHeader('Content-Length', String(file.size))
+    res.send(file.body)
   }
 }
 

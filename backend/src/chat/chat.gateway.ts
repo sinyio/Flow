@@ -111,12 +111,27 @@ export class ChatGateway implements OnGatewayConnection {
   @SubscribeMessage('message')
   public async message(
     @ConnectedSocket() client: SocketWithSession,
-    @MessageBody() body: { chatId: string; text?: string },
+    @MessageBody()
+    body: {
+      chatId: string
+      text?: string
+      attachments?: Array<{
+        name?: string
+        mimeType?: string
+        dataBase64: string
+        size?: number
+      }>
+    },
   ) {
     const userId = client.request.session?.userId
     if (!userId) return { ok: false }
 
-    const msg = await this.chatService.createMessage(userId, body.chatId, body.text)
+    const msg = await this.chatService.createMessage(
+      userId,
+      body.chatId,
+      body.text,
+      body.attachments ?? [],
+    )
     this.server.to(body.chatId).emit('message:new', msg)
     return { ok: true, message: msg }
   }

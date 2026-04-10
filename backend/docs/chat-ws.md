@@ -51,14 +51,25 @@ Payload:
 
 ### `message`
 
-Отправка текстового сообщения в чат.
+Отправка сообщения в чат (текст и/или вложения).
 
 - **Client → Server**
 
 Payload:
 
 ```json
-{ "chatId": "...", "text": "Привет!" }
+{
+  "chatId": "...",
+  "text": "Привет!",
+  "attachments": [
+    {
+      "name": "photo.png",
+      "mimeType": "image/png",
+      "size": 123456,
+      "dataBase64": "iVBORw0KGgoAAAANSUhEUgAA..."
+    }
+  ]
+}
 ```
 
 Ответ (ack):
@@ -66,6 +77,14 @@ Payload:
 ```json
 { "ok": true, "message": { /* message */ } }
 ```
+
+Правила:
+
+- Можно отправить только текст, только вложения или и то и другое.
+- Пустое сообщение (без текста и без вложений) отклоняется.
+- `dataBase64` должен быть **чистой base64 строкой** (без префикса `data:*/*;base64,`).
+- До `10` вложений в одном сообщении.
+- До `10MB` на одно вложение.
 
 ---
 
@@ -94,12 +113,26 @@ Payload (пример):
 }
 ```
 
+Если есть вложения, в `files` придут объекты вида:
+
+```json
+{
+  "id": "uuid",
+  "url": "/chats/<chatId>/files/<fileId>",
+  "mimeType": "image/png",
+  "fileName": "photo.png",
+  "size": 123456,
+  "createdAt": "2026-03-18T12:34:56.000Z"
+}
+```
+
 ## HTTP ручки (для истории и списка)
 
 WS используется для realtime, а историю/пагинацию удобнее брать через HTTP:
 
 - **Мои чаты**: `GET /chats?page=1&limit=20&q=...`
 - **Сообщения чата**: `GET /chats/:chatId/messages?page=1&limit=50`
+- **Скачать вложение**: `GET /chats/:chatId/files/:fileId` (только участник чата)
 
 ## Пример клиента (socket.io-client)
 
@@ -140,12 +173,64 @@ socket.on('message:new', (msg) => {
 socket.emit('message', { chatId: 'CHAT_ID', text: 'Привет!' }, (ack: any) => {
   console.log('message ack', ack)
 })
+
+// Пример: отправка файла
+async function fileToBase64(file: File): Promise<string> {
+  const arr = await file.arrayBuffer()
+  const bytes = new Uint8Array(arr)
+  let binary = ''
+  const chunkSize = 0x8000
+
+  for (let i = 0; i < bytes.length; i += chunkSize) {
+    binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize))
+  }
+
+  return btoa(binary)
+}
+
+async function sendFileMessage(chatId: string, file: File) {
+  const dataBase64 = await fileToBase64(file)
+
+  socket.emit(
+    'message',
+    {
+      chatId,
+      text: '',
+      attachments: [
+        {
+          name: file.name,
+          mimeType: file.type || 'application/octet-stream',
+          size: file.size,
+          dataBase64,
+        },
+      ],
+    },
+    (ack: any) => {
+      console.log('file message ack', ack)
+    },
+  )
+}
+
+// Пример: скачивание вложения из message.files[].url
+async function downloadAttachment(fileUrl: string, fileName = 'file') {
+  const res = await fetch(fileUrl, { credentials: 'include' })
+  if (!res.ok) throw new Error(`Download failed: ${res.status}`)
+
+  const blob = await res.blob()
+  const href = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = href
+  a.download = fileName
+  document.body.appendChild(a)
+  a.click()
+  a.remove()
+  URL.revokeObjectURL(href)
+}
 ```
 
 ## Примечания
 
-- События вложений/файлов пока не добавлены. Обычно делается так:
-  - файл загружается в S3/MinIO по HTTP,
-  - создаётся `MessageFile` в БД,
-  - затем по WS (или HTTP) отправляется сообщение, связанное с файлами.
+- Вложения физически хранятся в MinIO.
+- Прямые публичные ссылки на MinIO клиенту не отдаются.
+- Доступ к вложениям идет через backend-эндпоинт с проверкой участия в чате.
 
