@@ -1,10 +1,10 @@
 import { redirect } from 'next/navigation'
 
+import NotFound from 'src/app/not-found'
+
 import { me, TMeResponse } from '@api/auth'
 
 import { loadApiResource } from '@utils/load-api-resource'
-
-import { LoadErrorFallback } from '@views/error-fallback'
 
 const Page = async () => {
   const result = await loadApiResource<TMeResponse>(
@@ -17,7 +17,7 @@ const Page = async () => {
   }
 
   if (!result.ok) {
-    return <LoadErrorFallback message={result.message} />
+    return <NotFound />
   }
 }
 

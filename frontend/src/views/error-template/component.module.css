@@ -1,0 +1,16 @@
+.container {
+    padding: 32px;
+    background-color: var(--g-color-base-light);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    max-width: 600px;
+    width: fit-content;
+}
+
+.textContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}

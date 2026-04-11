@@ -15,4 +15,9 @@ export type TGetAdsParams = {
   endDate?: string
 }
 
-export type TGetAdsResponse = { data: TAd[]; meta: TPaginationMeta } | IApiError
+export type TGetAdsSuccessfullResponse = {
+  data: TAd[]
+  meta: TPaginationMeta
+}
+
+export type TGetAdsResponse = IApiError | TGetAdsSuccessfullResponse

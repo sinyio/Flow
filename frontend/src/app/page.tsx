@@ -1,15 +1,43 @@
-import { getPopularRoutes, TGetPopularRoutesResponse } from '@api/ads'
+import {
+  getAds,
+  getPopularRoutes,
+  TGetAdsParams,
+  TGetAdsResponse,
+  TGetAdsSuccessfullResponse,
+  TGetPopularRoutesResponse,
+  TRoute,
+} from '@api/ads'
 
 import { loadApiResource } from '@utils/load-api-resource'
 
-import { LoadErrorFallback } from '@views/error-fallback'
 import { FeedView } from '@views/feed'
 
-const Page = async () => {
-  const response = await loadApiResource<TGetPopularRoutesResponse>(
-    () => getPopularRoutes(),
-    (data): data is TGetPopularRoutesResponse => Array.isArray(data)
-  )
+const Page = async ({ searchParams }: { searchParams: Promise<TGetAdsParams> }) => {
+  const settings = await searchParams
+
+  if (settings) {
+    const adsResponse = await loadApiResource<TGetAdsResponse>(
+      () => getAds(settings),
+      (data): data is TGetAdsSuccessfullResponse => Array.isArray(data)
+    )
+
+    if (!adsResponse.ok) {
+      throw new Error(adsResponse?.message)
+    }
+
+    return <FeedView ads={adsResponse.data} settings={settings} />
+  } else {
+    const popularRoutesResponse = await loadApiResource<TGetPopularRoutesResponse>(
+      () => getPopularRoutes(),
+      (data): data is TRoute[] => Array.isArray(data)
+    )
+
+    if (!popularRoutesResponse.ok) {
+      throw new Error(popularRoutesResponse?.message)
+    }
+
+    return <FeedView routes={popularRoutesResponse.data} settings={settings} />
+  }
 
   // const mock: TGetPopularRoutesResponse = [
   //   {
@@ -113,12 +141,6 @@ const Page = async () => {
   //     ],
   //   },
   // ]
-
-  if (!response.ok) {
-    return <LoadErrorFallback message={response.message} />
-  }
-
-  return <FeedView routes={response.data} />
 }
 
 export default Page

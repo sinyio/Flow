@@ -134,7 +134,7 @@ const ProfileView = ({ user }: IProfileViewProps) => {
         add({
           isClosable: true,
           theme: 'warning',
-          name: 'register_error',
+          name: 'fetch_ads_error',
           title: 'Ошибка',
           content: e.message,
         })

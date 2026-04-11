@@ -3,8 +3,9 @@ import { getUser, TUser } from '@api/user/get-user'
 
 import { loadApiResource } from '@utils/load-api-resource'
 
-import { LoadErrorFallback } from '@views/error-fallback'
 import ProfileView from '@views/profile/view'
+
+import NotFound from '../not-found'
 
 const Page = async () => {
   const meResult = await loadApiResource<TMeResponse>(
@@ -13,7 +14,7 @@ const Page = async () => {
   )
 
   if (!meResult.ok) {
-    return <LoadErrorFallback message={meResult.message} />
+    return <NotFound />
   }
 
   const userResult = await loadApiResource<TUser>(
@@ -22,7 +23,7 @@ const Page = async () => {
   )
 
   if (!userResult.ok) {
-    return <LoadErrorFallback message={userResult.message} />
+    return <NotFound />
   }
 
   return <ProfileView user={userResult.data} />

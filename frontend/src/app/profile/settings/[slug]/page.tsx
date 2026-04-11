@@ -1,9 +1,10 @@
+import NotFound from 'src/app/not-found'
+
 import type { TUser } from '@api/user/get-user'
 import { getUser } from '@api/user/get-user'
 
 import { loadApiResource } from '@utils/load-api-resource'
 
-import { LoadErrorFallback } from '@views/error-fallback'
 import ProfileSettings from '@views/profile/settings/view'
 
 const Page = async ({ params }: { params: Promise<{ slug: string }> }) => {
@@ -15,7 +16,7 @@ const Page = async ({ params }: { params: Promise<{ slug: string }> }) => {
   )
 
   if (!result.ok) {
-    return <LoadErrorFallback message={result.message} />
+    return <NotFound />
   }
 
   return <ProfileSettings user={result.data} />
