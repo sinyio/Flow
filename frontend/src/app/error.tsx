@@ -21,7 +21,10 @@ const Error = ({ error, reset }: { error: Error & { digest?: string }; reset: ()
         title={(error?.cause as string) || 'Не удалось загрузить данные'}
         message={error.message}
         buttonText="Попробовать снова"
-        onClick={() => router.refresh()}
+        onClick={() => {
+          reset()
+          router.refresh()
+        }}
       />
     </PageContainer>
   )

@@ -1,13 +1,17 @@
 'use client'
 
 import type { TCreateAdFormValues } from './types'
-import { Button, Switch, Text } from '@gravity-ui/uikit'
+import { Button, Switch, Text, useToaster } from '@gravity-ui/uikit'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { isAxiosError } from 'axios'
+import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useForm, type SubmitHandler } from 'react-hook-form'
 
 import { createAd, getPopularRoutes, type TPackaging } from '@api/ads'
 import { useAxiosInstance } from '@api/use-axios-instance'
+
+import { normalizeApiMessage } from '@utils/session-not-found'
 
 import { DatePickerField } from '@components/form/date-picker-field/field'
 import { SelectField } from '@components/form/select-field/field'
@@ -30,6 +34,8 @@ const toRouteKey = (fromCity: string, toCity: string) => `${fromCity}__${toCity}
 
 export const CreateAdForm = () => {
   const axiosInstance = useAxiosInstance()
+  const router = useRouter()
+  const { add } = useToaster()
   const fileRef = useRef<HTMLInputElement | null>(null)
 
   const [routes, setRoutes] = useState<Array<{ value: string; content: string }>>([])
@@ -77,8 +83,8 @@ export const CreateAdForm = () => {
           )
         }
       })
-      .catch(() => {
-        // ignore: routes are optional for the form UX
+      .catch(err => {
+        console.error('[CreateAdForm] getPopularRoutes failed:', err)
       })
 
     return () => {
@@ -95,27 +101,71 @@ export const CreateAdForm = () => {
       return
     }
 
-    await createAd(
-      {
-        title: values.title.trim(),
-        startDate: values.startDate,
-        endDate: values.endDate,
-        fromCity,
-        toCity,
-        weight: Number(values.weight),
-        length: Number(values.length),
-        width: Number(values.width),
-        height: Number(values.height),
-        price: Number(values.price),
-        packaging: values.packaging as TPackaging,
-        role: values.role,
-        isFragile: values.isFragile,
-        isDocument: values.isDocument,
-        description: values.description.trim() ? values.description.trim() : undefined,
-        image: values.image,
-      },
-      axiosInstance
-    )
+    try {
+      const { data } = await createAd(
+        {
+          title: values.title.trim(),
+          startDate: values.startDate,
+          endDate: values.endDate,
+          fromCity,
+          toCity,
+          weight: Number(values.weight),
+          length: Number(values.length),
+          width: Number(values.width),
+          height: Number(values.height),
+          price: Number(values.price),
+          packaging: values.packaging as TPackaging,
+          role: values.role,
+          isFragile: values.isFragile,
+          isDocument: values.isDocument,
+          description: values.description.trim() ? values.description.trim() : undefined,
+          image: values.image,
+        },
+        axiosInstance
+      )
+
+      if ('status' in data && data.status === 'ok') {
+        add({
+          isClosable: true,
+          theme: 'success',
+          name: 'create_ad_ok',
+          title: 'Готово',
+          content: 'Объявление создано.',
+        })
+        router.push('/')
+
+        return
+      }
+
+      const apiMessage = 'message' in data ? data.message : 'Не удалось создать объявление'
+
+      console.error('[CreateAdForm] API rejected:', data)
+      add({
+        isClosable: true,
+        theme: 'warning',
+        name: 'create_ad_error',
+        title: 'Ошибка',
+        content: apiMessage,
+      })
+    } catch (error: unknown) {
+      console.error('[CreateAdForm] createAd failed:', error)
+
+      let message = 'Произошла ошибка при создании объявления'
+
+      if (isAxiosError(error)) {
+        const body = error.response?.data as { message?: unknown } | undefined
+
+        message = normalizeApiMessage(body?.message) ?? error.message ?? message
+      }
+
+      add({
+        isClosable: true,
+        theme: 'warning',
+        name: 'create_ad_error',
+        title: 'Ошибка',
+        content: message,
+      })
+    }
   }
 
   return (

@@ -12,17 +12,17 @@ export const mobileNavMocks = [
   },
   {
     icon: <CompassIcon />,
-    value: 'media',
+    value: '',
     label: 'медиа',
   },
   {
     icon: <FeedIcon />,
-    value: 'feed',
+    value: '',
     label: 'лента',
   },
   {
     icon: <AddIcon />,
-    value: 'ad',
+    value: 'ads',
     label: 'объявление',
   },
   {

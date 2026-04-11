@@ -12,7 +12,11 @@ const Page = async ({ params }: { params: Promise<{ slug: string }> }) => {
 
   const result = await loadApiResource<TUser>(
     () => getUser(slug),
-    (data): data is TUser => 'id' in data
+    (data): data is TUser =>
+      typeof data === 'object' &&
+      data !== null &&
+      'id' in data &&
+      typeof (data as TUser).id === 'string'
   )
 
   if (!result.ok) {

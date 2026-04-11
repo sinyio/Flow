@@ -1,5 +1,8 @@
+'use client'
+
 import { Button, Label, Text } from '@gravity-ui/uikit'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 
 import type { TAd } from '@api/ads'
 
@@ -15,6 +18,7 @@ export interface IAdCardProps {
 }
 
 export const AdCard = ({ ad }: IAdCardProps) => {
+  const router = useRouter()
   const route = `${ad.fromCity} – ${ad.toCity}`
   const date = `${getDate(ad.startDate)} – ${getDate(ad.endDate)}`
 
@@ -47,7 +51,13 @@ export const AdCard = ({ ad }: IAdCardProps) => {
       </div>
 
       {ad.userState.canEdit && statusesMap[ad.status]?.canEdit ? (
-        <Button view="action" size="l" style={{ width: '100%', marginTop: '8px' }}>
+        <Button
+          type="button"
+          view="action"
+          size="l"
+          style={{ width: '100%', marginTop: '8px' }}
+          onClick={() => router.push(`/ads/${ad.id}`)}
+        >
           Редактировать
         </Button>
       ) : null}

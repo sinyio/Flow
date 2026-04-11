@@ -10,7 +10,7 @@ import { ApiProvider } from '@contexts/api-context'
 
 import { BusinessLayout } from '@utils/business-layout'
 import { GlassEffect } from '@utils/glass-effect'
-import { TServerData } from '@utils/server-data-provider'
+import type { TServerData } from '@utils/server-data-provider'
 import { Metrika } from '@utils/yandex-metrika'
 
 import { AppShell } from '@components/global/app-shell'

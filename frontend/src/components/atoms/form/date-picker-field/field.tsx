@@ -1,3 +1,5 @@
+'use client'
+
 import { DatePicker, DatePickerProps } from '@gravity-ui/date-components'
 import { dateTimeParse, isDateTime } from '@gravity-ui/date-utils'
 import type { DateTime } from '@gravity-ui/date-utils'

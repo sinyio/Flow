@@ -1,3 +1,5 @@
+'use client'
+
 import { Button, Text, TextProps } from '@gravity-ui/uikit'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'

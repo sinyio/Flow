@@ -42,7 +42,7 @@ export const AdName = ({
       </div>
     </div>
 
-    <Button size="xl" width="max" view="action" onClick={() => console.log('chat')}>
+    <Button size="xl" width="max" view="action" type="button">
       <Text variant="header-1">Написать в чат</Text>
     </Button>
   </div>

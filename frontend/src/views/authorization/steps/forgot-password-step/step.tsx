@@ -1,3 +1,5 @@
+'use client'
+
 import { Button, Link, Text } from '@gravity-ui/uikit'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useCallback } from 'react'

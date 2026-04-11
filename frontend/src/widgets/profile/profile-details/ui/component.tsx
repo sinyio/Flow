@@ -1,5 +1,3 @@
-'use client'
-
 import { Accordion, Text } from '@gravity-ui/uikit'
 import { ReactNode } from 'react'
 

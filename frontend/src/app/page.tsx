@@ -2,9 +2,7 @@ import {
   getAds,
   getPopularRoutes,
   TGetAdsParams,
-  TGetAdsResponse,
   TGetAdsSuccessfullResponse,
-  TGetPopularRoutesResponse,
   TRoute,
 } from '@api/ads'
 
@@ -13,12 +11,19 @@ import { loadApiResource } from '@utils/load-api-resource'
 import { FeedView } from '@views/feed'
 
 const Page = async ({ searchParams }: { searchParams: Promise<TGetAdsParams> }) => {
-  const settings = await searchParams
+  const searchParamsObject = await searchParams
+
+  const settings = Object.keys(searchParamsObject).length > 0 ? searchParamsObject : undefined
 
   if (settings) {
-    const adsResponse = await loadApiResource<TGetAdsResponse>(
+    const adsResponse = await loadApiResource<TGetAdsSuccessfullResponse>(
       () => getAds(settings),
-      (data): data is TGetAdsSuccessfullResponse => Array.isArray(data)
+      (data): data is TGetAdsSuccessfullResponse =>
+        typeof data === 'object' &&
+        data !== null &&
+        'data' in data &&
+        'meta' in data &&
+        Array.isArray((data as TGetAdsSuccessfullResponse).data)
     )
 
     if (!adsResponse.ok) {
@@ -27,7 +32,7 @@ const Page = async ({ searchParams }: { searchParams: Promise<TGetAdsParams> }) 
 
     return <FeedView ads={adsResponse.data} settings={settings} />
   } else {
-    const popularRoutesResponse = await loadApiResource<TGetPopularRoutesResponse>(
+    const popularRoutesResponse = await loadApiResource<TRoute[]>(
       () => getPopularRoutes(),
       (data): data is TRoute[] => Array.isArray(data)
     )

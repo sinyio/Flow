@@ -1,11 +1,10 @@
 'use client'
 
-import { useToaster } from '@gravity-ui/uikit'
 import Image from 'next/image'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 
-import { getAdsByUser, TAd } from '@api/ads'
-import { getReviewsByUser, TReview } from '@api/reviews'
+import { TAd } from '@api/ads'
+import { TReview } from '@api/reviews/types'
 import { TUser } from '@api/user/get-user'
 
 import { getDate } from '@utils/get-date'
@@ -24,6 +23,8 @@ import styles from './view.module.css'
 
 export interface IProfileViewProps {
   user: TUser
+  initialReviews?: TReview[]
+  initialAds?: TAd[]
 }
 
 export const tabs = (reviews?: TReview[] | null, ads?: TAd[] | null) => [
@@ -41,13 +42,8 @@ export const tabs = (reviews?: TReview[] | null, ads?: TAd[] | null) => [
   },
 ]
 
-const ProfileView = ({ user }: IProfileViewProps) => {
+const ProfileView = ({ user, initialReviews = [], initialAds = [] }: IProfileViewProps) => {
   const { device } = useResponsive()
-
-  const [reviews, setReviews] = useState<TReview[] | null>()
-  const [ads, setAds] = useState<TAd[] | null>()
-
-  const { add } = useToaster()
 
   const name = useMemo(() => {
     if (user?.firstName && !user?.lastName) {
@@ -91,62 +87,13 @@ const ProfileView = ({ user }: IProfileViewProps) => {
     },
   ]
 
-  useEffect(() => {
-    getReviewsByUser({ userId: user.id, page: 1, limit: 10, role: 'all' })
-      .then(response => {
-        if ('data' in response.data) {
-          setReviews(response.data.data)
-        } else {
-          add({
-            isClosable: true,
-            theme: 'warning',
-            name: 'register_error',
-            title: 'Ошибка',
-            content: response.data.message,
-          })
-        }
-      })
-      .catch(e =>
-        add({
-          isClosable: true,
-          theme: 'warning',
-          name: 'register_error',
-          title: 'Ошибка',
-          content: e.message,
-        })
-      )
-
-    getAdsByUser({ userId: user.id, page: 1, limit: 10 })
-      .then(response => {
-        if ('data' in response.data) {
-          setAds(response.data.data)
-        } else {
-          add({
-            isClosable: true,
-            theme: 'warning',
-            name: 'fetch_ads_error',
-            title: 'Ошибка',
-            content: response.data.message,
-          })
-        }
-      })
-      .catch(e =>
-        add({
-          isClosable: true,
-          theme: 'warning',
-          name: 'fetch_ads_error',
-          title: 'Ошибка',
-          content: e.message,
-        })
-      )
-  }, [])
-
   if (device === 'mobile') {
     return (
       <PageContainer inner={{ className: styles.profilePageInner }}>
         <>
           <ProfileHeader
-            canEdit={user?.userState?.canEdit}
+            canEdit={Boolean(user?.userState?.canEdit)}
+            userId={user.id}
             name={name}
             subtitle="ответственный исполнитель"
             photoUrl={user?.photo || ''}
@@ -158,7 +105,7 @@ const ProfileView = ({ user }: IProfileViewProps) => {
           </div>
 
           <div className={styles.profileTabs}>
-            <Tabs tabs={tabs(reviews, ads)} />
+            <Tabs tabs={tabs(initialReviews, initialAds)} />
           </div>
         </>
       </PageContainer>
@@ -171,7 +118,8 @@ const ProfileView = ({ user }: IProfileViewProps) => {
         <div className={styles.heroInner}>
           <div className={styles.profileName}>
             <ProfileName
-              canEdit={user?.userState?.canEdit}
+              canEdit={Boolean(user?.userState?.canEdit)}
+              userId={user.id}
               name={name}
               subtitle="ответственный исполнитель"
               stats={stats}
@@ -201,7 +149,7 @@ const ProfileView = ({ user }: IProfileViewProps) => {
           </div>
 
           <div className={styles.profileTabs}>
-            <Tabs tabs={tabs(reviews, ads)} />
+            <Tabs tabs={tabs(initialReviews, initialAds)} />
           </div>
         </div>
       </PageContainer>

@@ -1,3 +1,5 @@
+'use client'
+
 import { Button, Icon, TextInput, TextInputProps } from '@gravity-ui/uikit'
 import { useState } from 'react'
 import { FieldValues, useController, UseControllerProps } from 'react-hook-form'

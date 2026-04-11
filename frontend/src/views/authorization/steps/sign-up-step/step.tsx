@@ -1,3 +1,5 @@
+'use client'
+
 import { Button, Link, Text, useToaster } from '@gravity-ui/uikit'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'

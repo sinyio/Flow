@@ -1,3 +1,5 @@
+'use client'
+
 import { Button, Text } from '@gravity-ui/uikit'
 import { useMemo } from 'react'
 

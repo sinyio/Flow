@@ -1,5 +1,3 @@
-'use client'
-
 import Image from 'next/image'
 
 import { TGetAdsParams, TGetAdsResponse, TGetPopularRoutesResponse } from '@api/ads'

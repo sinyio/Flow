@@ -1,3 +1,5 @@
+'use client'
+
 import { TextInput, TextInputProps } from '@gravity-ui/uikit'
 import { useMaskito } from '@maskito/react'
 import { FieldValues, useController, UseControllerProps } from 'react-hook-form'
