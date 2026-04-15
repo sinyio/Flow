@@ -151,6 +151,10 @@ export class MediaService {
         orderBy: { createdAt: 'desc' },
         skip: (page - 1) * limit,
         take: limit,
+        include: {
+          author: true,
+          likes: userId ? { where: { userId } } : false,
+        },
       }),
       this.prisma.mediaComment.count({
         where: {
@@ -163,26 +167,32 @@ export class MediaService {
 
     const rootIds = rootComments.map((comment) => comment.id)
 
-    const descendants = rootIds.length
+    const replies = rootIds.length
       ? await this.prisma.mediaComment.findMany({
           where: {
             postId,
             deletedAt: null,
-            OR: [{ id: { in: rootIds } }, { parentId: { in: rootIds } }],
+            parentId: { in: rootIds },
           },
           orderBy: { createdAt: 'asc' },
           include: {
             author: true,
+            parent: {
+              include: {
+                author: true,
+              },
+            },
             likes: userId ? { where: { userId } } : false,
           },
         })
       : []
 
     const byParent = new Map<string, any[]>()
-    const roots = new Map<string, any>()
 
-    for (const comment of descendants as any[]) {
-      const node = {
+    for (const comment of replies as any[]) {
+      if (!comment.parentId) continue
+
+      const replyNode = {
         id: comment.id,
         text: comment.text,
         createdAt: comment.createdAt,
@@ -190,30 +200,25 @@ export class MediaService {
         author: getUserResponse(comment.author),
         parentId: comment.parentId,
         isLiked: userId ? comment.likes.length > 0 : false,
-        replies: [] as any[],
+        replyTo: comment.parent ? getUserResponse(comment.parent.author) : null,
       }
 
-      if (!node.parentId) {
-        roots.set(node.id, node)
-        continue
-      }
-
-      const arr = byParent.get(node.parentId) ?? []
-      arr.push(node)
-      byParent.set(node.parentId, arr)
+      const arr = byParent.get(comment.parentId) ?? []
+      arr.push(replyNode)
+      byParent.set(comment.parentId, arr)
     }
 
-    const attachReplies = (node: any) => {
-      const children = byParent.get(node.id) ?? []
-      node.replies = children
-      for (const child of children) attachReplies(child)
-    }
-
-    const data = rootComments
-      .map((comment) => roots.get(comment.id))
-      .filter(Boolean)
-
-    for (const root of data) attachReplies(root)
+    const data = rootComments.map((comment: any) => ({
+      id: comment.id,
+      text: comment.text,
+      createdAt: comment.createdAt,
+      likesCount: comment.likesCount,
+      author: getUserResponse(comment.author),
+      parentId: null,
+      isLiked: userId ? comment.likes.length > 0 : false,
+      replyTo: null,
+      replies: byParent.get(comment.id) ?? [],
+    }))
 
     return {
       data,
@@ -329,10 +334,13 @@ export class MediaService {
     const post = await this.prisma.mediaPost.findUnique({ where: { id: postId } })
     if (!post || post.deletedAt) throw new NotFoundException('Пост не найден')
 
+    let parentId: string | null = null
+
     if (dto.parentId) {
       const parentComment = await this.prisma.mediaComment.findUnique({ where: { id: dto.parentId } })
       if (!parentComment || parentComment.deletedAt) throw new NotFoundException('Родительский комментарий не найден')
       if (parentComment.postId !== postId) throw new BadRequestException('Родительский комментарий принадлежит другому посту')
+      parentId = parentComment.parentId ?? parentComment.id
     }
 
     await this.prisma.mediaComment.create({
@@ -340,7 +348,7 @@ export class MediaService {
         postId,
         userId: req.session.userId!,
         text: dto.text,
-        parentId: dto.parentId,
+        parentId,
       },
     })
 
