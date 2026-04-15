@@ -5,6 +5,7 @@ import { filterEmptyValues, getStatusOk } from '../common/helpers'
 import { type Request } from 'express'
 import { PaginatedResponse } from '../common/types'
 import { MediaCommentCreateDto, MediaCommentUpdateDto, MediaListQueryDto, MediaPostCreateDto, MediaPostSort, MediaPostUpdateDto } from './dto'
+import { getUserResponse } from '../user/dto'
 
 @Injectable()
 export class MediaService {
@@ -51,7 +52,7 @@ export class MediaService {
       title: post.title,
       createdAt: post.createdAt,
       updatedAt: post.updatedAt,
-      author: post.author,
+      author: getUserResponse(post.author),
       viewsCount: post.viewsCount,
       likesCount: post.likesCount,
       favoritesCount: post.favoritesCount,
@@ -112,7 +113,7 @@ export class MediaService {
       id: post.id,
       title: post.title,
       createdAt: post.createdAt,
-      author: post.author,
+      author: getUserResponse(post.author),
       viewsCount: post.viewsCount,
       likesCount: post.likesCount,
       favoritesCount: post.favoritesCount,
@@ -186,7 +187,7 @@ export class MediaService {
         text: comment.text,
         createdAt: comment.createdAt,
         likesCount: comment.likesCount,
-        author: comment.author,
+        author: getUserResponse(comment.author),
         parentId: comment.parentId,
         isLiked: userId ? comment.likes.length > 0 : false,
         replies: [] as any[],
