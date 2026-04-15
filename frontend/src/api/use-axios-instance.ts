@@ -1,3 +1,5 @@
+'use client'
+
 import { useApiContext } from '@contexts/api-context'
 
 export function useAxiosInstance() {

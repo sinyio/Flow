@@ -1,24 +1,22 @@
 import { redirect } from 'next/navigation'
 
-import { me, TMeResponse } from '@api/auth'
+import NotFound from 'src/app/not-found'
+
+import { me, TMeSuccessfullResponse } from '@api/auth'
 
 import { loadApiResource } from '@utils/load-api-resource'
 
-import { LoadErrorFallback } from '@views/error-fallback'
-
 const Page = async () => {
-  const result = await loadApiResource<TMeResponse>(
+  const result = await loadApiResource<TMeSuccessfullResponse>(
     () => me(),
-    (data): data is TMeResponse => 'userId' in data
+    (data): data is TMeSuccessfullResponse => 'userId' in data && typeof data.userId === 'string'
   )
 
-  if (result.ok && 'userId' in result.data) {
-    redirect('/settings/' + result.data.userId)
+  if (!result.ok) {
+    return <NotFound />
   }
 
-  if (!result.ok) {
-    return <LoadErrorFallback message={result.message} />
-  }
+  redirect('/settings/' + result.data.userId)
 }
 
 export default Page

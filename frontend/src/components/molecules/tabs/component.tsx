@@ -1,3 +1,5 @@
+'use client'
+
 import { Tab, TabList, TabPanel, TabProvider } from '@gravity-ui/uikit'
 import { useState } from 'react'
 

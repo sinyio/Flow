@@ -7,7 +7,6 @@ import { ReactNode } from 'react'
 import { TAuthorizationStep, useAuthorizationStore } from '@utils/stores/authorization'
 
 import { LiquidGlassBlock } from '@components/global/liquid-glass-block'
-import { PageContainer } from '@components/global/page-container'
 
 import { ForgotPasswordStep } from './steps/forgot-password-step/step'
 import { SignInStep } from './steps/sign-in-step/step'
@@ -32,7 +31,7 @@ const AuthorizationView = () => {
   const { authorizationStep } = useAuthorizationStore(store => store)
 
   return (
-    <PageContainer>
+    <div className={styles.authRoot}>
       <div aria-hidden="true" className={styles.background}>
         <Image
           priority
@@ -42,18 +41,20 @@ const AuthorizationView = () => {
           src="/authorization/authorization-background.webp"
         />
       </div>
-      <div className={styles.content}>
-        <LiquidGlassBlock className={styles.glassBlock}>
-          <Text variant="display-3" className={styles.title}>
-            {headerMap[authorizationStep]}
-          </Text>
+      <div className={styles.authInner}>
+        <div className={styles.content}>
+          <LiquidGlassBlock className={styles.glassBlock}>
+            <Text variant="display-3" className={styles.title}>
+              {headerMap[authorizationStep]}
+            </Text>
 
-          <div className={styles.divider} />
+            <div className={styles.divider} />
 
-          {stepsMap[authorizationStep]}
-        </LiquidGlassBlock>
+            {stepsMap[authorizationStep]}
+          </LiquidGlassBlock>
+        </div>
       </div>
-    </PageContainer>
+    </div>
   )
 }
 

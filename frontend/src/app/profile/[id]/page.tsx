@@ -1,9 +1,11 @@
+import NotFound from 'src/app/not-found'
+
 import type { TUser } from '@api/user/get-user'
 import { getUser } from '@api/user/get-user'
 
 import { loadApiResource } from '@utils/load-api-resource'
+import { loadProfileTabsInitialData } from '@utils/load-profile-tabs-data'
 
-import { LoadErrorFallback } from '@views/error-fallback'
 import ProfileView from '@views/profile/view'
 
 const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
@@ -11,14 +13,20 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
 
   const result = await loadApiResource<TUser>(
     () => getUser(id),
-    (data): data is TUser => 'id' in data
+    (data): data is TUser =>
+      typeof data === 'object' &&
+      data !== null &&
+      'id' in data &&
+      typeof (data as TUser).id === 'string'
   )
 
   if (!result.ok) {
-    return <LoadErrorFallback message={result.message} />
+    return <NotFound />
   }
 
-  return <ProfileView user={result.data} />
+  const { reviews, ads } = await loadProfileTabsInitialData(result.data.id)
+
+  return <ProfileView user={result.data} initialReviews={reviews} initialAds={ads} />
 }
 
 export default Page

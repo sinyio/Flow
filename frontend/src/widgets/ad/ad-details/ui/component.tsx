@@ -1,5 +1,4 @@
 import { Text } from '@gravity-ui/uikit'
-import { useMemo } from 'react'
 
 import { TAd } from '@api/ads'
 
@@ -15,16 +14,13 @@ export interface IAdHeaderProps {
 }
 
 export const AdDetails = ({ ad }: IAdHeaderProps) => {
-  const list = useMemo(
-    () => [
-      { label: 'Вес', value: ad.weight },
-      { label: 'Габариты', value: `${ad.height}x${ad.width}x${ad.length} см` },
-      { label: 'Упаковка', value: getPackageType(ad.packaging) },
-      { label: 'Хрупкое', value: ad.isFragile ? 'Да' : 'Нет' },
-      { label: 'Документы', value: ad.isDocument ? 'Да' : 'Нет' },
-    ],
-    [ad]
-  )
+  const list = [
+    { label: 'Вес', value: ad.weight },
+    { label: 'Габариты', value: `${ad.height}x${ad.width}x${ad.length} см` },
+    { label: 'Упаковка', value: getPackageType(ad.packaging) },
+    { label: 'Хрупкое', value: ad.isFragile ? 'Да' : 'Нет' },
+    { label: 'Документы', value: ad.isDocument ? 'Да' : 'Нет' },
+  ]
 
   const stats = [`${ad.fromCity} - ${ad.toCity}`, `${getDate(ad.endDate, 'before')}`]
 

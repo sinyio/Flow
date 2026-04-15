@@ -1,3 +1,5 @@
+'use client'
+
 import { Checkbox, CheckboxProps } from '@gravity-ui/uikit'
 import { FieldValues, useController, UseControllerProps } from 'react-hook-form'
 

@@ -1,6 +1,7 @@
 'use client'
 
 import { Button, Icon, Text } from '@gravity-ui/uikit'
+import { useRouter } from 'next/navigation'
 import { HTMLAttributes } from 'react'
 
 import { Stats } from '@components/stats'
@@ -14,6 +15,8 @@ export interface IProfileNameProps extends HTMLAttributes<HTMLDivElement> {
   subtitle: string
   stats: string[]
   canEdit?: boolean
+  /** Для перехода в настройки при «Редактировать» */
+  userId?: string
   isBackdrop?: boolean
 }
 
@@ -21,36 +24,52 @@ export const ProfileName = ({
   name,
   subtitle,
   canEdit,
+  userId,
   stats,
   isBackdrop = true,
   ...rest
-}: IProfileNameProps) => (
-  <div
-    {...rest}
-    className={`${styles.info} ${isBackdrop ? styles.backdrop : ''} ${rest.className}`}
-  >
-    <div className={styles.nameContainer}>
-      <Text variant="display-3" className={styles.name}>
-        {name}
-      </Text>
-      <Text variant="body-3" className={styles.roleContainer}>
-        <Icon data={VerifiedIcon} />
-        <span className={styles.subtitle}>{subtitle}</span>
-      </Text>
-    </div>
+}: IProfileNameProps) => {
+  const router = useRouter()
 
-    <div className={styles.bottomContainer}>
-      {canEdit ? (
-        <Button size="xl" width="max" view="normal" onClick={() => console.log(123)}>
-          <Icon data={PenIcon} /> <Text variant="header-1">Редактировать</Text>
-        </Button>
-      ) : (
-        <Button size="xl" width="max" view="action" onClick={() => console.log(123)}>
-          <Text variant="header-1">Написать в чат</Text>
-        </Button>
-      )}
+  return (
+    <div
+      {...rest}
+      className={`${styles.info} ${isBackdrop ? styles.backdrop : ''} ${rest.className}`}
+    >
+      <div className={styles.nameContainer}>
+        <Text variant="display-3" className={styles.name}>
+          {name}
+        </Text>
+        <Text variant="body-3" className={styles.roleContainer}>
+          <Icon data={VerifiedIcon} />
+          <span className={styles.subtitle}>{subtitle}</span>
+        </Text>
+      </div>
 
-      <Stats stats={stats} labelProps={{ theme: 'unknown' }} />
+      <div className={styles.bottomContainer}>
+        {canEdit ? (
+          <Button
+            type="button"
+            size="xl"
+            width="max"
+            view="normal"
+            disabled={!userId}
+            onClick={() => {
+              if (userId) {
+                router.push(`/profile/settings/${userId}`)
+              }
+            }}
+          >
+            <Icon data={PenIcon} /> <Text variant="header-1">Редактировать</Text>
+          </Button>
+        ) : (
+          <Button size="xl" width="max" view="action" type="button">
+            <Text variant="header-1">Написать в чат</Text>
+          </Button>
+        )}
+
+        <Stats stats={stats} labelProps={{ theme: 'unknown' }} />
+      </div>
     </div>
-  </div>
-)
+  )
+}

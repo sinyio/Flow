@@ -1,3 +1,5 @@
+'use client'
+
 import { Text } from '@gravity-ui/uikit'
 import { useMemo } from 'react'
 import { Control, FieldValues, useWatch } from 'react-hook-form'

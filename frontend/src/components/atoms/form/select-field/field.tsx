@@ -1,3 +1,5 @@
+'use client'
+
 import { Select, SelectProps } from '@gravity-ui/uikit'
 import { useMemo } from 'react'
 import { FieldValues, useController, UseControllerProps } from 'react-hook-form'

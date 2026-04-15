@@ -4,4 +4,4 @@ export type TMeSuccessfullResponse = {
   userId: string
 }
 
-export type TMeResponse = TMeSuccessfullResponse & IApiError
+export type TMeResponse = TMeSuccessfullResponse | IApiError

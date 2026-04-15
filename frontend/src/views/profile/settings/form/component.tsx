@@ -1,5 +1,6 @@
-import { Button, Text } from '@gravity-ui/uikit'
+import { Button, Text, useToaster } from '@gravity-ui/uikit'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { isAxiosError } from 'axios'
 import { useForm, type SubmitHandler } from 'react-hook-form'
 
 import { logout } from '@api/auth'
@@ -7,6 +8,8 @@ import { useAxiosInstance } from '@api/use-axios-instance'
 import { deleteUser } from '@api/user/delete-user'
 import { TUser } from '@api/user/get-user'
 import { updateUser } from '@api/user/update-user'
+
+import { normalizeApiMessage } from '@utils/session-not-found'
 
 import { EmailField } from '@components/form'
 import { DatePickerField } from '@components/form/date-picker-field/field'
@@ -25,8 +28,6 @@ export interface ISettingsFormProps {
 }
 
 export const SettingsForm = ({ user }: ISettingsFormProps) => {
-  console.log(user)
-
   const { control, handleSubmit, formState } = useForm<TSettingsFormValues>({
     defaultValues: {
       firstName: user.firstName || '',
@@ -42,9 +43,79 @@ export const SettingsForm = ({ user }: ISettingsFormProps) => {
   })
 
   const axiosInstance = useAxiosInstance()
+  const { add } = useToaster()
 
   const onSubmit: SubmitHandler<TSettingsFormValues> = async data => {
-    await updateUser(data, axiosInstance)
+    try {
+      const { data: body } = await updateUser(data, axiosInstance)
+
+      if ('status' in body && body.status === 'ok') {
+        add({
+          isClosable: true,
+          theme: 'success',
+          name: 'settings_save_ok',
+          title: 'Сохранено',
+          content: 'Данные профиля обновлены.',
+        })
+
+        return
+      }
+
+      const apiMessage = 'message' in body ? body.message : 'Не удалось сохранить изменения'
+
+      console.error('[SettingsForm] updateUser rejected:', body)
+      add({
+        isClosable: true,
+        theme: 'warning',
+        name: 'settings_save_error',
+        title: 'Ошибка',
+        content: apiMessage,
+      })
+    } catch (error: unknown) {
+      console.error('[SettingsForm] updateUser failed:', error)
+
+      let message = 'Произошла ошибка при сохранении'
+
+      if (isAxiosError(error)) {
+        const errBody = error.response?.data as { message?: unknown } | undefined
+
+        message = normalizeApiMessage(errBody?.message) ?? error.message ?? message
+      }
+
+      add({
+        isClosable: true,
+        theme: 'warning',
+        name: 'settings_save_error',
+        title: 'Ошибка',
+        content: message,
+      })
+    }
+  }
+
+  const handleLogout = () => {
+    void logout(axiosInstance).catch((error: unknown) => {
+      console.error('[SettingsForm] logout failed:', error)
+      add({
+        isClosable: true,
+        theme: 'warning',
+        name: 'logout_error',
+        title: 'Ошибка',
+        content: 'Не удалось выйти из аккаунта.',
+      })
+    })
+  }
+
+  const handleDeleteUser = () => {
+    void deleteUser(axiosInstance).catch((error: unknown) => {
+      console.error('[SettingsForm] deleteUser failed:', error)
+      add({
+        isClosable: true,
+        theme: 'warning',
+        name: 'delete_user_error',
+        title: 'Ошибка',
+        content: 'Не удалось удалить профиль.',
+      })
+    })
   }
 
   return (
@@ -118,18 +189,13 @@ export const SettingsForm = ({ user }: ISettingsFormProps) => {
       <div className={styles.section}>
         <Text variant="header-2">Управление</Text>
         <div className={styles.managementButtons}>
-          <Button
-            type="button"
-            size="xl"
-            onClick={() => logout(axiosInstance)}
-            className={styles.actionButton}
-          >
+          <Button type="button" size="xl" onClick={handleLogout} className={styles.actionButton}>
             Выйти
           </Button>
           <Button
             type="button"
             size="xl"
-            onClick={() => deleteUser(axiosInstance)}
+            onClick={handleDeleteUser}
             view="outlined-danger"
             className={styles.actionButton}
           >
