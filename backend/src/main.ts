@@ -16,6 +16,7 @@ import { AdModule } from './ad/ad.module'
 import { ChatModule } from './chat/chat.module'
 import { ReviewModule } from './review/review.module'
 import { UserModule } from './user/user.module'
+import { MediaModule } from './media/media.module'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
@@ -73,7 +74,7 @@ async function bootstrap() {
     .build()
 
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig, {
-    include: [AuthModule, EmailConfirmationModule, AdModule, ChatModule, ReviewModule, UserModule],
+    include: [AuthModule, EmailConfirmationModule, AdModule, ChatModule, ReviewModule, UserModule, MediaModule],
   })
   SwaggerModule.setup('docs', app, swaggerDocument)
 
