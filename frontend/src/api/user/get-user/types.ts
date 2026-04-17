@@ -19,6 +19,6 @@ export type TUser = {
   }
 }
 
-export type TGetUserSuccessfullResponse = TUser
+export type TGetUserSuccessfulResponse = TUser
 
-export type TGetUserResponse = TGetUserSuccessfullResponse | IApiError
+export type TGetUserResponse = TGetUserSuccessfulResponse | IApiError

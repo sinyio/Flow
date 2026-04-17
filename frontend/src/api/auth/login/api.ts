@@ -1,4 +1,6 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
+import { AxiosInstance, AxiosRequestConfig } from 'axios'
+
+import { resolveApi } from '@api/client'
 
 import { TLoginRequest, TLoginResponse } from './types'
 
@@ -6,7 +8,8 @@ export const login = (
   data: TLoginRequest,
   axiosInstance?: AxiosInstance,
   config?: AxiosRequestConfig<TLoginRequest>
-) =>
-  typeof axiosInstance !== 'undefined'
-    ? axiosInstance.post<TLoginResponse>('/auth/login', data, config)
-    : axios.post<TLoginResponse>(`${process.env.NEXT_PUBLIC_API_HOST}/auth/login`, data, config)
+) => {
+  const { client, url } = resolveApi('/auth/login', axiosInstance)
+
+  return client.post<TLoginResponse>(url, data, config)
+}

@@ -14,8 +14,7 @@ export const Header = () => {
   const router = useRouter()
   const { add } = useToaster()
 
-  const notifySoon = (feature: string) => {
-    console.error(`[Flow] ${feature} is not implemented yet`)
+  const notifySoon = () => {
     add({
       isClosable: true,
       theme: 'warning',
@@ -42,12 +41,12 @@ export const Header = () => {
           {
             iconStart: <FlagIcon />,
             text: 'Пожаловаться',
-            action: () => notifySoon('report listing'),
+            action: () => notifySoon(),
           },
           {
             iconStart: <ShareIcon />,
             text: 'Поделиться',
-            action: () => notifySoon('share listing'),
+            action: () => notifySoon(),
           },
         ]}
       />

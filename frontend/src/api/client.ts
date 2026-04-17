@@ -1,6 +1,13 @@
-import axios, { isAxiosError } from 'axios'
+import axios, { isAxiosError, type AxiosInstance } from 'axios'
 
 import { isSessionNotFoundInApiMessage } from '@utils/session-not-found'
+
+export function resolveApi(path: string, axiosInstance?: AxiosInstance) {
+  return {
+    client: axiosInstance ?? axios,
+    url: axiosInstance ? path : `${process.env.NEXT_PUBLIC_API_HOST}${path}`,
+  }
+}
 
 export function createApiClient(baseURL: string) {
   const instance = axios.create({

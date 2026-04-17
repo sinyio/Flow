@@ -1,8 +1,11 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
+import { AxiosInstance, AxiosRequestConfig } from 'axios'
+
+import { resolveApi } from '@api/client'
 
 import { TDeleteUserResponse } from './types'
 
-export const deleteUser = (axiosInstance?: AxiosInstance, config?: AxiosRequestConfig) =>
-  typeof axiosInstance !== 'undefined'
-    ? axiosInstance.delete<TDeleteUserResponse>('/users', config)
-    : axios.delete<TDeleteUserResponse>(`${process.env.NEXT_PUBLIC_API_HOST}/users`, config)
+export const deleteUser = (axiosInstance?: AxiosInstance, config?: AxiosRequestConfig) => {
+  const { client, url } = resolveApi('/users', axiosInstance)
+
+  return client.delete<TDeleteUserResponse>(url, config)
+}

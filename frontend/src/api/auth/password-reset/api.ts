@@ -1,4 +1,6 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
+import { AxiosInstance, AxiosRequestConfig } from 'axios'
+
+import { resolveApi } from '@api/client'
 
 import { TPasswordResetRequest, TPasswordResetResponse } from './types'
 
@@ -6,15 +8,8 @@ export const passwordReset = (
   data: TPasswordResetRequest,
   axiosInstance?: AxiosInstance,
   config?: AxiosRequestConfig<TPasswordResetRequest>
-) =>
-  typeof axiosInstance !== 'undefined'
-    ? axiosInstance.post<TPasswordResetResponse>(
-        '/auth/email-confirmation/password-reset',
-        data,
-        config
-      )
-    : axios.post<TPasswordResetResponse>(
-        `${process.env.NEXT_PUBLIC_API_HOST}/auth/email-confirmation/password-reset`,
-        data,
-        config
-      )
+) => {
+  const { client, url } = resolveApi('/auth/email-confirmation/password-reset', axiosInstance)
+
+  return client.post<TPasswordResetResponse>(url, data, config)
+}

@@ -1,8 +1,9 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
+import { AxiosInstance, AxiosRequestConfig } from 'axios'
+
+import { resolveApi } from '@api/client'
+import { toIso } from '@api/utils'
 
 import { TUpdateAdRequest, TUpdateAdResponse } from './types'
-
-const toIso = (d: string | Date) => (typeof d === 'string' ? d : d.toISOString())
 
 const toFormData = (data: Omit<TUpdateAdRequest, 'id'>) => {
   const form = new FormData()
@@ -44,6 +45,7 @@ export const updateAd = (
 ) => {
   const { id, ...rest } = data
   const form = toFormData(rest)
+  const { client, url } = resolveApi(`/ads/${id}`, axiosInstance)
 
   const mergedConfig: AxiosRequestConfig<FormData> = {
     ...config,
@@ -53,11 +55,5 @@ export const updateAd = (
     },
   }
 
-  return typeof axiosInstance !== 'undefined'
-    ? axiosInstance.patch<TUpdateAdResponse>(`/ads/${id}`, form, mergedConfig)
-    : axios.patch<TUpdateAdResponse>(
-        `${process.env.NEXT_PUBLIC_API_HOST}/ads/${id}`,
-        form,
-        mergedConfig
-      )
+  return client.patch<TUpdateAdResponse>(url, form, mergedConfig)
 }

@@ -1,4 +1,6 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
+import { AxiosInstance, AxiosRequestConfig } from 'axios'
+
+import { resolveApi } from '@api/client'
 
 import { TDeleteReviewRequest, TDeleteReviewResponse } from './types'
 
@@ -6,10 +8,8 @@ export const deleteReview = (
   id: TDeleteReviewRequest,
   axiosInstance?: AxiosInstance,
   config?: AxiosRequestConfig
-) =>
-  typeof axiosInstance !== 'undefined'
-    ? axiosInstance.delete<TDeleteReviewResponse>(`/review/${id}`, config)
-    : axios.delete<TDeleteReviewResponse>(
-        `${process.env.NEXT_PUBLIC_API_HOST}/review/${id}`,
-        config
-      )
+) => {
+  const { client, url } = resolveApi(`/review/${id}`, axiosInstance)
+
+  return client.delete<TDeleteReviewResponse>(url, config)
+}

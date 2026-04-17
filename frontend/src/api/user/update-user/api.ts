@@ -1,4 +1,6 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
+import { AxiosInstance, AxiosRequestConfig } from 'axios'
+
+import { resolveApi } from '@api/client'
 
 import { TUpdateUserRequest, TUpdateUserResponse } from './types'
 
@@ -29,6 +31,7 @@ export const updateUser = (
   config?: AxiosRequestConfig<FormData>
 ) => {
   const form = toFormData(data)
+  const { client, url } = resolveApi('/users', axiosInstance)
 
   const mergedConfig: AxiosRequestConfig<FormData> = {
     ...config,
@@ -38,11 +41,5 @@ export const updateUser = (
     },
   }
 
-  return typeof axiosInstance !== 'undefined'
-    ? axiosInstance.patch<TUpdateUserResponse>('/users', form, mergedConfig)
-    : axios.patch<TUpdateUserResponse>(
-        `${process.env.NEXT_PUBLIC_API_HOST}/users`,
-        form,
-        mergedConfig
-      )
+  return client.patch<TUpdateUserResponse>(url, form, mergedConfig)
 }

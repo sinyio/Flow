@@ -1,4 +1,3 @@
-'use no memo'
 import { HTMLAttributes } from 'react'
 
 export const HomeIcon = ({ ...rest }: HTMLAttributes<SVGSVGElement>) => (

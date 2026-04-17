@@ -33,6 +33,7 @@ export const loadApiResource = async <T>(
       }
 
       const data = axiosError.response?.data as IApiError | undefined
+
       redirectToAuthIfSessionLost(data?.message)
 
       const message = normalizeApiMessage(data?.message) ?? axiosError.message ?? DEFAULT_MESSAGE

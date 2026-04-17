@@ -34,7 +34,7 @@ export const ProfileName = ({
   return (
     <div
       {...rest}
-      className={`${styles.info} ${isBackdrop ? styles.backdrop : ''} ${rest.className}`}
+      className={`${styles.info} ${isBackdrop ? styles.backdrop : ''} ${rest.className ?? ''}`}
     >
       <div className={styles.nameContainer}>
         <Text variant="display-3" className={styles.name}>
@@ -63,7 +63,13 @@ export const ProfileName = ({
             <Icon data={PenIcon} /> <Text variant="header-1">Редактировать</Text>
           </Button>
         ) : (
-          <Button size="xl" width="max" view="action" type="button">
+          <Button
+            size="xl"
+            width="max"
+            view="action"
+            type="button"
+            onClick={() => router.push(userId ? `/chats?userId=${userId}` : '/chats')}
+          >
             <Text variant="header-1">Написать в чат</Text>
           </Button>
         )}

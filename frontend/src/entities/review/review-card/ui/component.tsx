@@ -38,7 +38,6 @@ export const ReviewCard = ({ review }: IReviewCardProps) => (
           color={index <= review.rating - 1 ? 'var(--g-color-text-positive)' : 'gray'}
         />
       ))}
-      {status}
     </Text>
 
     <Text variant="body-3" className={styles.text}>

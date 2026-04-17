@@ -1,8 +1,11 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
+import { AxiosInstance, AxiosRequestConfig } from 'axios'
+
+import { resolveApi } from '@api/client'
 
 import { TMeResponse } from './types'
 
-export const me = (axiosInstance?: AxiosInstance, config?: AxiosRequestConfig) =>
-  typeof axiosInstance !== 'undefined'
-    ? axiosInstance.get<TMeResponse>('/auth/me', config)
-    : axios.get<TMeResponse>(`${process.env.NEXT_PUBLIC_API_HOST}/auth/me`, config)
+export const me = (axiosInstance?: AxiosInstance, config?: AxiosRequestConfig) => {
+  const { client, url } = resolveApi('/auth/me', axiosInstance)
+
+  return client.get<TMeResponse>(url, config)
+}

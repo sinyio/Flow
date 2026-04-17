@@ -1,4 +1,6 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
+import { AxiosInstance, AxiosRequestConfig } from 'axios'
+
+import { resolveApi } from '@api/client'
 
 import { TGetAdsByUserRequest, TGetAdsByUserResponse } from './types'
 
@@ -7,12 +9,8 @@ export const getAdsByUser = (
   axiosInstance?: AxiosInstance,
   config?: AxiosRequestConfig
 ) => {
+  const { client, url } = resolveApi(`/ads/user/${userId}`, axiosInstance)
   const params = { page, limit }
 
-  return typeof axiosInstance !== 'undefined'
-    ? axiosInstance.get<TGetAdsByUserResponse>(`/ads/user/${userId}`, { ...config, params })
-    : axios.get<TGetAdsByUserResponse>(`${process.env.NEXT_PUBLIC_API_HOST}/ads/user/${userId}`, {
-        ...config,
-        params,
-      })
+  return client.get<TGetAdsByUserResponse>(url, { ...config, params })
 }

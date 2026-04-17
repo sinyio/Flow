@@ -1,4 +1,6 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
+import { AxiosInstance, AxiosRequestConfig } from 'axios'
+
+import { resolveApi } from '@api/client'
 
 import { TGetReviewByIdRequest, TGetReviewByIdResponse } from './types'
 
@@ -6,7 +8,8 @@ export const getReviewById = (
   id: TGetReviewByIdRequest,
   axiosInstance?: AxiosInstance,
   config?: AxiosRequestConfig
-) =>
-  typeof axiosInstance !== 'undefined'
-    ? axiosInstance.get<TGetReviewByIdResponse>(`/review/${id}`, config)
-    : axios.get<TGetReviewByIdResponse>(`${process.env.NEXT_PUBLIC_API_HOST}/review/${id}`, config)
+) => {
+  const { client, url } = resolveApi(`/review/${id}`, axiosInstance)
+
+  return client.get<TGetReviewByIdResponse>(url, config)
+}

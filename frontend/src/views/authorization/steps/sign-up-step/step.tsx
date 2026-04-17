@@ -37,14 +37,18 @@ export const SignUpStep = () => {
   const { add } = useToaster()
 
   const onSubmit = async (data: SignUpFormValues) => {
-    await register({ email: data.email, password: data.password }, axiosInstance).catch(e =>
-      add({
-        isClosable: true,
-        theme: 'warning',
-        name: 'register_error',
-        title: 'Ошибка',
-        content: e.message,
-      })
+    await register({ email: data.email, password: data.password }, axiosInstance).catch(
+      (e: unknown) =>
+        add({
+          isClosable: true,
+          theme: 'warning',
+          name: 'register_error',
+          title: 'Ошибка',
+          content:
+            typeof e === 'object' && e !== null && 'message' in e
+              ? String((e as { message: unknown }).message)
+              : 'Неизвестная ошибка',
+        })
     )
   }
 

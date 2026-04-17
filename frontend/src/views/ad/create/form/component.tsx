@@ -5,7 +5,7 @@ import { Button, Switch, Text, useToaster } from '@gravity-ui/uikit'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { isAxiosError } from 'axios'
 import { useRouter } from 'next/navigation'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useForm, type SubmitHandler } from 'react-hook-form'
 
 import { createAd, getPopularRoutes, type TPackaging } from '@api/ads'
@@ -92,8 +92,6 @@ export const CreateAdForm = () => {
     }
   }, [axiosInstance])
 
-  const routeOptions = useMemo(() => routes, [routes])
-
   const onSubmit: SubmitHandler<TCreateAdFormValues> = async values => {
     const [fromCity, toCity] = values.routeKey.split('__')
 
@@ -179,7 +177,7 @@ export const CreateAdForm = () => {
           <SelectField
             label="Направление:"
             placeholder="Выберите маршрут"
-            options={routeOptions}
+            options={routes}
             controllerProps={{ control, name: 'routeKey' }}
             width="max"
           />

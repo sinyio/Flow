@@ -1,4 +1,6 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
+import { AxiosInstance, AxiosRequestConfig } from 'axios'
+
+import { resolveApi } from '@api/client'
 
 import { TGetAdByIdRequest, TGetAdByIdResponse } from './types'
 
@@ -6,7 +8,8 @@ export const getAdById = (
   id: TGetAdByIdRequest,
   axiosInstance?: AxiosInstance,
   config?: AxiosRequestConfig
-) =>
-  typeof axiosInstance !== 'undefined'
-    ? axiosInstance.get<TGetAdByIdResponse>(`/ads/${id}`, config)
-    : axios.get<TGetAdByIdResponse>(`${process.env.NEXT_PUBLIC_API_HOST}/ads/${id}`, config)
+) => {
+  const { client, url } = resolveApi(`/ads/${id}`, axiosInstance)
+
+  return client.get<TGetAdByIdResponse>(url, config)
+}

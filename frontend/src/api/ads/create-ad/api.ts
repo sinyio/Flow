@@ -1,8 +1,9 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
+import { AxiosInstance, AxiosRequestConfig } from 'axios'
+
+import { resolveApi } from '@api/client'
+import { toIso } from '@api/utils'
 
 import { TCreateAdRequest, TCreateAdResponse } from './types'
-
-const toIso = (d: string | Date) => (typeof d === 'string' ? d : d.toISOString())
 
 const toFormData = (data: TCreateAdRequest) => {
   const form = new FormData()
@@ -37,6 +38,7 @@ export const createAd = (
   config?: AxiosRequestConfig<FormData>
 ) => {
   const form = toFormData(data)
+  const { client, url } = resolveApi('/ads', axiosInstance)
 
   const mergedConfig: AxiosRequestConfig<FormData> = {
     ...config,
@@ -46,7 +48,5 @@ export const createAd = (
     },
   }
 
-  return typeof axiosInstance !== 'undefined'
-    ? axiosInstance.post<TCreateAdResponse>('/ads', form, mergedConfig)
-    : axios.post<TCreateAdResponse>(`${process.env.NEXT_PUBLIC_API_HOST}/ads`, form, mergedConfig)
+  return client.post<TCreateAdResponse>(url, form, mergedConfig)
 }

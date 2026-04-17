@@ -23,6 +23,21 @@ const initialState: IAuthorizationState = {
   },
 }
 
+function handleAuthError(error: unknown): never {
+  if (isAxiosError(error)) {
+    const axiosError: AxiosError<IApiError> = error
+
+    if (axiosError.response?.data.error) {
+      throw axiosError.response?.data
+    }
+  }
+
+  throw {
+    message: 'Неизвестная ошибка',
+    statusCode: 400,
+  }
+}
+
 export const useAuthorizationStore = create<TAuthorizationStore>()(set => ({
   ...initialState,
 
@@ -45,19 +60,7 @@ export const useAuthorizationStore = create<TAuthorizationStore>()(set => ({
       })
       .catch(error => {
         set({ isAuth: false })
-
-        if (isAxiosError(error)) {
-          const axiosError: AxiosError<IApiError> = error
-
-          if (axiosError.response?.data.error) {
-            throw axiosError.response?.data
-          }
-        }
-
-        throw {
-          message: 'Неизвестная ошибка',
-          statusCode: 400,
-        }
+        handleAuthError(error)
       })
       .finally(() => set(state => ({ isLoading: { ...state.isLoading, checkIsAuth: false } })))
   },
@@ -71,17 +74,7 @@ export const useAuthorizationStore = create<TAuthorizationStore>()(set => ({
 
         return response.data
       })
-      .catch(error => {
-        if (isAxiosError(error)) {
-          const axiosError: AxiosError<IApiError> = error
-
-          if (axiosError.response?.data.error) {
-            throw axiosError.response?.data
-          }
-        }
-
-        return new Error('Неизвестная ошибка')
-      })
+      .catch(handleAuthError)
       .finally(() => set(state => ({ isLoading: { ...state.isLoading, register: false } })))
   },
 
@@ -90,20 +83,7 @@ export const useAuthorizationStore = create<TAuthorizationStore>()(set => ({
 
     return apiLogin(data, axiosInstance)
       .then(response => response.data)
-      .catch(error => {
-        if (isAxiosError(error)) {
-          const axiosError: AxiosError<IApiError> = error
-
-          if (axiosError.response?.data.error) {
-            throw axiosError.response?.data
-          }
-        }
-
-        throw {
-          message: 'Неизвестная ошибка',
-          statusCode: 400,
-        }
-      })
+      .catch(handleAuthError)
       .finally(() => set(state => ({ isLoading: { ...state.isLoading, login: false } })))
   },
 
@@ -112,20 +92,7 @@ export const useAuthorizationStore = create<TAuthorizationStore>()(set => ({
 
     return apiLogout(axiosInstance)
       .then(response => response.data)
-      .catch(error => {
-        if (isAxiosError(error)) {
-          const axiosError: AxiosError<IApiError> = error
-
-          if (axiosError.response?.data.error) {
-            throw axiosError.response?.data
-          }
-        }
-
-        throw {
-          message: 'Неизвестная ошибка',
-          statusCode: 400,
-        }
-      })
+      .catch(handleAuthError)
       .finally(() =>
         set(state => ({ isAuth: false, isLoading: { ...state.isLoading, logout: false } }))
       )
@@ -136,20 +103,7 @@ export const useAuthorizationStore = create<TAuthorizationStore>()(set => ({
 
     return emailConfirmation(data, axiosInstance)
       .then(response => response.data)
-      .catch(error => {
-        if (isAxiosError(error)) {
-          const axiosError: AxiosError<IApiError> = error
-
-          if (axiosError.response?.data.error) {
-            throw axiosError.response?.data
-          }
-        }
-
-        throw {
-          message: 'Неизвестная ошибка',
-          statusCode: 400,
-        }
-      })
+      .catch(handleAuthError)
       .finally(() => set(state => ({ isLoading: { ...state.isLoading, confirmEmail: false } })))
   },
 }))

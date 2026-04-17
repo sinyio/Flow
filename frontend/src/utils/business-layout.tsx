@@ -35,9 +35,7 @@ export const BusinessLayout = ({ children, serverData }: BusinessLayoutProps) =>
       const data = error.response?.data as { message?: unknown } | undefined
 
       const shouldSendToAuth =
-        status === 401 ||
-        status === 403 ||
-        isSessionNotFoundInApiMessage(data?.message)
+        status === 401 || status === 403 || isSessionNotFoundInApiMessage(data?.message)
 
       if (shouldSendToAuth) {
         router.replace('/auth')

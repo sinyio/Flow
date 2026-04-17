@@ -11,10 +11,6 @@ export const useResponsive = (): {
   vw: number | undefined
   vh: number | undefined
 } => {
-  // Important: prevent SSR/CSR mismatch.
-  // On server we can't evaluate `window.matchMedia`, so we render with `defaultValue=false`,
-  // then update after hydration.
-
   const data = useServerData()
 
   const [vw, setVw] = useState<number | undefined>()
@@ -29,15 +25,13 @@ export const useResponsive = (): {
     initializeWithValue: false,
   })
 
-  const resize = () => {
-    setVw(window.innerWidth)
-    setVh(window.innerHeight)
-  }
-
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      resize()
+    const resize = () => {
+      setVw(window.innerWidth)
+      setVh(window.innerHeight)
     }
+
+    resize()
 
     window.addEventListener('resize', resize)
 

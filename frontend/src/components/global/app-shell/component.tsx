@@ -2,7 +2,7 @@
 
 import { Toaster, ToasterComponent, ToasterProvider } from '@gravity-ui/uikit'
 import { usePathname } from 'next/navigation'
-import { type ReactNode } from 'react'
+import { type ReactNode, useRef } from 'react'
 
 import { useResponsive } from '@utils/hooks/use-responsive'
 
@@ -22,7 +22,13 @@ export const AppShell = ({ children }: AppShellProps) => {
   const { device } = useResponsive()
   const pathname = usePathname()
 
-  const toaster = new Toaster()
+  const toasterRef = useRef<Toaster | null>(null)
+
+  if (!toasterRef.current) {
+    toasterRef.current = new Toaster()
+  }
+
+  const toaster = toasterRef.current
 
   const isAbsolute = pathname.startsWith('/auth')
 

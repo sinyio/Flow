@@ -1,4 +1,6 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
+import { AxiosInstance, AxiosRequestConfig } from 'axios'
+
+import { resolveApi } from '@api/client'
 
 import { TPatchReviewRequest, TPatchReviewResponse } from './types'
 
@@ -6,11 +8,8 @@ export const patchReview = (
   { id, ...body }: TPatchReviewRequest,
   axiosInstance?: AxiosInstance,
   config?: AxiosRequestConfig
-) =>
-  typeof axiosInstance !== 'undefined'
-    ? axiosInstance.patch<TPatchReviewResponse>(`/review/${id}`, body, config)
-    : axios.patch<TPatchReviewResponse>(
-        `${process.env.NEXT_PUBLIC_API_HOST}/review/${id}`,
-        body,
-        config
-      )
+) => {
+  const { client, url } = resolveApi(`/review/${id}`, axiosInstance)
+
+  return client.patch<TPatchReviewResponse>(url, body, config)
+}

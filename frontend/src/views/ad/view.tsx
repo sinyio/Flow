@@ -51,6 +51,7 @@ export const AdView = ({ ad }: IAdViewProps) => {
               authorName={ad?.author?.fullName}
               authorAvatarUrl={ad?.author?.photo || ''}
               isBackdrop={false}
+              adId={ad.id}
             />
           </div>
         </div>

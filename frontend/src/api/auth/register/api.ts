@@ -1,4 +1,6 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
+import { AxiosInstance, AxiosRequestConfig } from 'axios'
+
+import { resolveApi } from '@api/client'
 
 import { TRegisterRequest, TRegisterResponse } from './types'
 
@@ -6,11 +8,8 @@ export const register = (
   data: TRegisterRequest,
   axiosInstance?: AxiosInstance,
   config?: AxiosRequestConfig<TRegisterRequest>
-) =>
-  typeof axiosInstance !== 'undefined'
-    ? axiosInstance.post<TRegisterResponse>('/auth/register', data)
-    : axios.post<TRegisterResponse>(
-        `${process.env.NEXT_PUBLIC_API_HOST}/auth/register`,
-        data,
-        config
-      )
+) => {
+  const { client, url } = resolveApi('/auth/register', axiosInstance)
+
+  return client.post<TRegisterResponse>(url, data, config)
+}

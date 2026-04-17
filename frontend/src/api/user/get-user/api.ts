@@ -1,12 +1,15 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
+import { AxiosInstance, AxiosRequestConfig } from 'axios'
+
+import { resolveApi } from '@api/client'
 
 import { TGetUserRequest, TGetUserResponse } from './types'
 
 export const getUser = (
   uuid: TGetUserRequest,
   axiosInstance?: AxiosInstance,
-  config?: AxiosRequestConfig<TGetUserRequest>
-) =>
-  typeof axiosInstance !== 'undefined'
-    ? axiosInstance.get<TGetUserResponse>(`/users/${uuid}`, config)
-    : axios.get<TGetUserResponse>(`${process.env.NEXT_PUBLIC_API_HOST}/users/${uuid}`, config)
+  config?: AxiosRequestConfig
+) => {
+  const { client, url } = resolveApi(`/users/${uuid}`, axiosInstance)
+
+  return client.get<TGetUserResponse>(url, config)
+}

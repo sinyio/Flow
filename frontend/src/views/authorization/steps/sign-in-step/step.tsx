@@ -41,13 +41,16 @@ export const SignInStep = () => {
           router.push('/')
         }
       })
-      .catch(e =>
+      .catch((e: unknown) =>
         add({
           isClosable: true,
           theme: 'warning',
-          name: 'register_error',
+          name: 'login_error',
           title: 'Ошибка',
-          content: e.message,
+          content:
+            typeof e === 'object' && e !== null && 'message' in e
+              ? String((e as { message: unknown }).message)
+              : 'Неизвестная ошибка',
         })
       )
   }

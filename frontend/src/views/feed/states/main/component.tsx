@@ -48,14 +48,18 @@ export const MainState = ({ routes }: IMainStateProps) => {
           Популярные
         </Text>
         <DividerList>
-          {Array.isArray(routes) ? routes.map(route => <Route route={route} />) : null}
+          {Array.isArray(routes)
+            ? routes.map(route => (
+                <Route key={route.fromCity + '__' + route.toCity} route={route} />
+              ))
+            : null}
         </DividerList>
       </section>
 
       <section className={styles.section}>
         <div className={styles.mediaContainer}>
           {mockMedia.map(media => (
-            <MediaCard {...media} />
+            <MediaCard key={media.title} {...media} />
           ))}
         </div>
         <Button view="action" size="xl" width={device === 'mobile' ? 'max' : 'auto'}>
@@ -69,7 +73,7 @@ export const MainState = ({ routes }: IMainStateProps) => {
         </Text>
         <div className={styles.adsContainer}>
           {latestAds.map(ad => (
-            <AdCard ad={ad} />
+            <AdCard key={ad.id} ad={ad} />
           ))}
         </div>
         <Button view="action" size="xl" width={device === 'mobile' ? 'max' : 'auto'}>
