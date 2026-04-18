@@ -1,3 +1,5 @@
+import type { AxiosInstance } from 'axios'
+
 import { getAdsByUser, type TAd, type TPaginationMeta } from '@api/ads'
 import { getReviewsByUser } from '@api/reviews'
 import type { TReview } from '@api/reviews/types'
@@ -8,12 +10,15 @@ type TReviewsPage = { data: TReview[]; meta: TPaginationMeta }
 type TAdsPage = { data: TAd[]; meta: TPaginationMeta }
 
 /** Данные вкладок профиля для SSR (без действий пользователя). */
-export async function loadProfileTabsInitialData(userId: string): Promise<{
+export async function loadProfileTabsInitialData(
+  userId: string,
+  axiosInstance?: AxiosInstance
+): Promise<{
   reviews: TReview[]
   ads: TAd[]
 }> {
   const reviewsResult = await loadApiResource<TReviewsPage>(
-    () => getReviewsByUser({ userId, page: 1, limit: 10, role: 'all' }),
+    () => getReviewsByUser({ userId, page: 1, limit: 10, role: 'all' }, axiosInstance),
     (data): data is TReviewsPage =>
       typeof data === 'object' &&
       data !== null &&
@@ -27,7 +32,7 @@ export async function loadProfileTabsInitialData(userId: string): Promise<{
   }
 
   const adsResult = await loadApiResource<TAdsPage>(
-    () => getAdsByUser({ userId, page: 1, limit: 10 }),
+    () => getAdsByUser({ userId, page: 1, limit: 10 }, axiosInstance),
     (data): data is TAdsPage =>
       typeof data === 'object' &&
       data !== null &&

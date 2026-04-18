@@ -20,9 +20,11 @@ export const ChatRoomView = ({ chatId }: IChatRoomViewProps) => {
   const bottomRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    getMessages(chatId, undefined, axios).then(res => {
-      setInitialMessages([...res.data.data].reverse())
-    })
+    getMessages(chatId, undefined, axios)
+      .then(res => {
+        setInitialMessages([...res.data.data].reverse())
+      })
+      .catch(error => console.error('[ChatRoomView] getMessages failed:', error))
   }, [chatId])
 
   useEffect(() => {
@@ -43,7 +45,10 @@ export const ChatRoomView = ({ chatId }: IChatRoomViewProps) => {
   const handleSend = async () => {
     if (!text.trim()) return
     setIsSending(true)
-    await sendMessage(chatId, text.trim())
+    const result = await sendMessage(chatId, text.trim())
+    if (!result.ok) {
+      console.error('[ChatRoomView] sendMessage failed:', result)
+    }
     setText('')
     setIsSending(false)
   }

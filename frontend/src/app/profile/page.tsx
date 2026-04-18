@@ -1,39 +1,26 @@
-import { me, TMeSuccessfullResponse } from '@api/auth'
-import { getUser, TUser } from '@api/user/get-user'
+'use client'
 
-import { loadApiResource } from '@utils/load-api-resource'
-import { loadProfileTabsInitialData } from '@utils/load-profile-tabs-data'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 
-import ProfileView from '@views/profile/view'
+import { me } from '@api/auth'
+import { useAxiosInstance } from '@api/use-axios-instance'
 
-import NotFound from '../not-found'
+const ProfilePage = () => {
+  const router = useRouter()
+  const axiosInstance = useAxiosInstance()
 
-const Page = async () => {
-  const meResult = await loadApiResource<TMeSuccessfullResponse>(
-    () => me(),
-    (data): data is TMeSuccessfullResponse => 'userId' in data && typeof data.userId === 'string'
-  )
+  useEffect(() => {
+    me(axiosInstance)
+      .then(response => {
+        if ('userId' in response.data) {
+          router.replace(`/profile/${response.data.userId}`)
+        }
+      })
+      .catch(error => console.error('[ProfilePage] me() failed:', error))
+  }, [axiosInstance, router])
 
-  if (!meResult.ok) {
-    return <NotFound />
-  }
-
-  const userResult = await loadApiResource<TUser>(
-    () => getUser(meResult.data.userId),
-    (data): data is TUser =>
-      typeof data === 'object' &&
-      data !== null &&
-      'id' in data &&
-      typeof (data as TUser).id === 'string'
-  )
-
-  if (!userResult.ok) {
-    return <NotFound />
-  }
-
-  const { reviews, ads } = await loadProfileTabsInitialData(userResult.data.id)
-
-  return <ProfileView user={userResult.data} initialReviews={reviews} initialAds={ads} />
+  return null
 }
 
-export default Page
+export default ProfilePage

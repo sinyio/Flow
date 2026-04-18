@@ -1,22 +1,26 @@
-import { redirect } from 'next/navigation'
+'use client'
 
-import NotFound from 'src/app/not-found'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 
-import { me, TMeSuccessfullResponse } from '@api/auth'
+import { me } from '@api/auth'
+import { useAxiosInstance } from '@api/use-axios-instance'
 
-import { loadApiResource } from '@utils/load-api-resource'
+const ProfileSettingsPage = () => {
+  const router = useRouter()
+  const axiosInstance = useAxiosInstance()
 
-const Page = async () => {
-  const result = await loadApiResource<TMeSuccessfullResponse>(
-    () => me(),
-    (data): data is TMeSuccessfullResponse => 'userId' in data && typeof data.userId === 'string'
-  )
+  useEffect(() => {
+    me(axiosInstance)
+      .then(response => {
+        if ('userId' in response.data) {
+          router.replace(`/profile/settings/${response.data.userId}`)
+        }
+      })
+      .catch(error => console.error('[ProfileSettingsPage] me() failed:', error))
+  }, [axiosInstance, router])
 
-  if (!result.ok) {
-    return <NotFound />
-  }
-
-  redirect('/settings/' + result.data.userId)
+  return null
 }
 
-export default Page
+export default ProfileSettingsPage

@@ -1,6 +1,7 @@
 import NotFound from 'src/app/not-found'
 
 import { getAdById, type TAd } from '@api/ads'
+import { getServerAxiosInstance } from '@api/server-axios-instance'
 
 import { loadApiResource } from '@utils/load-api-resource'
 
@@ -8,9 +9,10 @@ import { AdView } from '@views/ad'
 
 const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params
+  const serverAxios = await getServerAxiosInstance()
 
   const result = await loadApiResource<TAd>(
-    () => getAdById(id),
+    () => getAdById(id, serverAxios),
     (data): data is TAd =>
       typeof data === 'object' &&
       data !== null &&

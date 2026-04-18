@@ -37,7 +37,7 @@ export const SignInStep = () => {
   const onSubmit = async (data: SignInFormValues) => {
     await login({ email: data.email, password: data.password }, axiosInstance)
       .then(response => {
-        if ('status' in response) {
+        if ('userId' in response) {
           router.push('/')
         }
       })

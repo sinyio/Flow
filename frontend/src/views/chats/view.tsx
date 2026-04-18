@@ -39,6 +39,7 @@ export const ChatsView = ({ adId, userId }: IChatsViewProps) => {
 
         setChats(data)
       })
+      .catch(error => console.error('[ChatsView] getChats failed:', error))
       .finally(() => setIsLoading(false))
   }, [adId, userId])
 

@@ -1,5 +1,6 @@
 import NotFound from 'src/app/not-found'
 
+import { getServerAxiosInstance } from '@api/server-axios-instance'
 import type { TUser } from '@api/user/get-user'
 import { getUser } from '@api/user/get-user'
 
@@ -9,9 +10,10 @@ import ProfileSettings from '@views/profile/settings/view'
 
 const Page = async ({ params }: { params: Promise<{ slug: string }> }) => {
   const { slug } = await params
+  const serverAxios = await getServerAxiosInstance()
 
   const result = await loadApiResource<TUser>(
-    () => getUser(slug),
+    () => getUser(slug, serverAxios),
     (data): data is TUser =>
       typeof data === 'object' &&
       data !== null &&

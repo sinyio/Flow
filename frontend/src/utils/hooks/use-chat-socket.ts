@@ -19,6 +19,7 @@ export function useChatSocket() {
 
     socket.on('connect', () => setIsConnected(true))
     socket.on('disconnect', () => setIsConnected(false))
+    socket.on('connect_error', error => console.error('[useChatSocket] connect_error:', error))
     socket.on('message:new', (message: TMessage) => {
       setNewMessages(prev => [...prev, message])
     })
