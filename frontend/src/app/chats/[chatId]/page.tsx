@@ -1,8 +1,5 @@
-'use client'
-
+import { redirect } from 'next/navigation'
 import { use } from 'react'
-
-import { ChatRoomView } from '@views/chats/chatId/view'
 
 interface IChatPageProps {
   params: Promise<{ chatId: string }>
@@ -11,5 +8,6 @@ interface IChatPageProps {
 export default function ChatPage({ params }: IChatPageProps) {
   const { chatId } = use(params)
 
-  return <ChatRoomView chatId={chatId} />
+  // Редирект на новую страницу с query params для обратной совместимости
+  redirect(`/chats?chatId=${chatId}`)
 }

@@ -12,7 +12,7 @@ import {
 import { IApiError } from '@api/types'
 
 const initialState: IAuthorizationState = {
-  authorizationStep: 'sign-up' as TAuthorizationStep,
+  authorizationStep: 'sign-in' as TAuthorizationStep,
   isAuth: false,
   isLoading: {
     checkIsAuth: false,

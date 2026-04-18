@@ -1,0 +1,44 @@
+.layout {
+  display: grid;
+  grid-template-columns: 35% 65%;
+  height: calc(100vh - 80px); /* Вычитаем высоту header */
+  gap: 0;
+  overflow: hidden;
+}
+
+.sidebar {
+  border-right: 1px solid var(--g-color-line-generic);
+  overflow-y: auto;
+}
+
+.room {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.emptyState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  color: var(--g-color-text-secondary);
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+
+  .sidebar {
+    border-right: none;
+    border-bottom: 1px solid var(--g-color-line-generic);
+    max-height: 40vh;
+  }
+
+  .room {
+    height: 60vh;
+  }
+}

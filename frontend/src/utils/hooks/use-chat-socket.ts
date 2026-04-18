@@ -29,29 +29,29 @@ export function useChatSocket() {
     }
   }, [])
 
-  const joinRoom = (chatId: string): Promise<boolean> => {
-    return new Promise(resolve => {
+  const joinRoom = (chatId: string): Promise<boolean> =>
+    new Promise(resolve => {
       if (!socketRef.current) {
         resolve(false)
+
         return
       }
       socketRef.current.emit('join', { chatId }, (response: { ok: boolean }) => {
         resolve(response.ok)
       })
     })
-  }
 
-  const sendMessage = (chatId: string, text: string): Promise<{ ok: boolean }> => {
-    return new Promise(resolve => {
+  const sendMessage = (chatId: string, text: string): Promise<{ ok: boolean }> =>
+    new Promise(resolve => {
       if (!socketRef.current) {
         resolve({ ok: false })
+
         return
       }
       socketRef.current.emit('message', { chatId, text }, (response: { ok: boolean }) => {
         resolve(response)
       })
     })
-  }
 
   return { isConnected, joinRoom, sendMessage, newMessages }
 }

@@ -7,6 +7,12 @@ export type TChatAd = {
   title: string
   status: string
   image: string | null
+  // Расширенные данные (могут отсутствовать в зависимости от backend)
+  fromCity?: string
+  toCity?: string
+  startDate?: string
+  endDate?: string
+  price?: number
 }
 
 export type TChatUserSnippet = {
@@ -15,6 +21,7 @@ export type TChatUserSnippet = {
   firstName: string | null
   lastName: string | null
   photo: string | null
+  rating?: number // Средний рейтинг пользователя
 }
 
 export type TChatLastMessage = {
@@ -34,6 +41,7 @@ export type TChatItem = {
   ad: TChatAd
   otherUser: TChatUserSnippet | null
   lastMessage: TChatLastMessage | null
+  unreadCount?: number // Количество непрочитанных сообщений
 }
 
 export type TMessageFile = {

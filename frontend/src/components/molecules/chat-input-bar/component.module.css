@@ -1,0 +1,41 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  border-top: 1px solid var(--g-color-line-generic);
+  background-color: var(--g-color-base-background);
+}
+
+.filesPreview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px;
+  background-color: var(--g-color-base-generic);
+  border-radius: 8px;
+}
+
+.fileChip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  background-color: var(--g-color-base-background);
+  border-radius: 6px;
+  border: 1px solid var(--g-color-line-generic);
+}
+
+.inputRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.attachButton {
+  flex-shrink: 0;
+}
+
+.input {
+  flex: 1;
+}

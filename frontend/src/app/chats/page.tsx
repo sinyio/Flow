@@ -2,12 +2,17 @@
 
 import { useSearchParams } from 'next/navigation'
 
-import { ChatsView } from '@views/chats/view'
+import { ChatLayout } from '@views/chats/layout'
 
-export default function ChatsPage() {
+const ChatsPage = () => {
   const searchParams = useSearchParams()
-  const adId = searchParams.get('adId') ?? undefined
-  const userId = searchParams.get('userId') ?? undefined
+  const chatId = searchParams.get('chatId') ?? undefined
 
-  return <ChatsView adId={adId} userId={userId} />
+  // TODO: Поддержка adId и userId фильтров если нужно
+  // const adId = searchParams.get('adId') ?? undefined
+  // const userId = searchParams.get('userId') ?? undefined
+
+  return <ChatLayout initialChatId={chatId} />
 }
+
+export default ChatsPage
