@@ -21,6 +21,9 @@ model User {
   gender      Gender?
   dateOfBirth DateTime? @map("date_of_birth")
   contacts    String?
+  
+  courierRating   Float @default(0) @map("courier_rating")
+  customerRating  Float @default(0) @map("customer_rating")
 
   deletedAt DateTime? @map("deleted_at")
 

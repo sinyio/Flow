@@ -5,4 +5,6 @@ export const getUserResponse = (user: User) => ({
     fullName: `${user.firstName} ${user.lastName}`,
     photo: user.photo ?? null,
     deletedAt: user.deletedAt,
+    courierRating: user.courierRating,
+    customerRating: user.customerRating,
 })

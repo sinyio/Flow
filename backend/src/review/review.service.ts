@@ -10,6 +10,30 @@ import { type Request } from 'express'
 export class ReviewService {
   public constructor(private readonly prisma: PrismaService) {}
 
+  private async refreshAggregateRatingsForUser(targetId: string): Promise<void> {
+    const [asCourier, asCustomer] = await Promise.all([
+      this.prisma.review.aggregate({
+        where: { targetId, type: ReviewType.CUSTOMER_TO_COURIER },
+        _avg: { rating: true },
+      }),
+      this.prisma.review.aggregate({
+        where: { targetId, type: ReviewType.COURIER_TO_CUSTOMER },
+        _avg: { rating: true },
+      }),
+    ])
+
+    const toStored = (avg: number | null) =>
+      avg == null ? 0 : Math.min(5, Math.max(0, Math.round(avg * 100) / 100))
+
+    await this.prisma.user.update({
+      where: { id: targetId },
+      data: {
+        courierRating: toStored(asCourier._avg.rating),
+        customerRating: toStored(asCustomer._avg.rating),
+      },
+    })
+  }
+
   private mapReview(review: any, userId: string) {
     return {
       id: review.id,
@@ -83,6 +107,8 @@ export class ReviewService {
       include: { author: true, target: true },
     })
 
+    await this.refreshAggregateRatingsForUser(targetId)
+
     return getStatusOk()
   }
 
@@ -97,7 +123,11 @@ export class ReviewService {
     if (!review) throw new NotFoundException('Отзыв не найден')
     if (review.authorId !== userId) throw new ForbiddenException('Удалить может только автор отзыва')
 
+    const { targetId } = review
+
     await this.prisma.review.delete({ where: { id: reviewId } })
+
+    await this.refreshAggregateRatingsForUser(targetId)
 
     return getStatusOk()
   }
@@ -171,6 +201,8 @@ export class ReviewService {
       },
       include: { author: true, target: true },
     })
+
+    await this.refreshAggregateRatingsForUser(updated.targetId)
 
     return this.mapReview(updated, userId)
   }

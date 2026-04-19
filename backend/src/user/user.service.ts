@@ -68,6 +68,8 @@ export class UserService {
         gender: true,
         dateOfBirth: true,
         contacts: true,
+        courierRating: true,
+        customerRating: true,
         createdAt: true,
         deletedAt: true,
         // updatedAt: true,
@@ -109,6 +111,8 @@ export class UserService {
       authoredAdsCount: user._count.authoredAds,
       receivedReviewsCount: user._count.reviewsReceived,
       authoredReviewsCount: user._count.reviewsAuthored,
+      courierRating: user.courierRating,
+      customerRating: user.customerRating,
       userState: {
         canEdit: userId === id
       }

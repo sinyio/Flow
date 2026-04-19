@@ -30,6 +30,12 @@ export class ProfileResponseDto {
     @ApiProperty({ example: 7 })
     authoredReviewsCount: number
 
+    @ApiProperty({ example: 4.8, description: 'Средняя оценка как курьер' })
+    courierRating: number
+
+    @ApiProperty({ example: 4.2, description: 'Средняя оценка как заказчик' })
+    customerRating: number
+
     @ApiProperty({ example: 'MALE' })
     gender: Gender | null
 
