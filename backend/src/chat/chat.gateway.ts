@@ -126,12 +126,7 @@ export class ChatGateway implements OnGatewayConnection {
     const userId = client.request.session?.userId
     if (!userId) return { ok: false }
 
-    const msg = await this.chatService.createMessage(
-      userId,
-      body.chatId,
-      body.text,
-      body.attachments ?? [],
-    )
+    const msg = await this.chatService.createMessage(userId, body.chatId, body.text)
     this.server.to(body.chatId).emit('message:new', msg)
     return { ok: true, message: msg }
   }

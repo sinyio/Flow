@@ -4,6 +4,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  Post,
   Query,
   Req,
   Res,
@@ -13,7 +14,13 @@ import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/
 import { type Request, type Response } from 'express'
 import { AuthGuard } from '@/src/auth/guards/auth.guard'
 import { ChatService } from './chat.service'
-import { ChatPaginatedResponseDto, ChatPaginationDto, MessagePaginatedResponseDto, MessagePaginationDto } from './dto'
+import {
+  ChatPaginatedResponseDto,
+  ChatPaginationDto,
+  MessagePaginatedResponseDto,
+  MessagePaginationDto,
+  OpenSupportChatResponseDto,
+} from './dto'
 
 @ApiTags('Chat')
 @Controller('chats')
@@ -31,6 +38,16 @@ export class ChatController {
   public async getMyChats(@Req() req: Request, @Query() query: ChatPaginationDto) {
     const userId = req.session.userId
     return this.chatService.getMyChats(userId, query.page ?? 1, query.limit ?? 20, query.q)
+  }
+
+  @Post('support/open')
+  @UseGuards(AuthGuard)
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Открыть чат с поддержкой' })
+  @ApiResponse({ status: 200, type: OpenSupportChatResponseDto })
+  public async openSupportChat(@Req() req: Request) {
+    const userId = req.session.userId
+    return this.chatService.openSupportChat(userId)
   }
 
   @Get(':chatId/messages')
@@ -53,7 +70,7 @@ export class ChatController {
   @Get(':chatId/files/:fileId')
   @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Скачать вложение из чата (только для участников)' })
+  @ApiOperation({ summary: 'Скачать вложение из чата' })
   @ApiParam({ name: 'chatId', required: true, type: String, description: 'Id чата' })
   @ApiParam({ name: 'fileId', required: true, type: String, description: 'Id файла' })
   public async getChatFile(

@@ -2,11 +2,12 @@ import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post
 import { AdService } from './ad.service';
 import { Authorization } from '../auth/decorators/auth.decorator';
 import { ApiBody, ApiConsumes, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { AdByUserQueryDto, AdDto, AdFilterDto, AdPaginatedResponseDto, AdResponseDto, AdUpdateDto, PopularRoutesResponseDto } from './dto';
+import { AdByUserQueryDto, AdDto, AdFilterDto, AdPaginatedResponseDto, AdResponseDto, AdUpdateDto, AssignCourierDto, PopularRoutesResponseDto } from './dto';
 import { type Request } from 'express';
 import { getStatusOk } from '../common/helpers';
 import { CanEditAd } from './guards';
 import { FileInterceptor } from '@nestjs/platform-express'
+import { AuthGuard } from '@/src/auth/guards/auth.guard'
 
 @ApiTags('Ads')
 @Controller('ads')
@@ -54,6 +55,22 @@ export class AdController {
     @Query() query: AdByUserQueryDto,
   ) {
     return this.adService.findAdsByAuthorId(req, userId, query.page ?? 1, query.limit ?? 10)
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post(':id/assign-courier')
+  @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Назначить исполнителем курьера по отклику' })
+  @ApiParam({ name: 'id', example: 'ad_123', description: 'Id объявления' })
+  @ApiBody({ type: AssignCourierDto })
+  @ApiResponse({
+    status: 200,
+    schema: {
+      example: getStatusOk(),
+    },
+  })
+  public assignCourier(@Req() req: Request, @Param('id') id: string, @Body() body: AssignCourierDto) {
+    return this.adService.assignCourier(req, id, body.courierId)
   }
 
   // @Authorization()

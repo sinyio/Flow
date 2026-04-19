@@ -128,15 +128,15 @@ export class UserService {
       const originalBuffer = file.buffer
       imageKey = `users/${userId}/avatar`
 
-      const thumb250 = await sharp(originalBuffer)
-        .resize(250, 250, { fit: 'cover' })
+      const thumb600 = await sharp(originalBuffer)
+        .resize(600, 600, { fit: 'cover' })
         .jpeg({ quality: 85 })
         .toBuffer()
 
       await this.s3.upload(
         this.configService.getOrThrow('MINIO_BUCKET'),
         imageKey,
-        thumb250,
+        thumb600,
         'image/jpeg'
       )
     }

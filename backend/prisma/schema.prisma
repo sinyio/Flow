@@ -159,11 +159,11 @@ enum AdResponseStatus {
 
 model Chat {
   id         String       @id @default(uuid())
-  adId       String       @map("ad_id")
+  adId       String?      @map("ad_id")
   responseId String?      @unique @map("response_id")
   createdAt  DateTime     @default(now()) @map("created_at")
   updatedAt  DateTime     @updatedAt @map("updated_at")
-  ad         Ad           @relation(fields: [adId], references: [id])
+  ad         Ad?          @relation(fields: [adId], references: [id])
   response   AdResponse?  @relation(fields: [responseId], references: [id])
   members    ChatMember[]
   messages   Message[]
@@ -174,7 +174,7 @@ model Chat {
 model ChatMember {
   chatId   String   @map("chat_id")
   userId   String   @map("user_id")
-  role     ChatRole
+  role     ChatRole?
   joinedAt DateTime @default(now()) @map("joined_at")
   chat     Chat     @relation(fields: [chatId], references: [id])
   user     User     @relation(fields: [userId], references: [id])

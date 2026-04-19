@@ -53,11 +53,20 @@ export class ChatResponseDto {
   @ApiProperty({ example: '44444444-4444-4444-4444-444444444444' })
   id: string
 
-  @ApiProperty({ example: '22222222-2222-2222-2222-222222222222' })
-  adId: string
+  @ApiProperty({ example: '22222222-2222-2222-2222-222222222222', nullable: true })
+  adId: string | null
 
   @ApiProperty({ example: '55555555-5555-5555-5555-555555555555', nullable: true })
   responseId: string | null
+
+  @ApiProperty({ description: 'Чат со службой поддержки (без объявления)', example: false })
+  isSupportChat: boolean
+
+  @ApiProperty({
+    description: 'Автор объявления может назначить собеседника-курьера исполнителем по этому отклику',
+    example: false,
+  })
+  canAssignCourier: boolean
 
   @ApiProperty({ example: '2026-03-12T10:00:00.000Z' })
   createdAt: Date
@@ -65,7 +74,7 @@ export class ChatResponseDto {
   @ApiProperty({ example: '2026-03-12T10:05:00.000Z' })
   updatedAt: Date
 
-  @ApiProperty({ type: ChatAdDto })
+  @ApiProperty({ type: ChatAdDto, description: 'Для поддержки — заглушка с title «Поддержка»' })
   ad: ChatAdDto
 
   @ApiProperty({ type: ChatOtherUserDto, nullable: true })
@@ -73,6 +82,11 @@ export class ChatResponseDto {
 
   @ApiProperty({ type: ChatLastMessageDto, nullable: true })
   lastMessage: ChatLastMessageDto | null
+}
+
+export class OpenSupportChatResponseDto {
+  @ApiProperty({ example: '44444444-4444-4444-4444-444444444444' })
+  chatId: string
 }
 
 export class ChatPaginatedResponseDto {

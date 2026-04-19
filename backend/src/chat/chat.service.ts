@@ -1,42 +1,16 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common'
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 import { PrismaService } from '@/src/prisma/prisma.service'
 import { S3Service } from '@/src/s3/s3.service'
-import { ConfigService } from '@nestjs/config'
-import { randomUUID } from 'node:crypto'
-
-type ChatAttachmentInput = {
-  name?: string
-  mimeType?: string
-  dataBase64: string
-  size?: number
-}
+import { SUPPORT_USER_ID } from './chat.constants'
 
 @Injectable()
 export class ChatService {
-  private static readonly MAX_ATTACHMENTS_COUNT = 10
-  private static readonly MAX_ATTACHMENT_SIZE = 10 * 1024 * 1024
-
   public constructor(
     private readonly prisma: PrismaService,
     private readonly s3: S3Service,
     private readonly config: ConfigService,
   ) {}
-
-  private mapFile(chatId: string, file: { id: string; mimeType: string; fileName: string | null; size: number | null; createdAt: Date }) {
-    return {
-      id: file.id,
-      url: `/chats/${chatId}/files/${file.id}`,
-      mimeType: file.mimeType,
-      fileName: file.fileName,
-      size: file.size,
-      createdAt: file.createdAt,
-    }
-  }
 
   public async getMyChats(userId?: string, page = 1, limit = 20, q?: string) {
     if (!userId) throw new UnauthorizedException('Сессия не найдена')
@@ -78,6 +52,7 @@ export class ChatService {
         take: limit,
         include: {
           ad: true,
+          response: true,
           members: {
             include: {
               user: true,
@@ -98,19 +73,37 @@ export class ChatService {
 
     const data = items.map((chat) => {
       const otherMember = chat.members.find((m) => m.userId !== userId)
+      const isSupportChat = chat.adId === null
+      const canAssignCourier = Boolean(
+        chat.ad &&
+          chat.response &&
+          chat.ad.authorId === userId &&
+          otherMember &&
+          otherMember.userId === chat.response.courierId &&
+          chat.ad.courierId !== chat.response.courierId,
+      )
 
       return {
         id: chat.id,
         adId: chat.adId,
         responseId: chat.responseId,
+        isSupportChat,
+        canAssignCourier,
         createdAt: chat.createdAt,
         updatedAt: chat.updatedAt,
-        ad: {
-          id: chat.ad.id,
-          title: chat.ad.title,
-          status: chat.ad.status,
-          image: chat.ad.image,
-        },
+        ad: chat.ad
+          ? {
+              id: chat.ad.id,
+              title: chat.ad.title,
+              status: chat.ad.status,
+              image: chat.ad.image,
+            }
+          : {
+              id: 'support',
+              title: 'Поддержка',
+              status: 'SUPPORT',
+              image: null,
+            },
         otherUser: otherMember
           ? {
               id: otherMember.user.id,
@@ -189,7 +182,12 @@ export class ChatService {
           photo: m.sender.photo,
         },
         files: m.files.map((f) => ({
-          ...this.mapFile(chatId, f),
+          id: f.id,
+          url: f.url,
+          mimeType: f.mimeType,
+          fileName: f.fileName,
+          size: f.size,
+          createdAt: f.createdAt,
         })),
       }))
 
@@ -204,6 +202,38 @@ export class ChatService {
     }
   }
 
+  public async openSupportChat(userId: string | undefined) {
+    if (!userId) throw new UnauthorizedException('Сессия не найдена')
+    if (userId === SUPPORT_USER_ID) {
+      throw new BadRequestException('Нельзя открыть этот чат от имени поддержки')
+    }
+
+    const supportUser = await this.prisma.user.findUnique({
+      where: { id: SUPPORT_USER_ID },
+    })
+    if (!supportUser) throw new NotFoundException('Служба поддержки недоступна')
+
+    const existing = await this.prisma.chat.findFirst({
+      where: {
+        adId: null,
+        responseId: null,
+        AND: [{ members: { some: { userId } } }, { members: { some: { userId: SUPPORT_USER_ID } } }],
+      },
+    })
+    if (existing) return { chatId: existing.id }
+
+    const chat = await this.prisma.chat.create({
+      data: {
+        adId: null,
+        members: {
+          create: [{ userId, role: 'CUSTOMER' }, { userId: SUPPORT_USER_ID }],
+        },
+      },
+    })
+
+    return { chatId: chat.id }
+  }
+
   public async assertChatMember(userId: string, chatId: string) {
     const member = await this.prisma.chatMember.findUnique({
       where: { chatId_userId: { chatId, userId } },
@@ -212,77 +242,14 @@ export class ChatService {
     return member
   }
 
-  public async createMessage(
-    userId: string,
-    chatId: string,
-    text?: string,
-    attachments: ChatAttachmentInput[] = [],
-  ) {
+  public async createMessage(userId: string, chatId: string, text?: string) {
     await this.assertChatMember(userId, chatId)
-
-    if (attachments.length > ChatService.MAX_ATTACHMENTS_COUNT) {
-      throw new BadRequestException('Слишком много вложений')
-    }
-
-    const normalizedText = text?.trim() ? text.trim() : null
-    if (!normalizedText && attachments.length === 0) {
-      throw new BadRequestException('Сообщение не может быть пустым')
-    }
-
-    const messageId = randomUUID()
-    const filesToCreate: Array<{
-      messageId: string
-      url: string
-      mimeType: string
-      fileName: string | null
-      size: number
-    }> = []
-
-    for (const attachment of attachments) {
-      const mimeType = attachment.mimeType?.trim() || 'application/octet-stream'
-      const fileName = attachment.name?.trim() || null
-      const body = Buffer.from(attachment.dataBase64, 'base64')
-
-      if (body.length === 0) {
-        throw new BadRequestException('Вложение повреждено или пустое')
-      }
-
-      if (body.length > ChatService.MAX_ATTACHMENT_SIZE) {
-        throw new BadRequestException('Размер вложения превышает 10MB')
-      }
-
-      const fileId = randomUUID()
-      const key = `chat/${chatId}/${messageId}/${fileId}`
-
-      await this.s3.upload(
-        this.config.getOrThrow('MINIO_BUCKET'),
-        key,
-        body,
-        mimeType,
-      )
-
-      filesToCreate.push({
-        messageId,
-        url: key,
-        mimeType,
-        fileName,
-        size: body.length,
-      })
-    }
 
     const message = await this.prisma.message.create({
       data: {
-        id: messageId,
         chatId,
         senderId: userId,
-        text: normalizedText,
-        files: filesToCreate.length
-          ? {
-              createMany: {
-                data: filesToCreate,
-              },
-            }
-          : undefined,
+        text: text?.trim() ? text.trim() : null,
       },
       include: {
         sender: true,
@@ -307,42 +274,30 @@ export class ChatService {
         lastName: message.sender.lastName,
         photo: message.sender.photo,
       },
-      files: message.files.map((f) => this.mapFile(message.chatId, f)),
+      files: [],
     }
   }
 
   public async getChatFile(userId: string | undefined, chatId: string, fileId: string) {
     if (!userId) throw new UnauthorizedException('Сессия не найдена')
-
     await this.assertChatMember(userId, chatId)
 
     const file = await this.prisma.messageFile.findFirst({
-      where: {
-        id: fileId,
-        message: {
-          chatId,
-        },
-      },
-      select: {
-        id: true,
-        url: true,
-        mimeType: true,
-        fileName: true,
-        size: true,
-      },
+      where: { id: fileId, message: { chatId } },
     })
+    if (!file) throw new NotFoundException('Файл не найден')
 
-    if (!file) {
-      throw new NotFoundException('Файл не найден')
-    }
+    const bucket = this.config.getOrThrow('MINIO_BUCKET')
+    const prefix = `${this.config.getOrThrow('MINIO_PUBLIC_BASE')}/${bucket}/`
+    const key = file.url.startsWith(prefix) ? file.url.slice(prefix.length) : file.url
 
-    const downloaded = await this.s3.download(this.config.getOrThrow('MINIO_BUCKET'), file.url)
+    const downloaded = await this.s3.download(bucket, key)
 
     return {
-      ...downloaded,
-      fileName: file.fileName,
+      body: downloaded.body,
       mimeType: file.mimeType || downloaded.contentType,
-      size: file.size ?? downloaded.contentLength ?? downloaded.body.length,
+      fileName: file.fileName,
+      size: file.size ?? downloaded.body.length,
     }
   }
 }

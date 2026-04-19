@@ -1,4 +1,10 @@
-import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common'
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
 import { AdFilterDto, AdDto, getAdResponse, AdUpdateDto } from './dto'
 import { PaginatedResponse } from '../common/types'
@@ -152,15 +158,15 @@ export class AdService {
       const originalBuffer = file.buffer
       imageKey = `ads/${adId}/image`
 
-      const thumb250 = await sharp(originalBuffer)
-        .resize(250, 250, { fit: 'cover' })
+      const thumb600 = await sharp(originalBuffer)
+        .resize(600, 600, { fit: 'cover' })
         .jpeg({ quality: 85 })
         .toBuffer()
 
       await this.s3.upload(
         this.configService.getOrThrow('MINIO_BUCKET'),
         imageKey,
-        thumb250,
+        thumb600,
         'image/jpeg'
       )
     }
@@ -195,15 +201,15 @@ export class AdService {
       const originalBuffer = file.buffer
       const imageKey = `ads/${adId}/image`
 
-      const thumb250 = await sharp(originalBuffer)
-        .resize(250, 250, { fit: 'cover' })
+      const thumb600 = await sharp(originalBuffer)
+        .resize(600, 600, { fit: 'cover' })
         .jpeg({ quality: 85 })
         .toBuffer()
 
       await this.s3.upload(
         this.configService.getOrThrow('MINIO_BUCKET'),
         imageKey,
-        thumb250,
+        thumb600,
         'image/jpeg'
       )
     }
@@ -335,6 +341,40 @@ export class AdService {
           { chatId: chat.id, userId, role: 'COURIER' },
         ],
         skipDuplicates: true,
+      })
+    })
+
+    return getStatusOk()
+  }
+
+  public async assignCourier(req: Request, adId: string, courierId: string) {
+    const userId = req.session.userId
+    if (!userId) throw new UnauthorizedException('Сессия не найдена')
+
+    const ad = await this.prisma.ad.findUnique({
+      where: { id: adId },
+      include: { responses: true },
+    })
+
+    if (!ad) throw new NotFoundException('Объявление не найдено')
+    if (ad.authorId !== userId) throw new ForbiddenException('Только автор объявления может назначить исполнителя')
+    if (courierId === ad.authorId) throw new BadRequestException('Нельзя назначить автора объявления курьером')
+
+    const hasResponse = ad.responses.some((r) => r.courierId === courierId)
+    if (!hasResponse) throw new BadRequestException('Этот пользователь не откликался на объявление')
+
+    await this.prisma.$transaction(async (tx) => {
+      await tx.ad.update({
+        where: { id: adId },
+        data: { courierId },
+      })
+      await tx.adResponse.updateMany({
+        where: { adId, courierId: { not: courierId } },
+        data: { status: 'REJECTED' },
+      })
+      await tx.adResponse.update({
+        where: { adId_courierId: { adId, courierId } },
+        data: { status: 'ACCEPTED' },
       })
     })
 
