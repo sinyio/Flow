@@ -3,8 +3,6 @@ import { getServerAxiosInstance } from '@api/server-axios-instance'
 import { loadApiResource } from '@utils/load-api-resource'
 import { MediaView } from '@views/media'
 
-const FLOW_AUTHOR_ID = 'adminuser'
-
 const isSuccess = (data: unknown): data is TGetPostsSuccessResponse =>
   typeof data === 'object' &&
   data !== null &&
@@ -32,28 +30,20 @@ const MediaPage = async ({ searchParams }: { searchParams: Promise<TGetPostsPara
   }
 
   const [flowResult, userResult] = await Promise.all([
-    FLOW_AUTHOR_ID
-      ? loadApiResource(
-          () => getPosts({ authorId: FLOW_AUTHOR_ID, limit: 2 }, serverAxios),
-          isSuccess
-        )
-      : Promise.resolve({ ok: false as const, message: '' }),
     loadApiResource(
-      () => getPosts({ sort: 'relevant', limit: 2 }, serverAxios),
+      () => getPosts({ filter: 'flow', limit: 2 }, serverAxios),
+      isSuccess
+    ),
+    loadApiResource(
+      () => getPosts({ filter: 'users', sort: 'relevant', limit: 2 }, serverAxios),
       isSuccess
     ),
   ])
 
-  console.log('Flow posts result:', flowResult)
-
   return (
     <MediaView
       flowPosts={flowResult.ok ? flowResult.data.data : []}
-      userPosts={
-        userResult.ok
-          ? userResult.data.data.filter(p => p.author?.id !== FLOW_AUTHOR_ID)
-          : []
-      }
+      userPosts={userResult.ok ? userResult.data.data : []}
     />
   )
 }

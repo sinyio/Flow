@@ -8,6 +8,12 @@ export enum MediaPostSort {
   RELEVANT = 'relevant',
 }
 
+export enum MediaPostFilter {
+  ALL = 'all',
+  FLOW = 'flow',
+  USERS = 'users',
+}
+
 export class MediaListQueryDto extends PaginationDto {
   @ApiPropertyOptional({ description: 'Поиск по заголовку поста', example: 'доставка' })
   @IsOptional()
@@ -27,5 +33,14 @@ export class MediaListQueryDto extends PaginationDto {
   @IsOptional()
   @IsString()
   authorId?: string
+
+  @ApiPropertyOptional({
+    description: 'Фильтр постов: all - все посты, flow - только посты от админа, users - только посты от обычных пользователей',
+    enum: MediaPostFilter,
+    example: MediaPostFilter.ALL,
+  })
+  @IsOptional()
+  @IsEnum(MediaPostFilter)
+  filter?: MediaPostFilter = MediaPostFilter.ALL
 }
 

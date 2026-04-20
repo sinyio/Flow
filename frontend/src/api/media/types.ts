@@ -5,6 +5,8 @@ export type { TPaginationMeta }
 
 export type TMediaPostSort = 'newest' | 'oldest' | 'relevant'
 
+export type TMediaPostFilter = 'all' | 'flow' | 'users'
+
 export type TMediaMutationResponse = IStatusOk | IApiError
 
 export type TMediaUserSnippet = {

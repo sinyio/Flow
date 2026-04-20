@@ -4,7 +4,7 @@ import { PrismaService } from '../prisma/prisma.service'
 import { filterEmptyValues, getStatusOk } from '../common/helpers'
 import { type Request } from 'express'
 import { PaginatedResponse } from '../common/types'
-import { MediaCommentCreateDto, MediaCommentUpdateDto, MediaListQueryDto, MediaPostCreateDto, MediaPostSort, MediaPostUpdateDto } from './dto'
+import { MediaCommentCreateDto, MediaCommentUpdateDto, MediaListQueryDto, MediaPostCreateDto, MediaPostFilter, MediaPostSort, MediaPostUpdateDto } from './dto'
 import { getUserResponse } from '../user/dto'
 import { nanoid } from 'nanoid'
 import sharp from 'sharp'
@@ -76,6 +76,21 @@ export class MediaService {
     const limit = query.limit ?? 10
     const userId = req.session.userId
 
+    // Определяем ID админа для фильтрации
+    const adminUsers = await this.prisma.user.findMany({
+      where: { role: 'ADMIN' },
+      select: { id: true },
+    })
+    const adminUserIds = adminUsers.map(u => u.id)
+
+    // Строим условие фильтрации
+    let authorFilter: Prisma.MediaPostWhereInput['author'] = undefined
+    if (query.filter === MediaPostFilter.FLOW) {
+      authorFilter = { id: { in: adminUserIds } }
+    } else if (query.filter === MediaPostFilter.USERS) {
+      authorFilter = { id: { notIn: adminUserIds } }
+    }
+
     const where: Prisma.MediaPostWhereInput = {
       deletedAt: null,
       ...(query.authorId ? { authorId: query.authorId } : {}),
@@ -87,6 +102,7 @@ export class MediaService {
           },
         }
         : {}),
+      ...(authorFilter ? { author: authorFilter } : {}),
     }
 
     const orderBy: Prisma.MediaPostOrderByWithRelationInput =

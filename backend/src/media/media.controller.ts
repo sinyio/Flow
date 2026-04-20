@@ -27,6 +27,13 @@ export class MediaController {
     description: 'Сортировка: newest | oldest | relevant (по просмотрам)',
   })
   @ApiQuery({ name: 'authorId', required: false, type: String })
+  @ApiQuery({
+    name: 'filter',
+    required: false,
+    type: String,
+    enum: ['all', 'flow', 'users'],
+    description: 'Фильтр постов: all - все посты, flow - только посты от админа, users - только посты от обычных пользователей',
+  })
   @ApiResponse({
     status: 200,
     schema: {
