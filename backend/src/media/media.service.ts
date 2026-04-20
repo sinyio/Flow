@@ -40,8 +40,6 @@ export class MediaService {
       },
       include: {
         author: true,
-        content: true,
-        image: true,
         likes: userId ? { where: { userId } } : false,
         favorites: userId ? { where: { userId } } : false,
         _count: {
