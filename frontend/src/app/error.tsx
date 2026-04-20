@@ -14,6 +14,7 @@ const Error = ({ error, reset }: { error: Error & { digest?: string }; reset: ()
       outer={{
         style: {
           justifyContent: 'center',
+          alignItems: 'center',
         },
       }}
     >

@@ -1,5 +1,8 @@
-/** Сообщение бэкенда при отсутствии сессии (Nest UnauthorizedException и т.п.) */
-export const SESSION_NOT_FOUND_MESSAGE = 'Сессия не найдена'
+/** Сообщения бэкенда при отсутствии сессии (Nest UnauthorizedException и т.п.) */
+export const SESSION_NOT_FOUND_MESSAGES = [
+  'Сессия не найдена',
+  'Пользователь не авторизован',
+] as const
 
 /** Nest может отдавать `message` строкой или массивом строк (валидация). */
 export function getApiMessageStrings(message: unknown): readonly string[] {
@@ -15,7 +18,9 @@ export function getApiMessageStrings(message: unknown): readonly string[] {
 
 /** Есть ли среди сообщений от API фраза о потере сессии (проверяются все элементы массива). */
 export function isSessionNotFoundInApiMessage(message: unknown): boolean {
-  return getApiMessageStrings(message).some(part => part.trim() === SESSION_NOT_FOUND_MESSAGE)
+  return getApiMessageStrings(message).some(part =>
+    SESSION_NOT_FOUND_MESSAGES.some(msg => part.trim() === msg)
+  )
 }
 
 export function isSessionNotFoundMessage(message: string | undefined | null): boolean {

@@ -35,12 +35,7 @@ export const Header = () => {
           <Button view="normal" size="xl" type="button" onClick={() => router.push('/ads')}>
             Создать объявление
           </Button>
-          <Button
-            view="outlined"
-            size="xl"
-            type="button"
-            onClick={() => router.push('/auth?action=login')}
-          >
+          <Button view="outlined" size="xl" type="button" onClick={() => router.push('/auth')}>
             Войти
           </Button>
         </div>

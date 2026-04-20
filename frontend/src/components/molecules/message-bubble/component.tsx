@@ -5,6 +5,8 @@ import { Avatar, Icon, Text } from '@gravity-ui/uikit'
 
 import { TMessage } from '@api/chats/types'
 
+import { formatUserName } from '@utils/format-user-name'
+
 import styles from './component.module.css'
 
 export interface IMessageBubbleProps {
@@ -14,9 +16,7 @@ export interface IMessageBubbleProps {
 }
 
 export const MessageBubble = ({ message, isOwn, showAvatar = true }: IMessageBubbleProps) => {
-  const senderName =
-    [message.sender.firstName, message.sender.lastName].filter(Boolean).join(' ') ||
-    message.sender.email
+  const senderName = formatUserName(message.sender)
 
   const time = new Date(message.createdAt).toLocaleTimeString('ru-RU', {
     hour: '2-digit',

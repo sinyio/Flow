@@ -41,7 +41,10 @@ const RootLayout = async ({
         <Metrika />
         <GlassEffect />
 
-        <ApiProvider apiHost={process.env.NEXT_PUBLIC_API_HOST ?? ''}>
+        <ApiProvider
+          apiHost={process.env.NEXT_PUBLIC_API_HOST ?? ''}
+          sessionKey={process.env.NEXT_PUBLIC_SESSION_KEY}
+        >
           <BusinessLayout serverData={serverData}>
             <AppShell>
               <ErrorBoundary errorComponent={Error}>{children}</ErrorBoundary>

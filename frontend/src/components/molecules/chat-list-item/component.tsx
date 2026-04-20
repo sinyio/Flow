@@ -4,6 +4,8 @@ import { Label, Text, User, Avatar } from '@gravity-ui/uikit'
 
 import { TChatItem } from '@api/chats/types'
 
+import { formatUserName } from '@utils/format-user-name'
+
 import styles from './component.module.css'
 
 export interface IChatListItemProps {
@@ -13,10 +15,7 @@ export interface IChatListItemProps {
 }
 
 export const ChatListItem = ({ chat, isActive = false, onClick }: IChatListItemProps) => {
-  const name = chat.otherUser
-    ? [chat.otherUser.firstName, chat.otherUser.lastName].filter(Boolean).join(' ') ||
-      chat.otherUser.email
-    : 'Неизвестный пользователь'
+  const name = chat.otherUser ? formatUserName(chat.otherUser) : 'Неизвестный пользователь'
 
   const lastMessagePreview = chat.lastMessage?.text || 'Нет сообщений'
   const lastMessageDate = chat.lastMessage?.createdAt

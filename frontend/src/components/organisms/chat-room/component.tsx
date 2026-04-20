@@ -5,20 +5,20 @@ import { useEffect, useRef } from 'react'
 
 import { TMessage } from '@api/chats/types'
 
+import { useChatStore } from '@utils/stores/chats'
+
 import { ChatInputBar } from '@components/molecules/chat-input-bar'
 import { MessageBubble } from '@components/molecules/message-bubble'
 
 import styles from './component.module.css'
 
 export interface IChatRoomProps {
-  chatId: string
-  messages: TMessage[]
-  currentUserId: string
   onSendMessage: (text: string) => Promise<void>
-  isSending: boolean
 }
 
-export const ChatRoom = ({ messages, currentUserId, onSendMessage, isSending }: IChatRoomProps) => {
+export const ChatRoom = ({ onSendMessage }: IChatRoomProps) => {
+  const { messages, currentUserId, isLoading } = useChatStore()
+
   const bottomRef = useRef<HTMLDivElement>(null)
   const messagesContainerRef = useRef<HTMLDivElement>(null)
 
@@ -99,7 +99,7 @@ export const ChatRoom = ({ messages, currentUserId, onSendMessage, isSending }: 
           }
           handleSend(text)
         }}
-        disabled={isSending}
+        disabled={isLoading.sendMessage}
       />
     </div>
   )

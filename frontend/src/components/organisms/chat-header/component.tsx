@@ -5,6 +5,8 @@ import { Avatar, Button, DropdownMenu, Icon, User } from '@gravity-ui/uikit'
 
 import { TChatAd, TChatUserSnippet } from '@api/chats/types'
 
+import { formatUserName } from '@utils/format-user-name'
+
 import { AdMiniCard } from '@components/molecules/ad-mini-card'
 
 import styles from './component.module.css'
@@ -17,8 +19,7 @@ export interface IChatHeaderProps {
 }
 
 export const ChatHeader = ({ otherUser, ad, rating, onMenuAction }: IChatHeaderProps) => {
-  const userName =
-    [otherUser.firstName, otherUser.lastName].filter(Boolean).join(' ') || otherUser.email
+  const userName = formatUserName(otherUser)
 
   // Используем rating из otherUser или переданный через props
   const userRating = rating ?? otherUser.rating

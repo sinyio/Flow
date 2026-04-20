@@ -1,0 +1,23 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--g-color-base-background);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border-bottom: 1px solid var(--g-color-line-generic);
+  background-color: var(--g-color-base-background);
+}
+
+.backButton {
+  flex-shrink: 0;
+}
+
+.avatar {
+  flex-shrink: 0;
+}
