@@ -25,6 +25,7 @@ services:
       - flow-backend
 
   backend:
+    restart: always
     container_name: backend
     build:
       context: ./backend
@@ -40,7 +41,9 @@ services:
       - flow-backend
     profiles:
       - prod
+      
   frontend:
+    restart: always
     container_name: frontend
     build:
       context: ./frontend
@@ -78,6 +81,7 @@ services:
 
   nginx:
     image: nginx:latest
+    restart: always
     container_name: nginx
     ports:
       - 80:80
