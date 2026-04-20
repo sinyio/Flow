@@ -74,7 +74,7 @@ export class MediaController {
         id: '11111111-1111-1111-1111-111111111111',
         title: 'Доставка документов Москва -> СПб за 1 день',
         content: 'Ищу курьера для доставки документов из Москвы в Санкт-Петербург. Важно, чтобы доставка была осуществлена в течение 1 дня. Оплата по договоренности.',
-        image: 'https://xn--k1agpb.com/storage/flow/media/default/post_image.jpg',
+        image: 'https://xn--k1agpb.com/storage/flow/posts/default/post_image.jpg',
         createdAt: '2026-04-10T12:00:00.000Z',
         updatedAt: '2026-04-15T10:00:00.000Z',
         author: {

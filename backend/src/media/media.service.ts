@@ -121,6 +121,8 @@ export class MediaService {
     const data = posts.map((post: any) => ({
       id: post.id,
       title: post.title,
+      content: post.content,
+      image: post.image,
       createdAt: post.createdAt,
       author: getUserResponse(post.author),
       viewsCount: post.viewsCount,
@@ -263,7 +265,7 @@ export class MediaService {
       )
     }
 
-    const image = `${this.configService.getOrThrow('MINIO_PUBLIC_BASE')}/${this.configService.getOrThrow('MINIO_BUCKET')}/${imageKey ? imageKey : 'posts/default/post_image.svg'}`
+    const image = `${this.configService.getOrThrow('MINIO_PUBLIC_BASE')}/${this.configService.getOrThrow('MINIO_BUCKET')}/${imageKey ? imageKey : 'posts/default/post_image.jpg'}`
 
     await this.prisma.mediaPost.create({
       data: {

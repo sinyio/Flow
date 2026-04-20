@@ -1,0 +1,44 @@
+.heroCard {
+  background-color: #fff;
+  padding: 58px;
+  display: flex;
+  justify-content: center;
+}
+
+.heroInner {
+  width: 100%;
+  max-width: 740px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  align-items: center;
+}
+
+.searchInput {
+  flex: 1;
+}
+
+.popupContent {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0;
+  min-width: 200px;
+}
+
+.sortOption {
+  all: unset;
+  cursor: pointer;
+  padding: 10px 16px;
+  width: 100%;
+  box-sizing: border-box;
+  transition: background-color 0.15s;
+}
+
+.sortOption:hover {
+  background: var(--g-color-base-simple-hover);
+}
+
+.sortOptionActive {
+  color: var(--g-color-text-brand);
+  background: var(--g-color-base-brand-light-hover);
+}

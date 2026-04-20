@@ -25,7 +25,7 @@ export type TMediaComment = {
   replies: TMediaComment[]
 }
 
-export type TMediaPost = {
+export type TPost = {
   id: string
   title: string
   content?: string

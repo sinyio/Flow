@@ -24,7 +24,7 @@ export const Header = () => {
               </Link>
             </li>
             <li>
-              <Link view="primary" className={styles.navLink} href="/">
+              <Link view="primary" className={styles.navLink} href="/media">
                 <Text variant="subheader-2">Наше медиа</Text>
               </Link>
             </li>

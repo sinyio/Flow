@@ -1,6 +1,6 @@
 import { IApiError } from '@api/types'
 
-import { TMediaPost, TMediaPostSort, TPaginationMeta } from '../types'
+import { TPost, TMediaPostSort, TPaginationMeta } from '../types'
 
 export type TGetPostsParams = {
   page?: number
@@ -11,7 +11,7 @@ export type TGetPostsParams = {
 }
 
 export type TGetPostsSuccessResponse = {
-  data: TMediaPost[]
+  data: TPost[]
   meta: TPaginationMeta
 }
 
