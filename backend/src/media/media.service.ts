@@ -76,19 +76,13 @@ export class MediaService {
     const limit = query.limit ?? 10
     const userId = req.session.userId
 
-    // Определяем ID админа для фильтрации
-    const adminUsers = await this.prisma.user.findMany({
-      where: { role: 'ADMIN' },
-      select: { id: true },
-    })
-    const adminUserIds = adminUsers.map(u => u.id)
+    const FLOW_AUTHOR_ID = 'adminuser'
 
-    // Строим условие фильтрации
     let authorFilter: Prisma.MediaPostWhereInput['author'] = undefined
     if (query.filter === MediaPostFilter.FLOW) {
-      authorFilter = { id: { in: adminUserIds } }
+      authorFilter = { id: FLOW_AUTHOR_ID }
     } else if (query.filter === MediaPostFilter.USERS) {
-      authorFilter = { id: { notIn: adminUserIds } }
+      authorFilter = { id: { not: FLOW_AUTHOR_ID } }
     }
 
     const where: Prisma.MediaPostWhereInput = {
