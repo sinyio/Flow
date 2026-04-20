@@ -1,7 +1,7 @@
 import { IApiError } from '@api/types'
 
-import { TMediaPost } from '../types'
+import { TPost } from '../types'
 
 export type TGetPostByIdRequest = string
 
-export type TGetPostByIdResponse = TMediaPost | IApiError
+export type TGetPostByIdResponse = TPost | IApiError
