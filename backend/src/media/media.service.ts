@@ -6,10 +6,17 @@ import { type Request } from 'express'
 import { PaginatedResponse } from '../common/types'
 import { MediaCommentCreateDto, MediaCommentUpdateDto, MediaListQueryDto, MediaPostCreateDto, MediaPostSort, MediaPostUpdateDto } from './dto'
 import { getUserResponse } from '../user/dto'
+import { nanoid } from 'nanoid'
+import sharp from 'sharp'
+import { S3Service } from '../s3/s3.service'
+import { ConfigService } from '@nestjs/config'
 
 @Injectable()
 export class MediaService {
-  public constructor(private readonly prisma: PrismaService) {}
+  public constructor(private readonly prisma: PrismaService,
+    private readonly s3: S3Service,
+    private readonly configService: ConfigService
+  ) { }
 
   public findPostById(id: string) {
     return this.prisma.mediaPost.findUnique({
@@ -33,6 +40,8 @@ export class MediaService {
       },
       include: {
         author: true,
+        content: true,
+        image: true,
         likes: userId ? { where: { userId } } : false,
         favorites: userId ? { where: { userId } } : false,
         _count: {
@@ -50,6 +59,8 @@ export class MediaService {
     return {
       id: post.id,
       title: post.title,
+      content: post.content,
+      image: post.image,
       createdAt: post.createdAt,
       updatedAt: post.updatedAt,
       author: getUserResponse(post.author),
@@ -72,11 +83,11 @@ export class MediaService {
       ...(query.authorId ? { authorId: query.authorId } : {}),
       ...(query.search
         ? {
-            title: {
-              contains: query.search,
-              mode: 'insensitive',
-            },
-          }
+          title: {
+            contains: query.search,
+            mode: 'insensitive',
+          },
+        }
         : {}),
     }
 
@@ -169,22 +180,22 @@ export class MediaService {
 
     const replies = rootIds.length
       ? await this.prisma.mediaComment.findMany({
-          where: {
-            postId,
-            deletedAt: null,
-            parentId: { in: rootIds },
-          },
-          orderBy: { createdAt: 'asc' },
-          include: {
-            author: true,
-            parent: {
-              include: {
-                author: true,
-              },
+        where: {
+          postId,
+          deletedAt: null,
+          parentId: { in: rootIds },
+        },
+        orderBy: { createdAt: 'asc' },
+        include: {
+          author: true,
+          parent: {
+            include: {
+              author: true,
             },
-            likes: userId ? { where: { userId } } : false,
           },
-        })
+          likes: userId ? { where: { userId } } : false,
+        },
+      })
       : []
 
     const byParent = new Map<string, any[]>()
@@ -231,12 +242,37 @@ export class MediaService {
     }
   }
 
-  public async createPost(req: Request, dto: MediaPostCreateDto) {
+  public async createPost(req: Request, dto: MediaPostCreateDto, file) {
     const authorId = req.session.userId
+
+    const postId = nanoid(12)
+
+    let imageKey: string | undefined
+    if (file) {
+      const originalBuffer = file.buffer
+      imageKey = `posts/${postId}/image`
+
+      const thumb600 = await sharp(originalBuffer)
+        .resize(1920, 700, { fit: 'cover' })
+        .jpeg({ quality: 85 })
+        .toBuffer()
+
+      await this.s3.upload(
+        this.configService.getOrThrow('MINIO_BUCKET'),
+        imageKey,
+        thumb600,
+        'image/jpeg'
+      )
+    }
+
+    const image = `${this.configService.getOrThrow('MINIO_PUBLIC_BASE')}/${this.configService.getOrThrow('MINIO_BUCKET')}/${imageKey ? imageKey : 'posts/default/post_image.svg'}`
 
     await this.prisma.mediaPost.create({
       data: {
+        id: postId,
         title: dto.title ?? null,
+        content: dto.content ?? null,
+        image: image,
         authorId: authorId!,
       },
     })
@@ -397,7 +433,7 @@ export class MediaService {
     return getStatusOk({ liked: true })
   }
 
-  public async updatePost(id: string, dto: MediaPostUpdateDto) {
+  public async updatePost(id: string, dto: MediaPostUpdateDto, file) {
     if (!id || Array.isArray(id)) throw new BadRequestException('Invalid ID')
 
     const post = await this.prisma.mediaPost.findUnique({ where: { id } })
@@ -405,9 +441,33 @@ export class MediaService {
 
     const data = filterEmptyValues(dto)
 
+    let imageKey: string | undefined
+    if (file) {
+      const postId = id
+      const originalBuffer = file.buffer
+      imageKey = `posts/${postId}/image`
+
+      const thumb600 = await sharp(originalBuffer)
+        .resize(1920, 700, { fit: 'cover' })
+        .jpeg({ quality: 85 })
+        .toBuffer()
+
+      await this.s3.upload(
+        this.configService.getOrThrow('MINIO_BUCKET'),
+        imageKey,
+        thumb600,
+        'image/jpeg'
+      )
+    }
+
+    const imagePath = `${this.configService.getOrThrow('MINIO_PUBLIC_BASE')}/${this.configService.getOrThrow('MINIO_BUCKET')}/${imageKey}`
+
     await this.prisma.mediaPost.update({
       where: { id },
-      data,
+      data: {
+        ...data,
+        ...(imagePath && { image: imagePath }),
+      },
     })
 
     return getStatusOk()

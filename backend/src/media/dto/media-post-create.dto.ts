@@ -6,5 +6,14 @@ export class MediaPostCreateDto {
   @IsOptional()
   @IsString()
   title?: string
+
+  @ApiPropertyOptional({ description: 'Содержание поста', example: 'Привет, это мой первый пост!' })
+  @IsOptional()
+  @IsString()
+  content?: string
+
+  @ApiPropertyOptional({ description: 'Изображение', type: 'string', format: 'binary' })
+  @IsOptional()
+  image?: any
 }
 

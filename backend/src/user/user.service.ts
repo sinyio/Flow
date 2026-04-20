@@ -125,7 +125,6 @@ export class UserService {
     const userId = req.session.userId
 
     const data = filterEmptyValues(dto)
-    console.log(data)
 
     let imageKey: string | undefined
     if (file) {

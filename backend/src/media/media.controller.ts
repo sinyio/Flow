@@ -1,10 +1,12 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common'
-import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Query, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common'
+import { ApiBody, ApiConsumes, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { type Request } from 'express'
 import { Authorization } from '../auth/decorators/auth.decorator'
 import { MediaService } from './media.service'
 import { MediaCommentCreateDto, MediaCommentUpdateDto, MediaListQueryDto, MediaPostCreateDto, MediaPostUpdateDto } from './dto'
 import { CanEditMediaComment, CanEditMediaPost } from './guards'
+import { FileInterceptor } from '@nestjs/platform-express'
+import { getStatusOk } from '../common/helpers'
 
 @ApiTags('Media')
 @Controller('media')
@@ -71,6 +73,8 @@ export class MediaController {
       example: {
         id: '11111111-1111-1111-1111-111111111111',
         title: 'Доставка документов Москва -> СПб за 1 день',
+        content: 'Ищу курьера для доставки документов из Москвы в Санкт-Петербург. Важно, чтобы доставка была осуществлена в течение 1 дня. Оплата по договоренности.',
+        image: 'https://xn--k1agpb.com/storage/flow/media/default/post_image.jpg',
         createdAt: '2026-04-10T12:00:00.000Z',
         updatedAt: '2026-04-15T10:00:00.000Z',
         author: {
@@ -170,19 +174,19 @@ export class MediaController {
 
   @Authorization()
   @Post('posts')
+  @ApiConsumes('multipart/form-data')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Создать пост' })
   @ApiBody({ type: MediaPostCreateDto })
   @ApiResponse({
     status: 200,
     schema: {
-      example: {
-        status: 'ok',
-      },
+      example: getStatusOk(),
     },
   })
-  public async createPost(@Req() req: Request, @Body() dto: MediaPostCreateDto) {
-    return this.mediaService.createPost(req, dto)
+  @UseInterceptors(FileInterceptor('image'))
+  public async createPost(@Req() req: Request, @Body() dto: MediaPostCreateDto, @UploadedFile() file) {
+    return this.mediaService.createPost(req, dto, file)
   }
 
   @Post('posts/:id/view')
@@ -275,6 +279,7 @@ export class MediaController {
 
   @Authorization()
   @Patch('posts/:id')
+  @ApiConsumes('multipart/form-data')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Редактировать пост' })
   @ApiParam({ name: 'id', required: true, type: String })
@@ -282,14 +287,13 @@ export class MediaController {
   @ApiResponse({
     status: 200,
     schema: {
-      example: {
-        status: 'ok',
-      },
+      example: getStatusOk(),
     },
   })
   @UseGuards(CanEditMediaPost)
-  public async patchPost(@Param('id') id: string, @Body() dto: MediaPostUpdateDto) {
-    return this.mediaService.updatePost(id, dto)
+  @UseInterceptors(FileInterceptor('image'))
+  public async patchPost(@Param('id') id: string, @Body() dto: MediaPostUpdateDto, @UploadedFile() file) {
+    return this.mediaService.updatePost(id, dto, file)
   }
 
   @Authorization()
