@@ -65,7 +65,35 @@ jobs:
   deploy-frontend:
     runs-on: ubuntu-latest
     needs: check-changes
-    if: needs.check-changes.outputs.frontend == 'true'
+    if: needs.check-changes.outputs.frontend == 'true' && needs.check-changes.outputs.backend != 'true'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy frontend
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+            cd ${{ secrets.PROJECT_PATH }}
+            git reset --hard ORIG_HEAD
+            git pull
+
+            # ОБНОВЛЯЕМ ТОЛЬКО frontend
+            docker-compose build frontend || exit 1
+            docker-compose up -d frontend
+
+            docker system prune -af
+            docker builder prune -af
+          EOF
+
+  deploy-both:
+    runs-on: ubuntu-latest
+    needs: [check-changes, deploy-backend]
+    if: needs.check-changes.outputs.frontend == 'true' && needs.check-changes.outputs.backend == 'true'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
