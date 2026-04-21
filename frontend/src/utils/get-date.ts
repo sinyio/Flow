@@ -13,7 +13,7 @@ const months: Record<string, string> = {
   декабрь: 'декабря',
 }
 
-export type TDateType = 'from' | 'before' | 'regular'
+export type TDateType = 'from' | 'before' | 'regular' | 'short'
 
 export const getDate = (datetime?: string, dateType: TDateType = 'from'): string => {
   if (!datetime) {
@@ -22,12 +22,13 @@ export const getDate = (datetime?: string, dateType: TDateType = 'from'): string
   const parsedDate = new Date(datetime)
   const day = parsedDate.getDate()
   const month = parsedDate.toLocaleDateString('ru-RU', { month: 'long' })
-  const year = parsedDate.getFullYear()
+  const year = String(parsedDate.getFullYear()).slice(-2)
 
   const date = {
     from: `с ${day} ${months[month]} ${year} года`,
     before: `до ${day} ${months[month]}`,
-    regular: `${day} ${months[month]} ${year} года`,
+    regular: `${day} ${months[month]} ${parsedDate.getFullYear()} года`,
+    short: `${String(day).padStart(2, '0')}.${String(parsedDate.getMonth() + 1).padStart(2, '0')}.${year}`,
   }
 
   return date[dateType]

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, use, useRef } from "react";
 
-import { Avatar, Button, Text } from "@gravity-ui/uikit";
+import { Avatar, Button, Flex, Text } from "@gravity-ui/uikit";
 import {
   Eye,
   ThumbsUp,
@@ -32,6 +32,74 @@ import { CommentCard, CommentInput } from "@entities/comment";
 import { Modal } from "src/ui-kit";
 
 const FLOW_AUTHOR_ID = "adminuser";
+const COMMENTS_PAGE_SIZE = 10;
+
+interface CommentsSectionProps {
+  commentsCount: number;
+  comments: TMediaComment[];
+  currentUserId?: string;
+  replyToCommentId?: string;
+  replyTo?: string;
+  onCommentSubmit: (text: string) => void;
+  onCommentLike: (id: string) => void;
+  onReply: (commentId: string, authorName: string) => void;
+  onDelete: (commentId: string) => void;
+  onCancelReply: () => void;
+}
+
+function CommentsSection({
+  commentsCount,
+  comments,
+  currentUserId,
+  replyToCommentId,
+  replyTo,
+  onCommentSubmit,
+  onCommentLike,
+  onReply,
+  onDelete,
+  onCancelReply,
+}: CommentsSectionProps) {
+  const [visibleCount, setVisibleCount] = useState(COMMENTS_PAGE_SIZE);
+  const visibleComments = comments.slice(0, visibleCount);
+  const remaining = comments.length - visibleCount;
+
+  return (
+    <div className={styles.commentsSection}>
+      <Flex direction="column" gap={4}>
+        <Text variant="header-2" className={styles.commentsTitle}>
+          {commentsCount} комментариев
+        </Text>
+        <CommentInput handleSubmit={onCommentSubmit} />
+      </Flex>
+      <div className={styles.commentsList}>
+        {visibleComments.map((comment) => (
+          <CommentCard
+            key={comment.id}
+            comment={comment}
+            onLike={onCommentLike}
+            onReply={onReply}
+            onDelete={onDelete}
+            currentUserId={currentUserId}
+            replyToCommentId={replyToCommentId}
+            handleCancelReply={onCancelReply}
+            handleCommentSubmit={onCommentSubmit}
+            replyTo={replyTo}
+          />
+        ))}
+        {remaining > 0 && (
+          <div
+            className={styles.showMore}
+            onClick={() => setVisibleCount((n) => n + COMMENTS_PAGE_SIZE)}
+          >
+            <Text variant="body-2" color="secondary">
+              Показать ещё {remaining} комментариев
+            </Text>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
 
 interface PostDetailPageProps {
   params: Promise<{ id: string }>;
@@ -282,20 +350,20 @@ export default function PostDetailPage({ params }: PostDetailPageProps) {
       {post.image && <PostHeader photoUrl={post.image} postId={post.id} />}
       <PageContainer inner={{ className: styles.pageInner }}>
         <div className={styles.content}>
-          <Text variant="header-1" className={styles.title}>
+          <Text variant="display-3" className={styles.title} as="h1">
             {post.title}
           </Text>
 
           <div className={styles.meta}>
             {post.author && !isFlowPost && (
-              <>
+              <Flex gap={2} alignItems="center">
                 <Avatar
                   size="s"
                   imgUrl={post.author.photo ?? undefined}
                   text={post.author.fullName}
                 />
                 <Text variant="body-2">{post.author.fullName}</Text>
-              </>
+              </Flex>
             )}
             <Text variant="body-2" color="secondary">
               {getDate(post.createdAt, "regular")}
@@ -310,7 +378,7 @@ export default function PostDetailPage({ params }: PostDetailPageProps) {
 
           {post.content && (
             <div className={styles.textContent}>
-              <Text variant="body-1">{post.content}</Text>
+              <Text variant="body-3">{post.content}</Text>
             </div>
           )}
 
@@ -357,31 +425,18 @@ export default function PostDetailPage({ params }: PostDetailPageProps) {
         </div>
 
         {!isFlowPost && (
-          <div className={styles.commentsSection}>
-            <Text variant="header-2" className={styles.commentsTitle}>
-              {post.commentsCount} комментариев
-            </Text>
-
-            <div className={styles.commentsList}>
-              {comments.map((comment) => (
-                <>
-                  <CommentCard
-                    key={comment.id}
-                    comment={comment}
-                    onLike={handleCommentLike}
-                    onReply={handleReply}
-                    onDelete={handleDeleteComment}
-                    currentUserId={currentUserId}
-                    replyToCommentId={replyToCommentId}
-                    handleCancelReply={handleCancelReply}
-                    handleCommentSubmit={handleCommentSubmit}
-                    replyTo={replyTo}
-                  />
-                </>
-              ))}
-            </div>
-            <CommentInput handleSubmit={handleCommentSubmit} />
-          </div>
+          <CommentsSection
+            commentsCount={post.commentsCount}
+            comments={comments}
+            currentUserId={currentUserId}
+            replyToCommentId={replyToCommentId}
+            replyTo={replyTo}
+            onCommentSubmit={handleCommentSubmit}
+            onCommentLike={handleCommentLike}
+            onReply={handleReply}
+            onDelete={handleDeleteComment}
+            onCancelReply={handleCancelReply}
+          />
         )}
       </PageContainer>
     </>

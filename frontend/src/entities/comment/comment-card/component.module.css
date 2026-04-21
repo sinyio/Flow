@@ -10,29 +10,79 @@
   gap: 12px;
 }
 
-.commentMain {
-  display: flex;
-  gap: 12px;
+.replyInput {
+  margin-left: 36px;
 }
 
-.commentBody {
-  flex: 1;
+.commentTop {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  align-items: center;
+  gap: 12px;
 }
 
 .commentHeader {
   display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.replyMeta {
+  display: flex;
   align-items: center;
-  gap: 8px;
+  flex-wrap: wrap;
+  gap: 4px;
 }
 
 .commentText {
   word-break: break-word;
 }
 
+.textWrapper {
+  position: relative;
+}
+
+.commentTextClamped {
+  word-break: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.expandLabel {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding-left: 32px;
+  background: linear-gradient(to right, transparent, var(--page-color, #f2f3f2) 40%);
+  cursor: pointer;
+  color: var(--g-color-text-secondary);
+  user-select: none;
+  font-size: 14px;
+
+  &:hover {
+    color: var(--g-color-text-primary);
+  }
+}
+
+.collapseLabel {
+  cursor: pointer;
+  color: var(--g-color-text-secondary);
+  user-select: none;
+
+  &:hover {
+    color: var(--g-color-text-primary);
+  }
+}
+
 .commentActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.commentActionsLeft {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -66,14 +116,6 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  cursor: pointer;
-  color: var(--g-color-text-danger);
-  transition: 0.2s opacity;
-  user-select: none;
-
-  &:hover {
-    opacity: 0.8;
-  }
 }
 
 .replies {
@@ -81,8 +123,6 @@
   flex-direction: column;
   gap: 8px;
   margin-left: 36px;
-  padding-left: 12px;
-  border-left: 1px solid var(--g-color-line-generic);
 }
 
 .replyItem {
@@ -91,14 +131,21 @@
 }
 
 .replyHeader {
-  margin-inline: auto;
-  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   cursor: pointer;
   user-select: none;
-  transition: 0.2s color;
+  width: fit-content;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid var(--g-color-line-generic);
+  color: var(--g-color-text-secondary);
+  transition: border-color 0.2s, color 0.2s;
 
   &:hover {
-    color: var(--g-color-base-generic-accent-disabled);
+    border-color: var(--g-color-line-generic-active);
+    color: var(--g-color-text-primary);
   }
 }
 
@@ -107,4 +154,15 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
+}
+
+.showMoreReplies {
+  cursor: pointer;
+  user-select: none;
+  padding: 4px 0;
+  transition: 0.2s color;
+
+  &:hover {
+    color: var(--g-color-base-generic-accent-disabled);
+  }
 }

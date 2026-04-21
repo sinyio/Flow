@@ -36,7 +36,7 @@
 .meta {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 24px;
 }
 
 .views {
@@ -100,14 +100,22 @@
   gap: 16px;
 }
 
-.commentsTitle {
-  padding-bottom: 24px;
-}
-
 .commentsList {
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+
+.showMore {
+  cursor: pointer;
+  user-select: none;
+  text-align: center;
+  padding: 8px 0;
+  transition: 0.2s color;
+
+  &:hover {
+    color: var(--g-color-base-generic-accent-disabled);
+  }
 }
 
 .cancelReply {
@@ -115,7 +123,7 @@
   cursor: pointer;
   margin-left: 16px;
   margin-bottom: 4px;
-  line-height: 0
+  line-height: 0;
 }
 
 @media (min-width: 834px) {
@@ -128,5 +136,21 @@
   .pageInner {
     padding: 48px 175px 0;
     max-width: 1280px;
+  }
+
+  .commentsList {
+    padding-inline: 1000px;
+    margin-inline: -1000px;
+    border-top: 1px solid var(--g-color-line-generic);
+    padding-top: 40px;
+  }
+
+  .commentsSection {
+    gap: 40px;
+  }
+
+  .stats {
+    margin-inline: -1000px;
+    padding-inline: 1000px;
   }
 }

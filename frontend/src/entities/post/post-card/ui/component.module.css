@@ -12,7 +12,7 @@
 .imageWrapper {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 16 / 6;
   overflow: hidden;
   background: var(--g-color-base-misc-medium);
 }
@@ -38,7 +38,8 @@
 .meta {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 24px;
+  flex-wrap: wrap;
 }
 
 .views {
@@ -53,13 +54,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-top: 1px solid var(--g-color-line-generic);
 }
 
-.author {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.share {
+  color: var(--g-color-text-secondary);
+  line-height: 0;
 }
 
 .stats {

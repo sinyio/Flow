@@ -2,11 +2,146 @@
 
 import styles from "./component.module.css";
 import { TMediaComment } from "@api/media";
-import { Avatar, Text, Button, Modal, Flex } from "@gravity-ui/uikit";
+import { Avatar, Text } from "@gravity-ui/uikit";
 import { getDate } from "@utils/get-date";
-import { useState } from "react";
-import { ThumbsUp, ThumbsUpFill, TrashBin, Xmark } from "@gravity-ui/icons";
+import { useState, useEffect, useRef } from "react";
+import { ThumbsUp, ThumbsUpFill } from "@gravity-ui/icons";
 import { CommentInput } from "../comment-input";
+
+const REPLIES_PAGE_SIZE = 3;
+
+interface CommentItemProps {
+  id: string;
+  author?: { id: string; fullName: string; photo?: string | null } | null;
+  replyTo?: { fullName: string } | null;
+  parentId?: string | null;
+  text: string;
+  createdAt: string;
+  isLiked: boolean;
+  likesCount: number;
+  avatarSize: "l" | "m" | "s" | "xs" ;
+  currentUserId?: string;
+  replyToCommentId?: string | null;
+  replyToName?: string;
+  onLike: (id: string) => void;
+  onReply?: (commentId: string, authorName: string) => void;
+  onDelete?: (commentId: string) => void;
+  onCancelReply?: () => void;
+  onSubmitReply?: (text: string) => void;
+}
+
+const CommentItem = ({
+  id,
+  author,
+  replyTo,
+  parentId,
+  text,
+  createdAt,
+  isLiked,
+  likesCount,
+  avatarSize,
+  currentUserId,
+  replyToCommentId,
+  replyToName,
+  onLike,
+  onReply,
+  onDelete,
+  onCancelReply,
+  onSubmitReply,
+}: CommentItemProps) => {
+  const isOwn = currentUserId && author?.id === currentUserId;
+  const [expanded, setExpanded] = useState(false);
+  const [overflows, setOverflows] = useState(false);
+  const textRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = textRef.current;
+    if (el) setOverflows(el.scrollHeight > el.clientHeight);
+  }, [text]);
+
+  return (
+    <>
+      <div className={styles.commentTop}>
+        <Avatar
+          size={avatarSize}
+          imgUrl={author?.photo ?? undefined}
+          text={author?.fullName ?? ""}
+        />
+        <div className={styles.commentHeader}>
+          <div className={styles.replyMeta}>
+            <Text variant="body-2">{author?.fullName}</Text>
+            {parentId && replyTo && (
+              <Text variant="body-2" color="secondary">
+                → {replyTo.fullName}
+              </Text>
+            )}
+          </div>
+          <Text variant="body-1" color="secondary" >
+            {getDate(createdAt, "short")}
+          </Text>
+        </div>
+      </div>
+      <div className={styles.textWrapper}>
+        <div
+          ref={textRef}
+          className={expanded ? styles.commentText : styles.commentTextClamped}
+        >
+          <Text variant="body-2">
+            {text}
+            {expanded && (
+              <span className={styles.collapseLabel} onClick={() => setExpanded(false)}>
+                {" "}скрыть
+              </span>
+            )}
+          </Text>
+        </div>
+        {!expanded && overflows && (
+          <span className={styles.expandLabel} onClick={() => setExpanded(true)}>
+            ещё
+          </span>
+        )}
+      </div>
+      <div className={styles.commentActions}>
+        <div className={styles.commentActionsLeft}>
+          {!isOwn && onReply && (
+            <div
+              className={styles.replyButton}
+              onClick={() => onReply(id, author?.fullName ?? "")}
+            >
+              <Text className={styles.commentStat} variant="caption-2">
+                Ответить
+              </Text>
+            </div>
+          )}
+          {isOwn && onDelete && (
+            <div className={styles.deleteButton} onClick={() => onDelete(id)}>
+              <Text className={styles.commentStat} variant="caption-2">
+                Удалить
+              </Text>
+            </div>
+          )}
+        </div>
+        <div className={styles.commentStat} onClick={() => onLike(id)}>
+          {isLiked ? (
+            <ThumbsUpFill width={12} height={12} />
+          ) : (
+            <ThumbsUp width={12} height={12} />
+          )}
+          <Text variant="caption-2">{likesCount}</Text>
+        </div>
+      </div>
+      {replyToCommentId === id && (
+        <div className={styles.replyInput}>
+          <CommentInput
+            replyTo={replyToName}
+            handleSubmit={onSubmitReply}
+            onCancel={onCancelReply}
+          />
+        </div>
+      )}
+    </>
+  );
+};
 
 interface CommentCardProps {
   comment: TMediaComment;
@@ -32,173 +167,97 @@ export const CommentCard = ({
   replyTo,
 }: CommentCardProps) => {
   const [showReplies, setShowReplies] = useState(false);
-  const isOwnComment = currentUserId && comment.author?.id === currentUserId;
+  const [visibleReplies, setVisibleReplies] = useState(REPLIES_PAGE_SIZE);
+
+  const replyIds = comment.replies?.map((r) => r.id) ?? [];
+  const isReplyingHere =
+    replyToCommentId === comment.id || replyIds.includes(replyToCommentId ?? "");
+
+  useEffect(() => {
+    if (isReplyingHere) {
+      setShowReplies(true);
+      if (replyToCommentId && replyToCommentId !== comment.id) {
+        const idx = replyIds.indexOf(replyToCommentId);
+        if (idx >= visibleReplies) {
+          setVisibleReplies(idx + 1);
+        }
+      }
+    }
+  }, [isReplyingHere, replyToCommentId]);
+
+  const shownReplies = comment.replies?.slice(0, visibleReplies) ?? [];
+  const remainingReplies = (comment.replies?.length ?? 0) - visibleReplies;
 
   return (
     <div className={styles.commentItem}>
-      <div className={styles.commentMain}>
-        <Avatar
-          size="s"
-          imgUrl={comment.author?.photo ?? undefined}
-          text={comment.author?.fullName ?? ""}
-        />
-        <div className={styles.commentBody}>
-          <div className={styles.commentHeader}>
-            <Text variant="body-2">{comment.author?.fullName}</Text>
-            <Text variant="body-2" color="secondary">
-              {getDate(comment.createdAt, "regular")}
-            </Text>
-          </div>
-          <Text variant="body-2" className={styles.commentText}>
-            {comment.text}
-          </Text>
-          <div className={styles.commentActions}>
-            <div
-              className={styles.commentStat}
-              onClick={() => onLike(comment.id)}
-            >
-              {comment.isLiked ? (
-                <ThumbsUpFill width={12} height={12} />
-              ) : (
-                <ThumbsUp width={12} height={12} />
-              )}
-              <Text variant="caption-2">{comment.likesCount}</Text>
-            </div>
-            {!isOwnComment && onReply && (
-              <div
-                className={styles.replyButton}
-                onClick={() =>
-                  onReply(comment.id, comment.author?.fullName ?? "")
-                }
-              >
-                <Text className={styles.commentStat} variant="caption-2">
-                  Ответить
-                </Text>
-              </div>
-            )}
-            {isOwnComment && onDelete && (
-              <div
-                className={styles.deleteButton}
-                onClick={() => onDelete(comment.id)}
-              >
-                <TrashBin width={12} height={12} />
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-      {replyToCommentId === comment.id && (
-        <div>
-          <div
-            onClick={handleCancelReply}
-            className={`${styles.cancelReply} ${styles.commentStat}`}
-          >
-            <Flex alignItems="center" gap={1}>
-              <Xmark width={16} height={16} />
-              Отмена
-            </Flex>
-          </div>
-          <CommentInput replyTo={replyTo} handleSubmit={handleCommentSubmit} />
-        </div>
-      )}
+      <CommentItem
+        id={comment.id}
+        author={comment.author}
+        text={comment.text}
+        createdAt={comment.createdAt}
+        isLiked={comment.isLiked}
+        likesCount={comment.likesCount}
+        avatarSize="m"
+        currentUserId={currentUserId}
+        replyToCommentId={replyToCommentId}
+        replyToName={replyTo}
+        onLike={onLike}
+        onReply={onReply}
+        onDelete={onDelete}
+        onCancelReply={handleCancelReply}
+        onSubmitReply={handleCommentSubmit}
+      />
       {comment.replies && comment.replies.length > 0 && (
         <div className={styles.replies}>
           <div
             className={styles.replyHeader}
             onClick={() => setShowReplies(!showReplies)}
           >
-            {showReplies
-              ? "Скрыть"
-              : `Показать ответы (${comment.replies.length})`}
+            <Text variant="caption-2">
+              {showReplies
+                ? `↑ Скрыть`
+                : `↓ Ответы · ${comment.replies.length}`}
+            </Text>
           </div>
-          {showReplies &&
-            comment?.replies?.map((reply) => {
-              const isOwnReply =
-                currentUserId && reply.author?.id === currentUserId;
-
-              return (
+          {showReplies && (
+            <>
+              {shownReplies.map((reply) => (
                 <div key={reply.id} className={styles.replyContainer}>
-                  <div className={styles.replyItem}>
-                    <Avatar
-                      size="xs"
-                      imgUrl={reply.author?.photo ?? undefined}
-                      text={reply.author?.fullName ?? ""}
-                    />
-                    <div className={styles.replyBody}>
-                      <div className={styles.commentHeader}>
-                        <Text variant="caption-1">
-                          {reply.author?.fullName}
-                        </Text>
-                        {reply.parentId && (
-                          <Text variant="caption-1" color="secondary">
-                            → {reply.replyTo?.fullName}
-                          </Text>
-                        )}
-                        <Text variant="caption-1" color="secondary">
-                          · {getDate(reply.createdAt, "regular")}
-                        </Text>
-                      </div>
-                      <Text variant="body-2" className={styles.commentText}>
-                        {reply.text}
-                      </Text>
-                      <div className={styles.commentActions}>
-                        <div
-                          className={styles.commentStat}
-                          onClick={() => onLike(reply.id)}
-                        >
-                          {reply.isLiked ? (
-                            <ThumbsUpFill width={12} height={12} />
-                          ) : (
-                            <ThumbsUp width={12} height={12} />
-                          )}
-                          <Text variant="caption-2">{reply.likesCount}</Text>
-                        </div>
-                        {reply.author?.id !== currentUserId && onReply && (
-                          <div
-                            className={styles.replyButton}
-                            onClick={() =>
-                              onReply(reply.id, reply.author?.fullName ?? "")
-                            }
-                          >
-                            <Text
-                              className={styles.commentStat}
-                              variant="caption-2"
-                            >
-                              Ответить
-                            </Text>
-                          </div>
-                        )}
-                        {isOwnReply && onDelete && (
-                          <div
-                            className={styles.deleteButton}
-                            onClick={() => onDelete(reply.id)}
-                          >
-                            <TrashBin width={12} height={12} />
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                  {replyToCommentId === reply.id && (
-                    <div>
-                      <div
-                        onClick={handleCancelReply}
-                        className={`${styles.cancelReply} ${styles.commentStat}`}
-                      >
-                        <Flex alignItems="center" gap={1}>
-                          <Xmark width={16} height={16} />
-                          Отмена
-                        </Flex>
-                      </div>
-                      <CommentInput
-                        replyTo={replyTo}
-                        handleSubmit={handleCommentSubmit}
-                      />
-                    </div>
-                  )}
+                  <CommentItem
+                    id={reply.id}
+                    author={reply.author}
+                    replyTo={reply.replyTo}
+                    parentId={reply.parentId}
+                    text={reply.text}
+                    createdAt={reply.createdAt}
+                    isLiked={reply.isLiked}
+                    likesCount={reply.likesCount}
+                    avatarSize="m"
+                    currentUserId={currentUserId}
+                    replyToCommentId={replyToCommentId}
+                    replyToName={replyTo}
+                    onLike={onLike}
+                    onReply={onReply}
+                    onDelete={onDelete}
+                    onCancelReply={handleCancelReply}
+                    onSubmitReply={handleCommentSubmit}
+                  />
                 </div>
-              );
-            })}
+              ))}
+              {remainingReplies > 0 && (
+                <div
+                  className={styles.showMoreReplies}
+                  onClick={() =>
+                    setVisibleReplies((n) => n + REPLIES_PAGE_SIZE)
+                  }
+                >
+                  <Text variant="caption-2" color="secondary">
+                    Показать ещё {remainingReplies} ответов
+                  </Text>
+                </div>
+              )}
+            </>
+          )}
         </div>
       )}
     </div>
