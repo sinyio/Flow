@@ -398,6 +398,8 @@ export class MediaService {
     if (!post || post.deletedAt) throw new NotFoundException('Пост не найден')
 
     let parentId: string | null = null
+    // Сохраняем оригинальный parentId для replyTo
+    const originalParentId = dto.parentId
 
     if (dto.parentId) {
       const parentComment = await this.prisma.mediaComment.findUnique({
@@ -407,7 +409,9 @@ export class MediaService {
         throw new NotFoundException('Родительский комментарий не найден')
       if (parentComment.postId !== postId)
         throw new BadRequestException('Родительский комментарий принадлежит другому посту')
-      parentId = parentComment.id
+      // Если родитель уже является ответом (имеет parentId), используем его parentId
+      // чтобы все ответы были на одном уровне вложенности
+      parentId = parentComment.parentId ?? parentComment.id
     }
 
     const userId = req.session.userId!
@@ -425,10 +429,11 @@ export class MediaService {
     })
 
     // Если это ответ на комментарий, нужно получить parent для replyTo
+    // Используем originalParentId чтобы показать того, на кого реально отвечаем
     let replyTo: any = null
-    if (parentId) {
+    if (originalParentId) {
       const parent = await this.prisma.mediaComment.findUnique({
-        where: { id: parentId },
+        where: { id: originalParentId },
         include: { author: true },
       })
       if (parent) {
