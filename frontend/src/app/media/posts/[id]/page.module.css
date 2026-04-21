@@ -112,7 +112,10 @@
 
 .cancelReply {
   align-self: flex-start;
-  margin-top: 8px;
+  cursor: pointer;
+  margin-left: 16px;
+  margin-bottom: 4px;
+  line-height: 0
 }
 
 @media (min-width: 834px) {

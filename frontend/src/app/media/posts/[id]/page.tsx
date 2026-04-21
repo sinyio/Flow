@@ -314,10 +314,7 @@ export default function PostDetailPage({ params }: PostDetailPageProps) {
             </div>
           )}
 
-          <Modal
-            open={deleteModalOpen}
-            onOpenChange={cancelDeleteComment}
-          >
+          <Modal open={deleteModalOpen} onOpenChange={cancelDeleteComment}>
             <div className={styles.deleteModal}>
               <Text variant="header-2">Удалить комментарий?</Text>
               <Text variant="body-1" color="secondary">
@@ -367,30 +364,23 @@ export default function PostDetailPage({ params }: PostDetailPageProps) {
 
             <div className={styles.commentsList}>
               {comments.map((comment) => (
-                <CommentCard
-                  key={comment.id}
-                  comment={comment}
-                  onLike={handleCommentLike}
-                  onReply={handleReply}
-                  onDelete={handleDeleteComment}
-                  currentUserId={currentUserId}
-                />
+                <>
+                  <CommentCard
+                    key={comment.id}
+                    comment={comment}
+                    onLike={handleCommentLike}
+                    onReply={handleReply}
+                    onDelete={handleDeleteComment}
+                    currentUserId={currentUserId}
+                    replyToCommentId={replyToCommentId}
+                    handleCancelReply={handleCancelReply}
+                    handleCommentSubmit={handleCommentSubmit}
+                    replyTo={replyTo}
+                  />
+                </>
               ))}
             </div>
-            <CommentInput
-              replyTo={replyTo}
-              handleSubmit={handleCommentSubmit}
-            />
-            {replyTo && (
-              <Button
-                view="flat"
-                size="s"
-                onClick={handleCancelReply}
-                className={styles.cancelReply}
-              >
-                Отмена
-              </Button>
-            )}
+            <CommentInput handleSubmit={handleCommentSubmit} />
           </div>
         )}
       </PageContainer>
