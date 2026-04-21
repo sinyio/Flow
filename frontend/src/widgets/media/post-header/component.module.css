@@ -1,0 +1,35 @@
+.container {
+  position: relative;
+  height: 536px;
+  overflow: hidden;
+}
+
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  /* aspect-ratio: 16 / 5.5; */
+  height: 224px;
+  overflow: hidden;
+  background: var(--g-color-base-misc-medium);
+}
+
+.profileName {
+  position: absolute !important;
+  padding: 20px 16px 28px;
+  box-sizing: border-box;
+  bottom: 0px;
+}
+
+@media (min-width: 834px) {
+  .imageWrapper {
+    height: 400px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .imageWrapper {
+    height: 440px;
+  }
+}
+
+

@@ -10,15 +10,24 @@
   align-items: center;
   position: relative;
   box-sizing: border-box;
+  padding: 80px 16px;
+}
+
+.backButton {
+  flex-shrink: 0;
+  position: absolute;
+  top: 20px;
+  left: 20px;
 }
 
 .heroImage {
   z-index: 0;
   object-fit: cover;
+  height: 234px;
 }
 
 .heroCard {
-  padding: 32px 164px;
+  width: 100%;
   border-radius: 24px;
   overflow: hidden;
 }
@@ -26,19 +35,28 @@
 .heroTitle {
   color: var(--g-color-text-inverted-primary);
   text-align: center;
+  padding: 20px;
 }
 
 .pageInner {
   width: 100%;
-  padding: 40px 16px 80px;
+  padding: 80px 16px;
   gap: 40px;
   box-sizing: border-box;
   background: var(--page-color, #f2f3f2);
 }
 
 @media (min-width: 834px) {
+  .heroCard {
+    width: fit-content;
+  }
+
   .heroInner {
-    padding: 156px 85px 48px;
+    padding: 156px 48px;
+  }
+
+  .heroTitle {
+    padding: 24px 70px;
   }
 
   .pageInner {
@@ -49,6 +67,10 @@
 @media (min-width: 1280px) {
   .heroInner {
     padding: 164px 48px;
+  }
+
+  .heroTitle {
+    padding: 32px 160px;
   }
 
   .pageInner {

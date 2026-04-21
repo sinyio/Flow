@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Button, Popup, Text, TextInput } from '@gravity-ui/uikit'
+import { Button, DropdownMenu, Text, TextInput } from '@gravity-ui/uikit'
 import { Sliders } from '@gravity-ui/icons'
 
 import { TMediaPostSort } from '@api/media'
@@ -43,36 +43,25 @@ export const MediaSearch = () => {
             }
           }}
         />
-        <Button
-          ref={filterRef}
-          view="flat"
-          size="xl"
-          selected={popupOpen}
-          onClick={() => setPopupOpen(v => !v)}
-        >
-          <Sliders />
-        </Button>
-        <Popup
-          open={popupOpen}
-          anchorRef={filterRef}
-          onOutsideClick={() => setPopupOpen(false)}
-          placement="bottom-end"
-        >
-          <div className={styles.popupContent}>
-            {SORT_OPTIONS.map(option => (
-              <button
-                key={option.value}
-                className={`${styles.sortOption} ${currentSort === option.value ? styles.sortOptionActive : ''}`}
-                onClick={() => {
-                  updateParams({ sort: currentSort === option.value ? '' : option.value })
-                  setPopupOpen(false)
-                }}
-              >
-                <Text variant="body-2">{option.label}</Text>
-              </button>
-            ))}
-          </div>
-        </Popup>
+        <DropdownMenu
+          size="l"
+          popupProps={{
+            placement: 'bottom-end',
+            offset: 8,
+          }}
+          renderSwitcher={props => (
+            <Button {...props} view="flat" size="xl" selected={popupOpen}>
+              <Sliders />
+            </Button>
+          )}
+          items={SORT_OPTIONS.map(option => ({
+            text: option.label,
+            action: () => {
+              updateParams({ sort: currentSort === option.value ? '' : option.value })
+            },
+            ...(currentSort === option.value && { iconStart: <span>✓</span> }),
+          }))}
+        />
       </div>
     </div>
   )

@@ -13,7 +13,7 @@ const months: Record<string, string> = {
   декабрь: 'декабря',
 }
 
-export type TDateType = 'from' | 'before'
+export type TDateType = 'from' | 'before' | 'regular'
 
 export const getDate = (datetime?: string, dateType: TDateType = 'from'): string => {
   if (!datetime) {
@@ -27,6 +27,7 @@ export const getDate = (datetime?: string, dateType: TDateType = 'from'): string
   const date = {
     from: `с ${day} ${months[month]} ${year} года`,
     before: `до ${day} ${months[month]}`,
+    regular: `${day} ${months[month]} ${year} года`,
   }
 
   return date[dateType]

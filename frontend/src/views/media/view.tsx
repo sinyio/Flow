@@ -1,35 +1,47 @@
-'use client'
+"use client";
 
-import Image from 'next/image'
-import { useMemo } from 'react'
+import Image from "next/image";
+import { useMemo } from "react";
+import { ArrowIcon } from '@components/svgr/arrow-icon/icon'
 
-import { Text, TextProps } from '@gravity-ui/uikit'
+import { Button, Icon, Text, TextProps } from "@gravity-ui/uikit";
 
-import { TPost, TGetPostsParams } from '@api/media'
+import { TPost, TGetPostsParams } from "@api/media";
 
-import { PageContainer } from '@components/global/page-container'
-import { LiquidGlassBlock } from '@components/global/liquid-glass-block'
-import { useResponsive } from '@utils/hooks/use-responsive'
+import { PageContainer } from "@components/global/page-container";
+import { LiquidGlassBlock } from "@components/global/liquid-glass-block";
+import { useResponsive } from "@utils/hooks/use-responsive";
 
-import { MediaSearch } from '@widgets/media'
+import { MediaSearch } from "@widgets/media";
 
-import { PostsState } from './states/posts/component'
-import { MainState } from './states/main/component'
-import styles from './view.module.css'
+import { PostsState } from "./states/posts/component";
+import { MainState } from "./states/main/component";
+import styles from "./view.module.css";
+import { useRouter } from "next/navigation";
 
 export interface IMediaViewProps {
-  flowPosts?: TPost[]
-  userPosts?: TPost[]
-  searchPosts?: TPost[]
-  settings?: TGetPostsParams
+  flowPosts?: TPost[];
+  userPosts?: TPost[];
+  searchPosts?: TPost[];
+  settings?: TGetPostsParams;
 }
 
-export const MediaView = ({ flowPosts, userPosts, searchPosts, settings }: IMediaViewProps) => {
-  const { device } = useResponsive()
+export const MediaView = ({
+  flowPosts,
+  userPosts,
+  searchPosts,
+  settings,
+}: IMediaViewProps) => {
+  const { device } = useResponsive();
   const headerText = useMemo(
-    () => ({ mobile: 'display-1', tablet: 'display-2', desktop: 'display-3' })[device],
-    [device]
-  ) as TextProps['variant']
+    () =>
+      ({ mobile: "display-1", tablet: "display-2", desktop: "display-3" })[
+        device
+      ],
+    [device],
+  ) as TextProps["variant"];
+
+  const router = useRouter()
 
   return (
     <>
@@ -44,6 +56,16 @@ export const MediaView = ({ flowPosts, userPosts, searchPosts, settings }: IMedi
             aria-hidden="true"
           />
           <LiquidGlassBlock className={styles.heroCard}>
+            {device === "mobile" && (
+              <Button
+                view="normal"
+                size="l"
+                onClick={() => router.push('/')}
+                className={styles.backButton}
+              >
+                <Icon data={ArrowIcon} size={20} />
+              </Button>
+            )}
             <Text variant={headerText} className={styles.heroTitle} as="h1">
               Медиа флоу
             </Text>
@@ -61,7 +83,7 @@ export const MediaView = ({ flowPosts, userPosts, searchPosts, settings }: IMedi
         )}
       </PageContainer>
     </>
-  )
-}
+  );
+};
 
-export default MediaView
+export default MediaView;
