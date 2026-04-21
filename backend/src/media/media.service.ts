@@ -4,7 +4,15 @@ import { PrismaService } from '../prisma/prisma.service'
 import { filterEmptyValues, getStatusOk } from '../common/helpers'
 import { type Request } from 'express'
 import { PaginatedResponse } from '../common/types'
-import { MediaCommentCreateDto, MediaCommentUpdateDto, MediaListQueryDto, MediaPostCreateDto, MediaPostFilter, MediaPostSort, MediaPostUpdateDto } from './dto'
+import {
+  MediaCommentCreateDto,
+  MediaCommentUpdateDto,
+  MediaListQueryDto,
+  MediaPostCreateDto,
+  MediaPostFilter,
+  MediaPostSort,
+  MediaPostUpdateDto,
+} from './dto'
 import { getUserResponse } from '../user/dto'
 import { nanoid } from 'nanoid'
 import sharp from 'sharp'
@@ -13,10 +21,11 @@ import { ConfigService } from '@nestjs/config'
 
 @Injectable()
 export class MediaService {
-  public constructor(private readonly prisma: PrismaService,
+  public constructor(
+    private readonly prisma: PrismaService,
     private readonly s3: S3Service,
-    private readonly configService: ConfigService
-  ) { }
+    private readonly configService: ConfigService,
+  ) {}
 
   public findPostById(id: string) {
     return this.prisma.mediaPost.findUnique({
@@ -68,6 +77,7 @@ export class MediaService {
       commentsCount: post._count.comments,
       isLiked: userId ? post.likes.length > 0 : false,
       isFavorite: userId ? post.favorites.length > 0 : false,
+      userState: { canEdit: userId === post.authorId },
     }
   }
 
@@ -90,11 +100,11 @@ export class MediaService {
       ...(query.authorId ? { authorId: query.authorId } : {}),
       ...(query.search
         ? {
-          title: {
-            contains: query.search,
-            mode: 'insensitive',
-          },
-        }
+            title: {
+              contains: query.search,
+              mode: 'insensitive',
+            },
+          }
         : {}),
       ...(authorFilter ? { author: authorFilter } : {}),
     }
@@ -141,6 +151,9 @@ export class MediaService {
       commentsCount: post._count.comments,
       isLiked: userId ? post.likes.length > 0 : false,
       isFavorite: userId ? post.favorites.length > 0 : false,
+      userState: {
+        canEdit: userId === post.authorId,
+      },
     }))
 
     return {
@@ -154,7 +167,11 @@ export class MediaService {
     }
   }
 
-  public async getPostComments(req: Request, postId: string, query: MediaListQueryDto): Promise<PaginatedResponse<any>> {
+  public async getPostComments(
+    req: Request,
+    postId: string,
+    query: MediaListQueryDto,
+  ): Promise<PaginatedResponse<any>> {
     const page = query.page ?? 1
     const limit = query.limit ?? 20
     const userId = req.session.userId
@@ -190,22 +207,22 @@ export class MediaService {
 
     const replies = rootIds.length
       ? await this.prisma.mediaComment.findMany({
-        where: {
-          postId,
-          deletedAt: null,
-          parentId: { in: rootIds },
-        },
-        orderBy: { createdAt: 'asc' },
-        include: {
-          author: true,
-          parent: {
-            include: {
-              author: true,
-            },
+          where: {
+            postId,
+            deletedAt: null,
+            parentId: { in: rootIds },
           },
-          likes: userId ? { where: { userId } } : false,
-        },
-      })
+          orderBy: { createdAt: 'asc' },
+          include: {
+            author: true,
+            parent: {
+              include: {
+                author: true,
+              },
+            },
+            likes: userId ? { where: { userId } } : false,
+          },
+        })
       : []
 
     const byParent = new Map<string, any[]>()
@@ -271,7 +288,7 @@ export class MediaService {
         this.configService.getOrThrow('MINIO_BUCKET'),
         imageKey,
         thumb600,
-        'image/jpeg'
+        'image/jpeg',
       )
     }
 
@@ -383,9 +400,13 @@ export class MediaService {
     let parentId: string | null = null
 
     if (dto.parentId) {
-      const parentComment = await this.prisma.mediaComment.findUnique({ where: { id: dto.parentId } })
-      if (!parentComment || parentComment.deletedAt) throw new NotFoundException('Родительский комментарий не найден')
-      if (parentComment.postId !== postId) throw new BadRequestException('Родительский комментарий принадлежит другому посту')
+      const parentComment = await this.prisma.mediaComment.findUnique({
+        where: { id: dto.parentId },
+      })
+      if (!parentComment || parentComment.deletedAt)
+        throw new NotFoundException('Родительский комментарий не найден')
+      if (parentComment.postId !== postId)
+        throw new BadRequestException('Родительский комментарий принадлежит другому посту')
       parentId = parentComment.parentId ?? parentComment.id
     }
 
@@ -466,7 +487,7 @@ export class MediaService {
         this.configService.getOrThrow('MINIO_BUCKET'),
         imageKey,
         thumb600,
-        'image/jpeg'
+        'image/jpeg',
       )
     }
 
@@ -537,4 +558,3 @@ export class MediaService {
     return getStatusOk()
   }
 }
-

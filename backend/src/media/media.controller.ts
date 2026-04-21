@@ -55,6 +55,9 @@ export class MediaController {
             commentsCount: 3,
             isLiked: true,
             isFavorite: false,
+            userState: {
+              canEdit: true,
+            }
           },
         ],
         meta: {
@@ -96,6 +99,9 @@ export class MediaController {
         commentsCount: 3,
         isLiked: true,
         isFavorite: false,
+        userState: {
+          canEdit: true,
+        }
       },
     },
   })
