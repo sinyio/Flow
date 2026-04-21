@@ -115,6 +115,7 @@ export const CommentCard = ({
             comment?.replies?.map((reply) => {
               const isOwnReply =
                 currentUserId && reply.author?.id === currentUserId;
+
               return (
                 <div key={reply.id} className={styles.replyContainer}>
                   <div className={styles.replyItem}>
@@ -130,7 +131,7 @@ export const CommentCard = ({
                         </Text>
                         {reply.parentId && (
                           <Text variant="caption-1" color="secondary">
-                            → {comment.author?.fullName}
+                            → {reply.replyTo?.fullName}
                           </Text>
                         )}
                         <Text variant="caption-1" color="secondary">

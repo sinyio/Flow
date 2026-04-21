@@ -407,7 +407,7 @@ export class MediaService {
         throw new NotFoundException('Родительский комментарий не найден')
       if (parentComment.postId !== postId)
         throw new BadRequestException('Родительский комментарий принадлежит другому посту')
-      parentId = parentComment.parentId ?? parentComment.id
+      parentId = parentComment.id
     }
 
     const userId = req.session.userId!
