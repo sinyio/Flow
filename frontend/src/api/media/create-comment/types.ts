@@ -1,4 +1,4 @@
-import { TMediaMutationResponse } from '../types'
+import { TMediaComment } from '../types'
 
 export type TCreateCommentRequest = {
   id: string
@@ -6,4 +6,7 @@ export type TCreateCommentRequest = {
   parentId?: string
 }
 
-export type TCreateCommentResponse = TMediaMutationResponse
+export type TCreateCommentResponse = {
+  status: 'ok'
+  comment: TMediaComment
+}

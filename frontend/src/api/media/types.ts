@@ -24,6 +24,7 @@ export type TMediaComment = {
   author: TMediaUserSnippet | null
   parentId: string | null
   isLiked: boolean
+  replyTo?: TMediaUserSnippet | null
   replies: TMediaComment[]
 }
 

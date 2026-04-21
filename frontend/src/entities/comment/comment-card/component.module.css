@@ -1,0 +1,99 @@
+.commentItem {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.commentMain {
+  display: flex;
+  gap: 12px;
+}
+
+.commentBody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.commentHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.commentText {
+  word-break: break-word;
+}
+
+.commentActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.commentStat {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: 0.2s color;
+  user-select: none;
+
+  &:hover {
+    color: var(--g-color-base-generic-accent-disabled);
+  }
+}
+
+.replyButton {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.deleteButton {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  color: var(--g-color-text-danger);
+  transition: 0.2s opacity;
+  user-select: none;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.replies {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-left: 36px;
+  padding-left: 12px;
+  border-left: 1px solid var(--g-color-line-generic);
+}
+
+.replyItem {
+  display: flex;
+  gap: 8px;
+}
+
+.replyHeader {
+  margin-inline: auto;
+  width: fit-content;
+  cursor: pointer;
+  user-select: none;
+  transition: 0.2s color;
+
+  &:hover {
+    color: var(--g-color-base-generic-accent-disabled);
+  }
+}
+
+.replyBody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}

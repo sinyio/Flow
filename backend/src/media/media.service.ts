@@ -410,16 +410,46 @@ export class MediaService {
       parentId = parentComment.parentId ?? parentComment.id
     }
 
-    await this.prisma.mediaComment.create({
+    const userId = req.session.userId!
+
+    const comment = await this.prisma.mediaComment.create({
       data: {
         postId,
-        userId: req.session.userId!,
+        userId,
         text: dto.text,
         parentId,
       },
+      include: {
+        author: true,
+      },
     })
 
-    return getStatusOk()
+    // Если это ответ на комментарий, нужно получить parent для replyTo
+    let replyTo: any = null
+    if (parentId) {
+      const parent = await this.prisma.mediaComment.findUnique({
+        where: { id: parentId },
+        include: { author: true },
+      })
+      if (parent) {
+        replyTo = getUserResponse(parent.author)
+      }
+    }
+
+    return {
+      ...getStatusOk(),
+      comment: {
+        id: comment.id,
+        text: comment.text,
+        createdAt: comment.createdAt,
+        likesCount: 0,
+        author: getUserResponse(comment.author),
+        parentId: comment.parentId,
+        isLiked: false,
+        replyTo,
+        replies: [],
+      },
+    }
   }
 
   public async toggleCommentLike(req: Request, commentId: string) {
