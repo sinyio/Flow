@@ -385,15 +385,15 @@ export default function PostDetailPage({ params }: PostDetailPageProps) {
           <Modal open={deleteModalOpen} onOpenChange={cancelDeleteComment}>
             <div className={styles.deleteModal}>
               <Text variant="header-2">Удалить комментарий?</Text>
-              <Text variant="body-1" color="secondary">
+              <Text variant="body-2" color="secondary">
                 Это действие нельзя отменить.
               </Text>
               <div className={styles.deleteModalActions}>
-                <Button view="flat" onClick={cancelDeleteComment}>
-                  Отмена
+                <Button onClick={cancelDeleteComment}>
+                  <Text variant="body-2">Отмена</Text>
                 </Button>
                 <Button view="action" onClick={confirmDeleteComment}>
-                  Удалить
+                  <Text variant="body-2">Удалить</Text>
                 </Button>
               </div>
             </div>

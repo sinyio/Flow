@@ -19,7 +19,7 @@ interface CommentItemProps {
   createdAt: string;
   isLiked: boolean;
   likesCount: number;
-  avatarSize: "l" | "m" | "s" | "xs" ;
+  avatarSize: "l" | "m" | "s" | "xs";
   currentUserId?: string;
   replyToCommentId?: string | null;
   replyToName?: string;
@@ -76,7 +76,7 @@ const CommentItem = ({
               </Text>
             )}
           </div>
-          <Text variant="body-1" color="secondary" >
+          <Text variant="body-1" color="secondary">
             {getDate(createdAt, "short")}
           </Text>
         </div>
@@ -86,17 +86,23 @@ const CommentItem = ({
           ref={textRef}
           className={expanded ? styles.commentText : styles.commentTextClamped}
         >
-          <Text variant="body-2">
+          <Text variant="body-3">
             {text}
             {expanded && (
-              <span className={styles.collapseLabel} onClick={() => setExpanded(false)}>
-                {" "}скрыть
+              <span
+                className={styles.collapseLabel}
+                onClick={() => setExpanded(false)}
+              >
+                скрыть
               </span>
             )}
           </Text>
         </div>
         {!expanded && overflows && (
-          <span className={styles.expandLabel} onClick={() => setExpanded(true)}>
+          <span
+            className={styles.expandLabel}
+            onClick={() => setExpanded(true)}
+          >
             ещё
           </span>
         )}
@@ -108,14 +114,14 @@ const CommentItem = ({
               className={styles.replyButton}
               onClick={() => onReply(id, author?.fullName ?? "")}
             >
-              <Text className={styles.commentStat} variant="caption-2">
+              <Text className={styles.commentStat} variant="body-1">
                 Ответить
               </Text>
             </div>
           )}
           {isOwn && onDelete && (
             <div className={styles.deleteButton} onClick={() => onDelete(id)}>
-              <Text className={styles.commentStat} variant="caption-2">
+              <Text className={styles.commentStat} variant="body-1">
                 Удалить
               </Text>
             </div>
@@ -123,11 +129,11 @@ const CommentItem = ({
         </div>
         <div className={styles.commentStat} onClick={() => onLike(id)}>
           {isLiked ? (
-            <ThumbsUpFill width={12} height={12} />
+            <ThumbsUpFill width={16} height={16} />
           ) : (
-            <ThumbsUp width={12} height={12} />
+            <ThumbsUp width={16} height={16} />
           )}
-          <Text variant="caption-2">{likesCount}</Text>
+          <Text variant="body-2">{likesCount}</Text>
         </div>
       </div>
       {replyToCommentId === id && (
@@ -171,7 +177,8 @@ export const CommentCard = ({
 
   const replyIds = comment.replies?.map((r) => r.id) ?? [];
   const isReplyingHere =
-    replyToCommentId === comment.id || replyIds.includes(replyToCommentId ?? "");
+    replyToCommentId === comment.id ||
+    replyIds.includes(replyToCommentId ?? "");
 
   useEffect(() => {
     if (isReplyingHere) {

@@ -1,6 +1,7 @@
 'use client'
 
 import { Button, Flex, Text } from '@gravity-ui/uikit'
+import { useRouter } from 'next/navigation'
 
 import { TPost } from '@api/media'
 import { useResponsive } from '@utils/hooks/use-responsive'
@@ -15,6 +16,7 @@ export interface IMainStateProps {
 
 export const MainState = ({ flowPosts = [], userPosts = [] }: IMainStateProps) => {
   const { device } = useResponsive()
+  const router = useRouter()
   const isFullWidth = device === 'mobile'
 
   return (
@@ -55,7 +57,7 @@ export const MainState = ({ flowPosts = [], userPosts = [] }: IMainStateProps) =
           <Text variant="body-3">
             Расскажите свою историю, чтобы больше пользователей узнали о Флоу.
           </Text>
-          <Button view="action" size="xl" width={isFullWidth ? 'max' : 'auto'}>
+          <Button view="action" size="xl" width={isFullWidth ? 'max' : 'auto'} onClick={() => router.push('/media/posts/new')}>
             <Text variant="header-1">Написать пост</Text>
           </Button>
         </Flex>
