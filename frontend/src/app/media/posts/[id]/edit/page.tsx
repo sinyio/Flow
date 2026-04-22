@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect, use } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -10,14 +10,16 @@ import { Paperclip, Xmark } from "@gravity-ui/icons";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-import { createPost } from "@api/media/create-post";
+import { patchPost } from "@api/media/patch-post";
+import { getPostById } from "@api/media/get-post-by-id";
+import { me } from "@api/auth/me";
 import { useApiContext } from "@contexts/api-context";
 import { ArrowIcon } from "@components/svgr/arrow-icon/icon";
 import { TextField } from "@components/form/text-field/field";
 import { TextAreaField } from "@components/form/text-area-field/field";
 import { PageContainer } from "@components/global/page-container";
 
-import styles from "./page.module.css";
+import styles from "../../new/page.module.css";
 
 const schema = z.object({
   title: z.string().min(1, "Введите заголовок").max(200),
@@ -26,31 +28,83 @@ const schema = z.object({
 
 type TFormValues = z.infer<typeof schema>;
 
-export default function NewPostPage() {
+interface EditPostPageProps {
+  params: Promise<{ id: string }>;
+}
+
+export default function EditPostPage({ params }: EditPostPageProps) {
+  const { id } = use(params);
   const router = useRouter();
   const { apiClient } = useApiContext();
   const { add } = useToaster();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
+  const [existingImage, setExistingImage] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const { control, handleSubmit, formState } = useForm<TFormValues>({
+  const { control, handleSubmit, formState, reset } = useForm<TFormValues>({
     defaultValues: { title: "", content: "" },
     mode: "onChange",
     resolver: zodResolver(schema),
   });
+
+  useEffect(() => {
+    let cancelled = false;
+
+    Promise.all([
+      me(apiClient),
+      getPostById(id, apiClient),
+    ])
+      .then(([meRes, postRes]) => {
+        if (cancelled) return;
+
+        const meData = meRes.data;
+        const postData = postRes.data;
+
+        if (!("userId" in meData)) {
+          router.replace("/media");
+          return;
+        }
+
+        if (!("id" in postData)) {
+          router.replace("/media");
+          return;
+        }
+
+        if (postData.author?.id !== meData.userId) {
+          router.replace("/media");
+          return;
+        }
+
+        reset({ title: postData.title, content: postData.content ?? "" });
+        setExistingImage(postData.image);
+      })
+      .catch(() => {
+        if (!cancelled) router.replace("/media");
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [id, apiClient, router, reset]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     setImage(file);
     setPreview(URL.createObjectURL(file));
+    setExistingImage(null);
     e.target.value = "";
   };
 
   const removeImage = () => {
     setImage(null);
+    setExistingImage(null);
     if (preview) URL.revokeObjectURL(preview);
     setPreview(null);
   };
@@ -58,8 +112,8 @@ export default function NewPostPage() {
   const onSubmit: SubmitHandler<TFormValues> = async (data) => {
     setSubmitting(true);
     try {
-      const { data: body } = await createPost(
-        { title: data.title, content: data.content || undefined, image: image ?? undefined },
+      const { data: body } = await patchPost(
+        { id, title: data.title, content: data.content || undefined, image: image ?? undefined },
         apiClient,
       );
 
@@ -67,31 +121,45 @@ export default function NewPostPage() {
         add({
           isClosable: true,
           theme: "success",
-          name: "create_post_success",
-          title: "Пост опубликован",
+          name: "edit_post_success",
+          title: "Пост обновлён",
         });
-        router.push(`/media/posts/${body.id}`);
+        router.push(`/media/posts/${id}`);
         return;
       }
 
       add({
         isClosable: true,
         theme: "warning",
-        name: "create_post_error",
+        name: "edit_post_error",
         title: "Ошибка",
-        content: "message" in body ? body.message : "Не удалось опубликовать пост",
+        content: "message" in body ? body.message : "Не удалось обновить пост",
       });
     } catch (error) {
-      let message = "Произошла ошибка при публикации";
+      let message = "Произошла ошибка при обновлении";
       if (isAxiosError(error)) {
         const err = error.response?.data as { message?: string } | undefined;
         message = err?.message ?? error.message ?? message;
       }
-      add({ isClosable: true, theme: "warning", name: "create_post_error", title: "Ошибка", content: message });
+      add({ isClosable: true, theme: "warning", name: "edit_post_error", title: "Ошибка", content: message });
     } finally {
       setSubmitting(false);
     }
   };
+
+  const currentPreview = preview ?? existingImage;
+
+  if (loading) {
+    return (
+      <PageContainer>
+        <div style={{ padding: "48px 16px" }}>
+          <Text variant="body-2" color="secondary">
+            Загрузка...
+          </Text>
+        </div>
+      </PageContainer>
+    );
+  }
 
   return (
     <>
@@ -104,13 +172,13 @@ export default function NewPostPage() {
             size="l"
             className={styles.backButton}
             aria-label="Назад"
-            onClick={() => router.push("/media")}
+            onClick={() => router.push(`/media/posts/${id}`)}
           >
             <Icon data={ArrowIcon} />
           </Button>
 
           <Text variant="display-3" className={styles.title}>
-            Новый пост
+            Редактировать пост
           </Text>
         </div>
 
@@ -135,7 +203,7 @@ export default function NewPostPage() {
           </div>
 
           <div className={styles.section}>
-            <Text variant="header-2">Добавьте обложку</Text>
+            <Text variant="header-2">Обложка</Text>
             <input
               ref={fileInputRef}
               type="file"
@@ -143,9 +211,9 @@ export default function NewPostPage() {
               className={styles.hiddenInput}
               onChange={handleFileChange}
             />
-            {preview ? (
+            {currentPreview ? (
               <div className={styles.previewWrapper}>
-                <Image src={preview} alt="Обложка" fill className={styles.previewImage} />
+                <Image src={currentPreview} alt="Обложка" fill className={styles.previewImage} />
                 <button type="button" className={styles.removeImage} onClick={removeImage}>
                   <Xmark width={16} height={16} />
                 </button>
@@ -164,14 +232,6 @@ export default function NewPostPage() {
             )}
           </div>
 
-          <Text variant="body-2" color="secondary">
-            Ваш текст будет опубликован в{" "}
-            <span className={styles.link} onClick={() => router.push("/media")}>
-              Медиа
-            </span>{" "}
-            после проверки модератором.
-          </Text>
-
           <div className={styles.submitBlock}>
             <Button
               type="submit"
@@ -181,13 +241,8 @@ export default function NewPostPage() {
               disabled={!formState.isValid || submitting}
               loading={submitting}
             >
-              Опубликовать
+              Сохранить
             </Button>
-            <Text variant="caption-1" color="secondary" className={styles.terms}>
-              Нажимая «Опубликовать», вы принимаете{" "}
-              <span className={styles.termsLink}>условия соглашения</span> и{" "}
-              <span className={styles.termsLink}>политику конфиденциальности</span>.
-            </Text>
           </div>
         </form>
       </PageContainer>
