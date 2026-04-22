@@ -2,6 +2,7 @@
 
 import styles from "./component.module.css";
 import { TMediaComment } from "@api/media";
+import { FormattedText } from "@components/atoms/formatted-text/component";
 import { Avatar, Text } from "@gravity-ui/uikit";
 import { getDate } from "@utils/get-date";
 import { getNoun } from "@utils/get-noun";
@@ -94,7 +95,7 @@ const CommentItem = ({
           ref={textRef}
           className={expanded ? styles.commentText : styles.commentTextClamped}
         >
-          <Text variant="body-3">{text}</Text>
+          <FormattedText text={text} variant="body-3" />
         </div>
         {!expanded && overflows && (
           <Text variant="body-3">

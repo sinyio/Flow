@@ -21,9 +21,11 @@ import { PageContainer } from "@components/global/page-container";
 
 import styles from "../../new/page.module.css";
 
+const CONTENT_MAX = 10_000;
+
 const schema = z.object({
   title: z.string().min(1, "Введите заголовок").max(200),
-  content: z.string().optional(),
+  content: z.string().max(CONTENT_MAX, `Максимум ${CONTENT_MAX.toLocaleString()} символов`).optional(),
 });
 
 type TFormValues = z.infer<typeof schema>;
@@ -44,7 +46,10 @@ export default function EditPostPage({ params }: EditPostPageProps) {
   const [submitting, setSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  const { control, handleSubmit, formState, reset } = useForm<TFormValues>({
+  const normalizeContent = (s?: string) =>
+    s ? s.replace(/\r\n/g, '\n').replace(/\r/g, '\n').replace(/\n{3,}/g, '\n\n') : undefined;
+
+  const { control, handleSubmit, formState, reset, watch } = useForm<TFormValues>({
     defaultValues: { title: "", content: "" },
     mode: "onChange",
     resolver: zodResolver(schema),
@@ -78,7 +83,7 @@ export default function EditPostPage({ params }: EditPostPageProps) {
           return;
         }
 
-        reset({ title: postData.title, content: postData.content ?? "" });
+        reset({ title: postData.title, content: normalizeContent(postData.content) ?? "" });
         setExistingImage(postData.image);
       })
       .catch(() => {
@@ -113,7 +118,7 @@ export default function EditPostPage({ params }: EditPostPageProps) {
     setSubmitting(true);
     try {
       const { data: body } = await patchPost(
-        { id, title: data.title, content: data.content || undefined, image: image ?? undefined },
+        { id, title: data.title, content: normalizeContent(data.content), image: image ?? undefined },
         apiClient,
       );
 
@@ -198,6 +203,9 @@ export default function EditPostPage({ params }: EditPostPageProps) {
                 placeholder="Ваш текст"
                 minRows={6}
                 controllerProps={{ control, name: "content" }}
+                note={(watch("content")?.length ?? 0) > CONTENT_MAX * 0.8
+                  ? `${watch("content")?.length ?? 0} / ${CONTENT_MAX.toLocaleString()}`
+                  : undefined}
               />
             </div>
           </div>

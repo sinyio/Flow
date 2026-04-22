@@ -30,8 +30,14 @@
 .sendWrapper {
   display: flex;
   align-items: flex-end;
+  gap: 4px;
   padding: 6px 6px 6px 0;
   flex-shrink: 0;
+}
+
+.counter {
+  align-self: center;
+  white-space: nowrap;
 }
 
 .sendButton {

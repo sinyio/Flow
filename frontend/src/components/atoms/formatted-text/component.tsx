@@ -9,20 +9,32 @@ interface FormattedTextProps {
   className?: string
 }
 
+const normalizeText = (text: string) =>
+  text.replace(/\r\n/g, '\n').replace(/\r/g, '\n').replace(/\n{3,}/g, '\n\n')
+
 export const FormattedText = ({ text, variant = 'body-3', className }: FormattedTextProps) => {
-  const lines = text.split('\n')
+  const paragraphs = normalizeText(text).split('\n\n')
 
   return (
     <div className={className}>
-      {lines.map((line, i) =>
-        line === '' ? (
-          <div key={i} style={{ height: '0.6em' }} />
-        ) : (
-          <Text key={i} variant={variant} as="p" style={{ margin: 0 }}>
-            {line}
+      {paragraphs.map((para, i) => {
+        const lines = para.split('\n')
+        return (
+          <Text
+            key={i}
+            variant={variant}
+            as="p"
+            style={{ margin: 0, marginBottom: i < paragraphs.length - 1 ? '1.4em' : 0 }}
+          >
+            {lines.map((line, j) => (
+              <span key={j}>
+                {line}
+                {j < lines.length - 1 && <br />}
+              </span>
+            ))}
           </Text>
         )
-      )}
+      })}
     </div>
   )
 }
