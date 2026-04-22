@@ -49,7 +49,7 @@ export const MediaView = ({
         <div className={styles.heroInner}>
           <Image
             fill
-            priority
+            preload={true}
             src="/media-hero.webp"
             alt=""
             className={styles.heroImage}

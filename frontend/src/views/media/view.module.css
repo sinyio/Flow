@@ -24,6 +24,8 @@
   z-index: 0;
   object-fit: cover;
   height: 234px;
+  max-height: 224px;
+  height: 100%;
 }
 
 .heroCard {
@@ -51,6 +53,10 @@
     width: fit-content;
   }
 
+  .heroImage {
+    max-height: 400px;
+  }
+
   .heroInner {
     padding: 156px 48px;
   }
@@ -67,6 +73,10 @@
 @media (min-width: 1280px) {
   .heroInner {
     padding: 164px 48px;
+  }
+
+  .heroImage {
+    max-height: 440px;
   }
 
   .heroTitle {
