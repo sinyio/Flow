@@ -1,5 +1,5 @@
-@import '../fonts.css';
-@import '../theme.css';
+@import "../fonts.css";
+@import "../theme.css";
 
 html {
   overflow-y: scroll;
@@ -20,48 +20,48 @@ body {
   --background-color: rgba(255, 255, 255, 0.85);
 
   --page-color: #f2f3f2;
-  
+
   background-color: var(--page-color);
 
-  --g-text-body-font-family: 'TildaSansRegular';
+  --g-text-body-font-family: "TildaSansRegular";
 
-  --g-text-body1-font-family: 'TildaSansRegular';
+  --g-text-body1-font-family: "TildaSansRegular";
 
-  --g-text-body1short-font-family: 'TildaSansRegular';
+  --g-text-body1short-font-family: "TildaSansRegular";
 
-  --g-text-body2-font-family: 'TildaSansRegular';
+  --g-text-body2-font-family: "TildaSansRegular";
 
-  --g-text-body3-font-family: 'TildaSansRegular';
+  --g-text-body3-font-family: "TildaSansRegular";
 
-  --g-text-header-font-family: 'TildaSansRegular';
+  --g-text-header-font-family: "TildaSansRegular";
 
-  --g-text-header1-font-family: 'TildaSansRegular';
+  --g-text-header1-font-family: "TildaSansRegular";
 
-  --g-text-header2-font-family: 'TildaSansRegular';
+  --g-text-header2-font-family: "TildaSansRegular";
 
-  --g-text-subheader-font-family: 'TildaSansRegular';
+  --g-text-subheader-font-family: "TildaSansRegular";
 
-  --g-text-subheader1-font-family: 'TildaSansRegular';
+  --g-text-subheader1-font-family: "TildaSansRegular";
 
-  --g-text-subheader2-font-family: 'TildaSansRegular';
+  --g-text-subheader2-font-family: "TildaSansRegular";
 
-  --g-text-subheader3-font-family: 'TildaSansRegular';
+  --g-text-subheader3-font-family: "TildaSansRegular";
 
-  --g-text-display-font-family: 'TildaSansBold';
+  --g-text-display-font-family: "TildaSansBold";
 
-  --g-text-display1-font-family: 'TildaSansBold';
+  --g-text-display1-font-family: "TildaSansBold";
 
-  --g-text-display2-font-family: 'TildaSansBold';
+  --g-text-display2-font-family: "TildaSansBold";
 
-  --g-text-display3-font-family: 'TildaSansBold';
+  --g-text-display3-font-family: "TildaSansBold";
 
-  --g-text-display4-font-family: 'TildaSansBold';
-  
-  --g-text-caption-font-family: 'TildaSansRegular';
+  --g-text-display4-font-family: "TildaSansBold";
 
-  --g-text-caption1-font-family: 'TildaSansRegular';
+  --g-text-caption-font-family: "TildaSansRegular";
 
-  --g-text-caption2-font-family: 'TildaSansRegular';
+  --g-text-caption1-font-family: "TildaSansRegular";
+
+  --g-text-caption2-font-family: "TildaSansRegular";
 
   --g-border-radius-xs: 8px;
   --g-border-radius-s: 12px;
@@ -87,7 +87,7 @@ body {
   --g-text-area-border-width: 1px;
 
   --g-text-input-background-color: var(--background-color);
-  --g-font-family-sans: 'Inter', sans-serif;
+  --g-font-family-sans: "Inter", sans-serif;
 
   --g-text-header-font-weight: 600;
   --g-text-subheader-font-weight: 600;
@@ -101,3 +101,16 @@ body {
   --g-color-text-brand-contrast: rgba(255, 255, 255, 1);
   --g-color-text-hint: var(--text-hint);
 }
+
+.g-text-input__content,
+.g-select-control__button::before {
+  border: none !important;
+  background-color: transparent !important;
+}
+
+.g-text-input,
+.g-select {
+  border-radius: 50px;
+  background-color: #fff;
+}
+

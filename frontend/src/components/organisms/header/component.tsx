@@ -1,25 +1,32 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Avatar, Button, Link, Text } from "@gravity-ui/uikit";
+import { useEffect, useRef, useState } from "react";
+import { Avatar, Button, Text } from "@gravity-ui/uikit";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 
 import { me } from "@api/auth/me";
 import { getUser } from "@api/user/get-user";
 import { useApiContext } from "@contexts/api-context";
+import { subscribeAuthChange } from "@utils/auth-events";
 import { LiquidGlassBlock } from "@components/global/liquid-glass-block";
+import { Skeleton } from "src/ui-kit";
 
 import styles from "./component.module.css";
 
 export const Header = () => {
   const router = useRouter();
+  const pathname = usePathname();
   const { apiClient } = useApiContext();
   const [userId, setUserId] = useState<string | null>(null);
   const [photo, setPhoto] = useState<string | null>(null);
-  const [fullName, setFullName] = useState<string>("");
+  const [fullName, setFullName] = useState("");
+  const [loaded, setLoaded] = useState(false);
+  const prevPathname = useRef(pathname);
 
-  useEffect(() => {
+  const fetchUser = () => {
+    setLoaded(false);
     me(apiClient)
       .then((res) => {
         const data = res.data;
@@ -33,11 +40,36 @@ export const Header = () => {
                 setFullName(`${user.firstName} ${user.lastName}`.trim());
               }
             })
-            .catch(() => {});
+            .catch(() => {})
+            .finally(() => setLoaded(true));
+        } else {
+          setUserId(null);
+          setLoaded(true);
         }
       })
-      .catch(() => {});
-  }, [apiClient]);
+      .catch(() => setLoaded(true));
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
+  useEffect(() => {
+    const wasOnAuth = prevPathname.current.startsWith("/auth");
+    prevPathname.current = pathname;
+    if (wasOnAuth && !pathname.startsWith("/auth")) {
+      fetchUser();
+    }
+  }, [pathname]);
+
+  useEffect(() => {
+    return subscribeAuthChange(() => {
+      setUserId(null);
+      setPhoto(null);
+      setFullName("");
+      setLoaded(true);
+    });
+  }, []);
 
   return (
     <div className={styles.outer}>
@@ -54,12 +86,12 @@ export const Header = () => {
         <nav aria-label="Навигация">
           <ul className={styles.nav}>
             <li>
-              <Link view="primary" className={styles.navLink} href="/">
+              <Link className={styles.navLink} href="/">
                 <Text variant="subheader-2">Лента объявлений</Text>
               </Link>
             </li>
             <li>
-              <Link view="primary" className={styles.navLink} href="/media">
+              <Link className={styles.navLink} href="/media">
                 <Text variant="subheader-2">Наше медиа</Text>
               </Link>
             </li>
@@ -76,7 +108,9 @@ export const Header = () => {
           >
             Создать объявление
           </Button>
-          {userId ? (
+          {!loaded ? (
+            <Skeleton variant="circle" width={40} height={40} />
+          ) : userId ? (
             <div
               className={styles.avatarButton}
               onClick={() => router.push(`/profile/${userId}`)}

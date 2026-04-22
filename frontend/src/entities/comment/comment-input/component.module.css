@@ -20,8 +20,5 @@
 }
 
 .input {
-  :global(.g-text-input__content) {
-    background-color: #e2e2e2;
-    border: none;
-  }
+  background-color: #e2e2e2;
 }

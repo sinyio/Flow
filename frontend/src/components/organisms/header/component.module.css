@@ -12,7 +12,7 @@
   border-radius: var(--g-border-radius-2xl, 32px);
   overflow: hidden;
   width: 100%;
-  max-width: 698px;
+  width: 740px;
   box-sizing: border-box;
 }
 
@@ -30,8 +30,13 @@
   list-style: none;
 }
 
-.navLink:hover {
-  text-decoration: underline;
+.navLink {
+  color: inherit;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 .actions {
@@ -39,6 +44,21 @@
   align-items: center;
   gap: var(--g-spacing-2, 8px);
   white-space: nowrap;
+}
+
+
+.logoutModal {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px;
+  min-width: 280px;
+}
+
+.logoutModalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
 }
 
 .avatarButton {

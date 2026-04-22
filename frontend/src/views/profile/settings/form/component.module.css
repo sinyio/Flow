@@ -53,3 +53,17 @@
     width: 100%;
   }
 }
+
+.logoutModal {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px;
+  min-width: 280px;
+}
+
+.logoutModalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}

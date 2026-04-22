@@ -16,12 +16,7 @@
 
 .searchInput {
   flex: 1;
-  border-radius: 24px;
-
-  :global(.g-text-input__content) {
-    background-color: var(--page-color);
-    border: none;
-  }
+  background-color: var(--page-color);
 }
 
 .filterButton {

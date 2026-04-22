@@ -1,10 +1,14 @@
+import { useState } from 'react'
 import { Button, Text, useToaster } from '@gravity-ui/uikit'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { isAxiosError } from 'axios'
 import { useForm, type SubmitHandler } from 'react-hook-form'
+import { useRouter } from 'next/navigation'
 
 import { logout } from '@api/auth'
 import { useAxiosInstance } from '@api/use-axios-instance'
+import { emitAuthChange } from '@utils/auth-events'
+import { Modal } from 'src/ui-kit'
 import { deleteUser } from '@api/user/delete-user'
 import { TUser } from '@api/user/get-user'
 import { updateUser } from '@api/user/update-user'
@@ -44,6 +48,8 @@ export const SettingsForm = ({ user }: ISettingsFormProps) => {
 
   const axiosInstance = useAxiosInstance()
   const { add } = useToaster()
+  const router = useRouter()
+  const [logoutModalOpen, setLogoutModalOpen] = useState(false)
 
   const onSubmit: SubmitHandler<TSettingsFormValues> = async data => {
     try {
@@ -93,16 +99,22 @@ export const SettingsForm = ({ user }: ISettingsFormProps) => {
   }
 
   const handleLogout = () => {
-    void logout(axiosInstance).catch((error: unknown) => {
-      console.error('[SettingsForm] logout failed:', error)
-      add({
-        isClosable: true,
-        theme: 'warning',
-        name: 'logout_error',
-        title: 'Ошибка',
-        content: 'Не удалось выйти из аккаунта.',
+    logout(axiosInstance)
+      .then(() => {
+        emitAuthChange();
+        router.push('/');
       })
-    })
+      .catch((error: unknown) => {
+        console.error('[SettingsForm] logout failed:', error)
+        add({
+          isClosable: true,
+          theme: 'warning',
+          name: 'logout_error',
+          title: 'Ошибка',
+          content: 'Не удалось выйти из аккаунта.',
+        })
+      })
+      .finally(() => setLogoutModalOpen(false))
   }
 
   const handleDeleteUser = () => {
@@ -189,7 +201,7 @@ export const SettingsForm = ({ user }: ISettingsFormProps) => {
       <div className={styles.section}>
         <Text variant="header-2">Управление</Text>
         <div className={styles.managementButtons}>
-          <Button type="button" size="xl" onClick={handleLogout} className={styles.actionButton}>
+          <Button type="button" size="xl" onClick={() => setLogoutModalOpen(true)} className={styles.actionButton}>
             Выйти
           </Button>
           <Button
@@ -203,6 +215,16 @@ export const SettingsForm = ({ user }: ISettingsFormProps) => {
           </Button>
         </div>
       </div>
+
+      <Modal open={logoutModalOpen} onOpenChange={setLogoutModalOpen}>
+        <div className={styles.logoutModal}>
+          <Text variant="header-2">Выйти из аккаунта?</Text>
+          <div className={styles.logoutModalActions}>
+            <Button onClick={() => setLogoutModalOpen(false)}>Отмена</Button>
+            <Button view="action" onClick={handleLogout}>Выйти</Button>
+          </div>
+        </div>
+      </Modal>
     </form>
   )
 }
