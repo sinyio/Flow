@@ -26,6 +26,7 @@ import { me } from "@api/auth/me";
 import { useApiContext } from "@contexts/api-context";
 
 import { PageContainer } from "@components/global/page-container";
+import { FormattedText } from "@components/atoms/formatted-text/component";
 
 import styles from "./page.module.css";
 import { getDate } from "@utils/get-date";
@@ -171,54 +172,47 @@ export default function PostDetailPage({ params }: PostDetailPageProps) {
 
   const handleLike = () => {
     if (!post) return;
-    togglePostLike(post.id, apiClient).then(() => {
-      setPost((prev) =>
-        prev
-          ? {
-              ...prev,
-              isLiked: !prev.isLiked,
-              likesCount: prev.isLiked
-                ? prev.likesCount - 1
-                : prev.likesCount + 1,
-            }
-          : null,
-      );
+    const snapshot = { isLiked: post.isLiked, likesCount: post.likesCount };
+    setPost((prev) =>
+      prev
+        ? { ...prev, isLiked: !prev.isLiked, likesCount: prev.isLiked ? prev.likesCount - 1 : prev.likesCount + 1 }
+        : null,
+    );
+    togglePostLike(post.id, apiClient).catch(() => {
+      setPost((prev) => prev ? { ...prev, ...snapshot } : null);
     });
   };
 
   const handleFavorite = () => {
     if (!post) return;
-    togglePostFavorite(post.id, apiClient).then(() => {
-      setPost((prev) =>
-        prev
-          ? {
-              ...prev,
-              isFavorite: !prev.isFavorite,
-              favoritesCount: prev.isFavorite
-                ? prev.favoritesCount - 1
-                : prev.favoritesCount + 1,
-            }
-          : null,
-      );
+    const snapshot = { isFavorite: post.isFavorite, favoritesCount: post.favoritesCount };
+    setPost((prev) =>
+      prev
+        ? { ...prev, isFavorite: !prev.isFavorite, favoritesCount: prev.isFavorite ? prev.favoritesCount - 1 : prev.favoritesCount + 1 }
+        : null,
+    );
+    togglePostFavorite(post.id, apiClient).catch(() => {
+      setPost((prev) => prev ? { ...prev, ...snapshot } : null);
     });
   };
 
   const handleCommentLike = (commentId: string) => {
-    toggleCommentLike(commentId, apiClient).then(() => {
-      setComments((prev) => {
-        const updateLikes = (comments: TMediaComment[]): TMediaComment[] =>
-          comments?.map((c) => {
-            if (c.id === commentId) {
-              return {
-                ...c,
-                isLiked: !c.isLiked,
-                likesCount: c.isLiked ? c.likesCount - 1 : c.likesCount + 1,
-              };
-            }
-            return { ...c, replies: updateLikes(c.replies) };
-          });
-        return updateLikes(prev);
-      });
+    const applyToggle = (list: TMediaComment[]): TMediaComment[] =>
+      list.map((c) =>
+        c.id === commentId
+          ? { ...c, isLiked: !c.isLiked, likesCount: c.isLiked ? c.likesCount - 1 : c.likesCount + 1 }
+          : { ...c, replies: applyToggle(c.replies ?? []) },
+      );
+    const revert = (list: TMediaComment[]): TMediaComment[] =>
+      list.map((c) =>
+        c.id === commentId
+          ? { ...c, isLiked: !c.isLiked, likesCount: c.isLiked ? c.likesCount - 1 : c.likesCount + 1 }
+          : { ...c, replies: revert(c.replies ?? []) },
+      );
+
+    setComments((prev) => applyToggle(prev));
+    toggleCommentLike(commentId, apiClient).catch(() => {
+      setComments((prev) => revert(prev));
     });
   };
 
@@ -389,7 +383,7 @@ export default function PostDetailPage({ params }: PostDetailPageProps) {
               </Flex>
             )}
             <Text variant="body-2" color="secondary">
-              {getDate(post.createdAt, "regular")}
+              {getDate(post.createdAt, "short")}
             </Text>
             <div className={styles.views}>
               <Eye width={14} height={14} />
@@ -401,7 +395,7 @@ export default function PostDetailPage({ params }: PostDetailPageProps) {
 
           {post.content && (
             <div className={styles.textContent}>
-              <Text variant="body-3">{post.content}</Text>
+              <FormattedText text={post.content} variant="body-3" />
             </div>
           )}
 

@@ -5,14 +5,14 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { isAxiosError } from "axios";
-import { Button, Text, useToaster } from "@gravity-ui/uikit";
-import { ArrowLeft, Paperclip, Xmark } from "@gravity-ui/icons";
+import { Button, Icon, Text, useToaster } from "@gravity-ui/uikit";
+import { Paperclip, Xmark } from "@gravity-ui/icons";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { createPost } from "@api/media/create-post";
 import { useApiContext } from "@contexts/api-context";
+import { ArrowIcon } from "@components/svgr/arrow-icon/icon";
 import { TextField } from "@components/form/text-field/field";
 import { TextAreaField } from "@components/form/text-area-field/field";
 import { PageContainer } from "@components/global/page-container";
@@ -94,88 +94,103 @@ export default function NewPostPage() {
   };
 
   return (
-    <PageContainer inner={{ className: styles.inner }}>
-      <div className={styles.header}>
-        <Link href="/media" className={styles.backButton}>
-          <ArrowLeft width={20} height={20} />
-        </Link>
-        <Text variant="header-1">Новый пост</Text>
-      </div>
+    <>
+      <div className={styles.gap} />
 
-      <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-        <div className={styles.section}>
-          <Text variant="header-2">Напишите свою историю</Text>
-          <div className={styles.fields}>
-            <TextField
-              size="xl"
-              placeholder="Заголовок"
-              controllerProps={{ control, name: "title" }}
-            />
-            <TextAreaField
-              size="xl"
-              placeholder="Ваш текст"
-              minRows={6}
-              controllerProps={{ control, name: "content" }}
-            />
-          </div>
-        </div>
-
-        <div className={styles.section}>
-          <Text variant="header-2">Добавьте обложку</Text>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            className={styles.hiddenInput}
-            onChange={handleFileChange}
-          />
-          {preview ? (
-            <div className={styles.previewWrapper}>
-              <Image src={preview} alt="Обложка" fill className={styles.previewImage} />
-              <button type="button" className={styles.removeImage} onClick={removeImage}>
-                <Xmark width={16} height={16} />
-              </button>
-            </div>
-          ) : (
-            <Button
-              type="button"
-              view="action"
-              size="xl"
-              className={styles.uploadButton}
-              onClick={() => fileInputRef.current?.click()}
-            >
-              <Paperclip width={16} height={16} />
-              Добавить фото
-            </Button>
-          )}
-        </div>
-
-        <Text variant="body-2" color="secondary">
-          Ваш текст будет опубликован в{" "}
-          <Link href="/media" className={styles.link}>
-            Медиа
-          </Link>{" "}
-          после проверки модератором.
-        </Text>
-
-        <div className={styles.submitBlock}>
+      <PageContainer inner={{ className: styles.page }}>
+        <div className={styles.headerRow}>
           <Button
-            type="submit"
-            size="xl"
-            view="action"
-            className={styles.submitButton}
-            disabled={!formState.isValid || submitting}
-            loading={submitting}
+            view="normal"
+            size="l"
+            className={styles.backButton}
+            aria-label="Назад"
+            onClick={() => router.push("/media")}
           >
-            Продолжить
+            <Icon data={ArrowIcon} />
           </Button>
-          <Text variant="caption-1" color="secondary" className={styles.terms}>
-            Нажимая «Опубликовать», вы принимаете{" "}
-            <span className={styles.termsLink}>условия соглашения</span> и{" "}
-            <span className={styles.termsLink}>политику конфиденциальности</span>.
+
+          <Text variant="display-3" className={styles.title}>
+            Новый пост
           </Text>
         </div>
-      </form>
-    </PageContainer>
+
+        <div className={styles.divider} />
+
+        <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+          <div className={styles.section}>
+            <Text variant="header-2">Напишите свою историю</Text>
+            <div className={styles.fields}>
+              <TextField
+                size="xl"
+                placeholder="Заголовок"
+                controllerProps={{ control, name: "title" }}
+              />
+              <TextAreaField
+                size="xl"
+                placeholder="Ваш текст"
+                minRows={6}
+                controllerProps={{ control, name: "content" }}
+              />
+            </div>
+          </div>
+
+          <div className={styles.section}>
+            <Text variant="header-2">Добавьте обложку</Text>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className={styles.hiddenInput}
+              onChange={handleFileChange}
+            />
+            {preview ? (
+              <div className={styles.previewWrapper}>
+                <Image src={preview} alt="Обложка" fill className={styles.previewImage} />
+                <button type="button" className={styles.removeImage} onClick={removeImage}>
+                  <Xmark width={16} height={16} />
+                </button>
+              </div>
+            ) : (
+              <Button
+                type="button"
+                view="action"
+                size="xl"
+                className={styles.uploadButton}
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <Paperclip width={16} height={16} />
+                Добавить фото
+              </Button>
+            )}
+          </div>
+
+          <Text variant="body-2" color="secondary">
+            Ваш текст будет опубликован в{" "}
+            <span className={styles.link} onClick={() => router.push("/media")}>
+              Медиа
+            </span>{" "}
+            после проверки модератором.
+          </Text>
+
+          <div className={styles.submitBlock}>
+            <Button
+              type="submit"
+              size="xl"
+              view="action"
+              className={styles.submitButton}
+              disabled={!formState.isValid || submitting}
+              loading={submitting}
+            >
+              Продолжить
+            </Button>
+            <Text variant="caption-1" color="secondary" className={styles.terms}>
+              Нажимая «Опубликовать», вы принимаете{" "}
+              <span className={styles.termsLink}>условия соглашения</span> и{" "}
+              <span className={styles.termsLink}>политику конфиденциальности</span>.
+            </Text>
+          </div>
+        </form>
+      </PageContainer>
+    </>
   );
 }

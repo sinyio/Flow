@@ -1,36 +1,55 @@
-.inner {
-  padding: 24px 16px 60px;
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
+.gap {
+  height: 24px;
+  width: 100%;
+}
+
+.page {
+  width: 100%;
+  padding: 0 16px 48px;
+  box-sizing: border-box;
   max-width: 640px;
 }
 
-.header {
+.headerRow {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--g-color-line-generic);
+  gap: 12px;
+  margin-bottom: 20px;
 }
 
 .backButton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border-radius: 20px;
   width: 36px;
   height: 36px;
-  border-radius: 50%;
-  background: var(--g-color-base-generic);
-  color: inherit;
-  text-decoration: none;
-  flex-shrink: 0;
-  transition: background 0.15s;
+  padding: 0;
+  flex: 0 0 auto;
+}
 
-  &:hover {
-    background: var(--g-color-base-generic-hover);
+.title {
+  margin: 0;
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background-color: rgba(0, 0, 0, 0.1);
+  margin-bottom: 36px;
+}
+
+@media (min-width: 834px) {
+  .gap {
+    height: 136px;
+    margin-bottom: 48px;
+    background-color: var(--g-color-base-selection);
+  }
+
+  .page {
+    padding: 0 0 72px;
   }
 }
+
+/* Form */
 
 .form {
   display: flex;
@@ -94,6 +113,8 @@
 
 .link {
   color: inherit;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .submitBlock {
@@ -114,11 +135,4 @@
 .termsLink {
   text-decoration: underline;
   cursor: pointer;
-}
-
-@media (min-width: 834px) {
-  .inner {
-    padding: 40px 0 60px;
-    padding-top: 184px;
-  }
 }

@@ -94,17 +94,7 @@ const CommentItem = ({
           ref={textRef}
           className={expanded ? styles.commentText : styles.commentTextClamped}
         >
-          <Text variant="body-3">
-            {text}
-            {expanded && (
-              <span
-                className={styles.collapseLabel}
-                onClick={() => setExpanded(false)}
-              >
-                скрыть
-              </span>
-            )}
-          </Text>
+          <Text variant="body-3">{text}</Text>
         </div>
         {!expanded && overflows && (
           <Text variant="body-3">
@@ -113,6 +103,16 @@ const CommentItem = ({
               onClick={() => setExpanded(true)}
             >
               ещё
+            </span>
+          </Text>
+        )}
+        {expanded && (
+          <Text variant="body-3">
+            <span
+              className={styles.collapseLabel}
+              onClick={() => setExpanded(false)}
+            >
+              скрыть
             </span>
           </Text>
         )}
