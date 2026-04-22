@@ -25,6 +25,7 @@ export class UserController {
 
   @HttpCode(HttpStatus.OK)
   @Patch()
+  @Authorization()
   @ApiOperation({ summary: 'Обновить профиль' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: UpdateProfileDto })
@@ -40,6 +41,7 @@ export class UserController {
 
   @HttpCode(HttpStatus.OK)
   @Delete()
+  @Authorization()
   @ApiOperation({ summary: 'Удалить профиль' })
   @ApiResponse({
     status: 200, schema: {
