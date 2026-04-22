@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { Icon, Text } from "@gravity-ui/uikit";
 import { PaperPlane } from "@gravity-ui/icons";
+import { normalizeContent } from "@utils/normalize-content";
 import styles from "./component.module.css";
 
 const COMMENT_MAX = 1_000;
@@ -36,7 +37,7 @@ export const CommentInput = ({
 
   const submit = () => {
     if (!text.trim() || text.length > COMMENT_MAX) return;
-    const normalized = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n').replace(/\n{3,}/g, '\n\n');
+    const normalized = normalizeContent(text) ?? text;
     handleSubmit?.(normalized);
     setText("");
     if (textareaRef.current) {

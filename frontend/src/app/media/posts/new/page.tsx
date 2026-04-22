@@ -17,6 +17,7 @@ import { TextField } from "@components/form/text-field/field";
 import { TextAreaField } from "@components/form/text-area-field/field";
 import { PageContainer } from "@components/global/page-container";
 
+import { normalizeContent } from "@utils/normalize-content";
 import styles from "./page.module.css";
 
 const CONTENT_MAX = 10_000;
@@ -56,9 +57,6 @@ export default function NewPostPage() {
     if (preview) URL.revokeObjectURL(preview);
     setPreview(null);
   };
-
-  const normalizeContent = (s?: string) =>
-    s ? s.replace(/\r\n/g, '\n').replace(/\r/g, '\n').replace(/\n{3,}/g, '\n\n') : undefined;
 
   const onSubmit: SubmitHandler<TFormValues> = async (data) => {
     setSubmitting(true);

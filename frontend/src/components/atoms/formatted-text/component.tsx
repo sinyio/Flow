@@ -3,17 +3,16 @@
 import { Text } from '@gravity-ui/uikit'
 import type { TextProps } from '@gravity-ui/uikit'
 
+import { normalizeContent } from '@utils/normalize-content'
+
 interface FormattedTextProps {
   text: string
   variant?: TextProps['variant']
   className?: string
 }
 
-const normalizeText = (text: string) =>
-  text.replace(/\r\n/g, '\n').replace(/\r/g, '\n').replace(/\n{3,}/g, '\n\n')
-
 export const FormattedText = ({ text, variant = 'body-3', className }: FormattedTextProps) => {
-  const paragraphs = normalizeText(text).split('\n\n')
+  const paragraphs = (normalizeContent(text) ?? text).split('\n\n')
 
   return (
     <div className={className}>
