@@ -40,3 +40,20 @@
   gap: var(--g-spacing-2, 8px);
   white-space: nowrap;
 }
+
+.avatarButton {
+  cursor: pointer;
+  border-radius: 50%;
+  transition: opacity 0.15s;
+  height: 42px;
+  
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.avatar {
+  width: 42px;
+  height: 42px;
+}
+
