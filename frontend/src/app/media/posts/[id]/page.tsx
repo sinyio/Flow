@@ -29,6 +29,7 @@ import { PageContainer } from "@components/global/page-container";
 
 import styles from "./page.module.css";
 import { getDate } from "@utils/get-date";
+import { getNoun } from "@utils/get-noun";
 import { PostHeader } from "@widgets/media";
 import { CommentCard, CommentInput } from "@entities/comment";
 import { Modal } from "src/ui-kit";
@@ -69,7 +70,7 @@ function CommentsSection({
     <div className={styles.commentsSection}>
       <Flex direction="column" gap={4}>
         <Text variant="header-2" className={styles.commentsTitle}>
-          {commentsCount} комментариев
+          {getNoun(commentsCount, "комментарий", "комментария", "комментариев")}
         </Text>
         <CommentInput handleSubmit={onCommentSubmit} />
       </Flex>
@@ -94,7 +95,7 @@ function CommentsSection({
             onClick={() => setVisibleCount((n) => n + COMMENTS_PAGE_SIZE)}
           >
             <Text variant="body-2" color="secondary">
-              Показать ещё {remaining} комментариев
+              Показать ещё {getNoun(remaining, "комментарий", "комментария", "комментариев")}
             </Text>
           </div>
         )}

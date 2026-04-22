@@ -72,6 +72,7 @@ export const Header = () => {
             size="xl"
             type="button"
             onClick={() => router.push("/ads")}
+            className={styles.actionButton}
           >
             Создать объявление
           </Button>
@@ -92,6 +93,7 @@ export const Header = () => {
               size="xl"
               type="button"
               onClick={() => router.push("/auth")}
+              className={styles.actionButton}
             >
               Войти
             </Button>

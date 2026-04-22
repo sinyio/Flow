@@ -45,15 +45,21 @@
   cursor: pointer;
   border-radius: 50%;
   transition: opacity 0.15s;
-  height: 42px;
-  
+  height: 40px;
+
   &:hover {
     opacity: 0.8;
   }
 }
 
+.actionButton {
+  max-height: 44px;
+  display: flex;
+  align-items: center;
+}
+
 .avatar {
-  width: 42px;
-  height: 42px;
+  width: 40px;
+  height: 40px;
 }
 

@@ -4,6 +4,7 @@ import styles from "./component.module.css";
 import { TMediaComment } from "@api/media";
 import { Avatar, Text } from "@gravity-ui/uikit";
 import { getDate } from "@utils/get-date";
+import { getNoun } from "@utils/get-noun";
 import { useState, useEffect, useRef } from "react";
 import { ThumbsUp, ThumbsUpFill } from "@gravity-ui/icons";
 import { useRouter } from "next/navigation";
@@ -231,8 +232,8 @@ export const CommentCard = ({
           >
             <Text variant="caption-2">
               {showReplies
-                ? `↑ Скрыть`
-                : `↓ Ответы · ${comment.replies.length}`}
+                ? `Скрыть ответы`
+                : `Показать ответы · ${comment.replies.length}`}
             </Text>
           </div>
           {showReplies && (
@@ -268,7 +269,7 @@ export const CommentCard = ({
                   }
                 >
                   <Text variant="caption-2" color="secondary">
-                    Показать ещё {remainingReplies} ответов
+                    Показать ещё {getNoun(remainingReplies, "ответ", "ответа", "ответов")}
                   </Text>
                 </div>
               )}

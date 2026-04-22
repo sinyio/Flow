@@ -1,5 +1,4 @@
 .container {
-  background-color: #313131;
   border-radius: 30px;
 }
 
@@ -12,10 +11,17 @@
   margin-right: 6px;
   border-top-left-radius: 20px;
   border-bottom-left-radius: 20px;
-  background-color: rgba(0, 0, 0, 0.18);
+  background-color: rgba(0, 0, 0, 0.15);
   transition: background-color 0.15s;
 
   &:hover {
-    background-color: rgba(0, 0, 0, 0.32);
+    background-color: rgba(0, 0, 0, 0.25);
+  }
+}
+
+.input {
+  :global(.g-text-input__content) {
+    background-color: #e2e2e2;
+    border: none;
   }
 }
