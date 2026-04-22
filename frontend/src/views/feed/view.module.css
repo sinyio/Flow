@@ -33,9 +33,12 @@
   background: var(--page-color, #f2f3f2);
 }
 
+
+
 @media (min-width: 834px) {
   .heroInner {
-    padding: 156px 85px 48px;
+    height: 526px;
+    padding: 0 85px;
   }
 
   .pageInner {
@@ -45,7 +48,8 @@
 
 @media (min-width: 1280px) {
   .heroInner {
-    padding: 156px 16px 48px;
+    height: 440px;
+    padding: 0 16px;
   }
 
   .pageInner {
@@ -53,3 +57,4 @@
     max-width: 1280px;
   }
 }
+

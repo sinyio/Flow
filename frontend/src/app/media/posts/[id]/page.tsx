@@ -168,6 +168,10 @@ export default function PostDetailPage({ params }: PostDetailPageProps) {
 
   const handleLike = () => {
     if (!post) return;
+    if (!currentUserId) {
+      add({ isClosable: true, theme: "warning", name: "like_auth", title: "Войдите в аккаунт, чтобы поставить лайк" });
+      return;
+    }
     const snapshot = { isLiked: post.isLiked, likesCount: post.likesCount };
     setPost((prev) =>
       prev
@@ -181,6 +185,10 @@ export default function PostDetailPage({ params }: PostDetailPageProps) {
 
   const handleFavorite = () => {
     if (!post) return;
+    if (!currentUserId) {
+      add({ isClosable: true, theme: "warning", name: "favorite_auth", title: "Войдите в аккаунт, чтобы добавить в избранное" });
+      return;
+    }
     const snapshot = { isFavorite: post.isFavorite, favoritesCount: post.favoritesCount };
     setPost((prev) =>
       prev
@@ -193,6 +201,10 @@ export default function PostDetailPage({ params }: PostDetailPageProps) {
   };
 
   const handleCommentLike = (commentId: string) => {
+    if (!currentUserId) {
+      add({ isClosable: true, theme: "warning", name: "comment_like_auth", title: "Войдите в аккаунт, чтобы поставить лайк" });
+      return;
+    }
     const applyToggle = (list: TMediaComment[]): TMediaComment[] =>
       list.map((c) =>
         c.id === commentId
@@ -214,6 +226,10 @@ export default function PostDetailPage({ params }: PostDetailPageProps) {
 
   const handleCommentSubmit = (text: string) => {
     if (!text.trim()) return;
+    if (!currentUserId) {
+      add({ isClosable: true, theme: "warning", name: "comment_auth", title: "Войдите в аккаунт, чтобы оставить комментарий" });
+      return;
+    }
 
     createComment(
       {
@@ -269,6 +285,10 @@ export default function PostDetailPage({ params }: PostDetailPageProps) {
   };
 
   const handleReply = (commentId: string, authorName: string) => {
+    if (!currentUserId) {
+      add({ isClosable: true, theme: "warning", name: "reply_auth", title: "Войдите в аккаунт, чтобы ответить на комментарий" });
+      return;
+    }
     setReplyTo(authorName);
     setReplyToCommentId(commentId);
   };
