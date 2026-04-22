@@ -103,14 +103,16 @@ body {
 }
 
 .g-text-input__content,
-.g-select-control__button::before {
+.g-select-control__button::before,
+.g-text-area__content {
   border: none !important;
-  background-color: transparent !important;
+}
+
+.g-text-area__content {
+  background-color: #fff !important;
 }
 
 .g-text-input,
 .g-select {
   border-radius: 50px;
-  background-color: #fff;
 }
-

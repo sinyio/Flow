@@ -63,12 +63,13 @@ export const Header = () => {
   }, [pathname]);
 
   useEffect(() => {
-    return subscribeAuthChange(() => {
+    const unsubscribe = subscribeAuthChange(() => {
       setUserId(null);
       setPhoto(null);
       setFullName("");
       setLoaded(true);
     });
+    return () => { unsubscribe(); };
   }, []);
 
   return (

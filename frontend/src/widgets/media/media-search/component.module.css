@@ -16,7 +16,10 @@
 
 .searchInput {
   flex: 1;
-  background-color: var(--page-color);
+
+  :global(.g-text-input__content) {
+    background-color: var(--page-color);
+  }
 }
 
 .filterButton {
