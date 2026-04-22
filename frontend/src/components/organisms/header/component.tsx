@@ -6,10 +6,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
-import { me } from "@api/auth/me";
 import { getUser } from "@api/user/get-user";
 import { useApiContext } from "@contexts/api-context";
 import { subscribeAuthChange } from "@utils/auth-events";
+import { useCurrentUserStore } from "@utils/stores/current-user";
 import { LiquidGlassBlock } from "@components/global/liquid-glass-block";
 import { Skeleton } from "src/ui-kit";
 
@@ -19,6 +19,7 @@ export const Header = () => {
   const router = useRouter();
   const pathname = usePathname();
   const { apiClient } = useApiContext();
+  const { fetch: fetchCurrentUser, invalidate, clear } = useCurrentUserStore();
   const [userId, setUserId] = useState<string | null>(null);
   const [photo, setPhoto] = useState<string | null>(null);
   const [fullName, setFullName] = useState("");
@@ -27,12 +28,11 @@ export const Header = () => {
 
   const fetchUser = () => {
     setLoaded(false);
-    me(apiClient)
-      .then((res) => {
-        const data = res.data;
-        if ("userId" in data) {
-          setUserId(data.userId);
-          getUser(data.userId, apiClient)
+    fetchCurrentUser(apiClient)
+      .then((id) => {
+        if (id) {
+          setUserId(id);
+          getUser(id, apiClient)
             .then((res) => {
               const user = res.data;
               if ("id" in user) {
@@ -58,12 +58,14 @@ export const Header = () => {
     const wasOnAuth = prevPathname.current.startsWith("/auth");
     prevPathname.current = pathname;
     if (wasOnAuth && !pathname.startsWith("/auth")) {
+      invalidate();
       fetchUser();
     }
   }, [pathname]);
 
   useEffect(() => {
     const unsubscribe = subscribeAuthChange(() => {
+      clear();
       setUserId(null);
       setPhoto(null);
       setFullName("");

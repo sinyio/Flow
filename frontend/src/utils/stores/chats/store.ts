@@ -1,8 +1,8 @@
 import type { IChatState, TChatStore } from './types'
 import { create } from 'zustand'
 
-import { me } from '@api/auth'
 import { getChats, getMessages } from '@api/chats'
+import { useCurrentUserStore } from '@utils/stores/current-user'
 import { TChatItem } from '@api/chats/types'
 
 const initialState: IChatState = {
@@ -25,11 +25,9 @@ export const useChatStore = create<TChatStore>()(set => ({
   loadCurrentUser: axiosInstance => {
     set(state => ({ isLoading: { ...state.isLoading, currentUser: true } }))
 
-    return me(axiosInstance)
-      .then(res => {
-        if ('userId' in res.data) {
-          set({ currentUserId: res.data.userId })
-        }
+    return useCurrentUserStore.getState().fetch(axiosInstance)
+      .then(userId => {
+        if (userId) set({ currentUserId: userId })
       })
       .catch(error => console.error('[ChatStore] me failed:', error))
       .finally(() => set(state => ({ isLoading: { ...state.isLoading, currentUser: false } })))

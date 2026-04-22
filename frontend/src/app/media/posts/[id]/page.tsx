@@ -22,8 +22,8 @@ import { toggleCommentLike } from "@api/media/toggle-comment-like";
 import { createComment } from "@api/media/create-comment";
 import { deleteComment } from "@api/media/delete-comment";
 import { deletePost } from "@api/media/delete-post";
-import { me } from "@api/auth/me";
 import { useApiContext } from "@contexts/api-context";
+import { useCurrentUserStore } from "@utils/stores/current-user";
 
 import { PageContainer } from "@components/global/page-container";
 import { FormattedText } from "@components/atoms/formatted-text/component";
@@ -112,6 +112,7 @@ interface PostDetailPageProps {
 export default function PostDetailPage({ params }: PostDetailPageProps) {
   const { id } = use(params);
   const { apiClient } = useApiContext();
+  const { fetch: fetchCurrentUser } = useCurrentUserStore();
   const router = useRouter();
   const { add } = useToaster();
 
@@ -129,14 +130,9 @@ export default function PostDetailPage({ params }: PostDetailPageProps) {
   const viewAdded = useRef(false);
 
   useEffect(() => {
-    me(apiClient)
-      .then((res) => {
-        const data = res.data;
-        if ("userId" in data) {
-          setCurrentUserId(data.userId);
-        }
-      })
-      .catch(() => {});
+    fetchCurrentUser(apiClient).then(userId => {
+      if (userId) setCurrentUserId(userId);
+    });
   }, [apiClient]);
 
   useEffect(() => {

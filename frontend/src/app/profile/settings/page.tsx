@@ -3,19 +3,18 @@
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
-import { me } from '@api/auth'
 import { useAxiosInstance } from '@api/use-axios-instance'
+import { useCurrentUserStore } from '@utils/stores/current-user'
 
 const ProfileSettingsPage = () => {
   const router = useRouter()
   const axiosInstance = useAxiosInstance()
+  const { fetch: fetchCurrentUser } = useCurrentUserStore()
 
   useEffect(() => {
-    me(axiosInstance)
-      .then(response => {
-        if ('userId' in response.data) {
-          router.replace(`/profile/settings/${response.data.userId}`)
-        }
+    fetchCurrentUser(axiosInstance)
+      .then(userId => {
+        if (userId) router.replace(`/profile/settings/${userId}`)
       })
       .catch(error => console.error('[ProfileSettingsPage] me() failed:', error))
   }, [axiosInstance, router])

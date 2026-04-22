@@ -12,8 +12,8 @@ import { useRouter } from "next/navigation";
 
 import { patchPost } from "@api/media/patch-post";
 import { getPostById } from "@api/media/get-post-by-id";
-import { me } from "@api/auth/me";
 import { useApiContext } from "@contexts/api-context";
+import { useCurrentUserStore } from "@utils/stores/current-user";
 import { ArrowIcon } from "@components/svgr/arrow-icon/icon";
 import { TextField } from "@components/form/text-field/field";
 import { TextAreaField } from "@components/form/text-area-field/field";
@@ -47,6 +47,8 @@ export default function EditPostPage({ params }: EditPostPageProps) {
   const [submitting, setSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  const { fetch: fetchCurrentUser } = useCurrentUserStore();
+
   const { control, handleSubmit, formState, reset, watch } = useForm<TFormValues>({
     defaultValues: { title: "", content: "" },
     mode: "onChange",
@@ -57,16 +59,15 @@ export default function EditPostPage({ params }: EditPostPageProps) {
     let cancelled = false;
 
     Promise.all([
-      me(apiClient),
+      fetchCurrentUser(apiClient),
       getPostById(id, apiClient),
     ])
-      .then(([meRes, postRes]) => {
+      .then(([userId, postRes]) => {
         if (cancelled) return;
 
-        const meData = meRes.data;
         const postData = postRes.data;
 
-        if (!("userId" in meData)) {
+        if (!userId) {
           router.replace("/media");
           return;
         }
@@ -76,7 +77,7 @@ export default function EditPostPage({ params }: EditPostPageProps) {
           return;
         }
 
-        if (postData.author?.id !== meData.userId) {
+        if (postData.author?.id !== userId) {
           router.replace("/media");
           return;
         }
