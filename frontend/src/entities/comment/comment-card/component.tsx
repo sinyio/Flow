@@ -6,6 +6,7 @@ import { Avatar, Text } from "@gravity-ui/uikit";
 import { getDate } from "@utils/get-date";
 import { useState, useEffect, useRef } from "react";
 import { ThumbsUp, ThumbsUpFill } from "@gravity-ui/icons";
+import { useRouter } from "next/navigation";
 import { CommentInput } from "../comment-input";
 
 const REPLIES_PAGE_SIZE = 3;
@@ -49,6 +50,7 @@ const CommentItem = ({
   onCancelReply,
   onSubmitReply,
 }: CommentItemProps) => {
+  const router = useRouter();
   const isOwn = currentUserId && author?.id === currentUserId;
   const [expanded, setExpanded] = useState(false);
   const [overflows, setOverflows] = useState(false);
@@ -62,11 +64,16 @@ const CommentItem = ({
   return (
     <>
       <div className={styles.commentTop}>
-        <Avatar
-          size={avatarSize}
-          imgUrl={author?.photo ?? undefined}
-          text={author?.fullName ?? ""}
-        />
+        <div
+          className={styles.avatarWrapper}
+          onClick={() => author?.id && router.push(`/profile/${author.id}`)}
+        >
+          <Avatar
+            size={avatarSize}
+            imgUrl={author?.photo ?? undefined}
+            text={author?.fullName ?? ""}
+          />
+        </div>
         <div className={styles.commentHeader}>
           <div className={styles.replyMeta}>
             <Text variant="body-2">{author?.fullName}</Text>
@@ -99,12 +106,14 @@ const CommentItem = ({
           </Text>
         </div>
         {!expanded && overflows && (
-          <span
-            className={styles.expandLabel}
-            onClick={() => setExpanded(true)}
-          >
-            ещё
-          </span>
+          <Text variant="body-3">
+            <span
+              className={styles.expandLabel}
+              onClick={() => setExpanded(true)}
+            >
+              ещё
+            </span>
+          </Text>
         )}
       </div>
       <div className={styles.commentActions}>

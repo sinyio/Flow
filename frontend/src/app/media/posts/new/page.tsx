@@ -64,7 +64,13 @@ export default function NewPostPage() {
       );
 
       if ("status" in body && body.status === "ok") {
-        router.push("/media");
+        add({
+          isClosable: true,
+          theme: "success",
+          name: "create_post_success",
+          title: "Пост опубликован",
+        });
+        router.push(`/media/posts/${body.id}`);
         return;
       }
 

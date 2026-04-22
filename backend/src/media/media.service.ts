@@ -304,7 +304,7 @@ export class MediaService {
       },
     })
 
-    return getStatusOk()
+    return getStatusOk({ id: postId })
   }
 
   public async addView(postId: string) {

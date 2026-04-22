@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useEffect, use, useRef } from "react";
+import { useRouter } from "next/navigation";
 
-import { Avatar, Button, Flex, Text } from "@gravity-ui/uikit";
+import { Avatar, Button, Flex, Text, useToaster } from "@gravity-ui/uikit";
 import {
   Eye,
   ThumbsUp,
@@ -20,6 +21,7 @@ import { togglePostFavorite } from "@api/media/toggle-post-favorite";
 import { toggleCommentLike } from "@api/media/toggle-comment-like";
 import { createComment } from "@api/media/create-comment";
 import { deleteComment } from "@api/media/delete-comment";
+import { deletePost } from "@api/media/delete-post";
 import { me } from "@api/auth/me";
 import { useApiContext } from "@contexts/api-context";
 
@@ -108,6 +110,8 @@ interface PostDetailPageProps {
 export default function PostDetailPage({ params }: PostDetailPageProps) {
   const { id } = use(params);
   const { apiClient } = useApiContext();
+  const router = useRouter();
+  const { add } = useToaster();
 
   const [post, setPost] = useState<TPost | null>(null);
   const [comments, setComments] = useState<TMediaComment[]>([]);
@@ -321,6 +325,17 @@ export default function PostDetailPage({ params }: PostDetailPageProps) {
     setCommentToDelete(null);
   };
 
+  const handleDeletePost = () => {
+    deletePost(id, apiClient)
+      .then(() => {
+        add({ isClosable: true, theme: "success", name: "delete_post_success", title: "Пост удалён" });
+        router.push("/media");
+      })
+      .catch(() => {
+        add({ isClosable: true, theme: "danger", name: "delete_post_error", title: "Ошибка", content: "Не удалось удалить пост" });
+      });
+  };
+
   if (loading) {
     return (
       <PageContainer>
@@ -347,7 +362,14 @@ export default function PostDetailPage({ params }: PostDetailPageProps) {
 
   return (
     <>
-      {post.image && <PostHeader photoUrl={post.image} postId={post.id} />}
+      {post.image && (
+        <PostHeader
+          photoUrl={post.image}
+          postId={post.id}
+          canEdit={!isFlowPost && post.author?.id === currentUserId}
+          onDeletePost={handleDeletePost}
+        />
+      )}
       <PageContainer inner={{ className: styles.pageInner }}>
         <div className={styles.content}>
           <Text variant="display-3" className={styles.title} as="h1">

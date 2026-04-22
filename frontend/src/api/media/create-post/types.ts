@@ -1,4 +1,4 @@
-import { TMediaMutationResponse } from '../types'
+import { IApiError, IStatusOk } from '@api/types'
 
 export type TCreatePostRequest = {
   title?: string
@@ -6,4 +6,4 @@ export type TCreatePostRequest = {
   image?: File
 }
 
-export type TCreatePostResponse = TMediaMutationResponse
+export type TCreatePostResponse = (IStatusOk & { id: string }) | IApiError

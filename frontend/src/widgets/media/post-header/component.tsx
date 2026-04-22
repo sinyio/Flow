@@ -8,14 +8,17 @@ interface ProfileHeaderProps {
   canEdit?: boolean;
   photoUrl: string;
   postId: string;
+  onDeletePost?: () => void;
 }
 
-export const PostHeader = ({ canEdit, photoUrl, postId }: ProfileHeaderProps) => {
+export const PostHeader = ({ canEdit, photoUrl, postId, onDeletePost }: ProfileHeaderProps) => {
   const { device } = useResponsive();
   return (
     <div className={styles.imageWrapper}>
       <Image fill priority alt="" src={photoUrl} className={styles.image} />
-      {device === "mobile" && <Header postId={postId} />}
+      {device === "mobile" && (
+        <Header postId={postId} canEdit={canEdit} onDeletePost={onDeletePost} />
+      )}
     </div>
   );
 };
