@@ -77,19 +77,21 @@ export const Header = () => {
   return (
     <div className={styles.outer}>
       <LiquidGlassBlock className={styles.container}>
-        <Image
-          priority
-          alt=""
-          src="/logo.png"
-          width={96}
-          height={48}
-          className={styles.logo}
-        />
+        <Link href="/" className={styles.logoLink}>
+          <Image
+            priority
+            alt="Флоу"
+            src="/logo.png"
+            width={96}
+            height={48}
+            className={styles.logo}
+          />
+        </Link>
 
         <nav aria-label="Навигация">
           <ul className={styles.nav}>
             <li>
-              <Link className={styles.navLink} href="/">
+              <Link className={styles.navLink} href="/feed">
                 <Text variant="subheader-2">Лента объявлений</Text>
               </Link>
             </li>

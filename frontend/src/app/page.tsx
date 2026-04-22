@@ -1,50 +1,39 @@
-import {
-  getAds,
-  getPopularRoutes,
-  TGetAdsParams,
-  TGetAdsSuccessfullResponse,
-  TRoute,
-} from '@api/ads'
-import { getServerAxiosInstance } from '@api/server-axios-instance'
+import Image from 'next/image'
+import Link from 'next/link'
 
-import { loadApiResource } from '@utils/load-api-resource'
+import styles from './page.module.css'
 
-import { FeedView } from '@views/feed'
+export default function MainPage() {
+  return (
+    <section className={styles.hero}>
+      <Image
+        src="/main/hero.jpg"
+        alt=""
+        fill
+        priority
+        className={styles.heroImage}
+      />
+      <div className={styles.overlay} />
 
-const Page = async ({ searchParams }: { searchParams: Promise<TGetAdsParams> }) => {
-  const searchParamsObject = await searchParams
-  const serverAxios = await getServerAxiosInstance()
-
-  const settings = Object.keys(searchParamsObject).length > 0 ? searchParamsObject : undefined
-
-  if (settings) {
-    const adsResponse = await loadApiResource<TGetAdsSuccessfullResponse>(
-      () => getAds(settings, serverAxios),
-      (data): data is TGetAdsSuccessfullResponse =>
-        typeof data === 'object' &&
-        data !== null &&
-        'data' in data &&
-        'meta' in data &&
-        Array.isArray((data as TGetAdsSuccessfullResponse).data)
-    )
-
-    if (!adsResponse.ok) {
-      throw new Error(adsResponse?.message)
-    }
-
-    return <FeedView ads={adsResponse.data} settings={settings} />
-  } else {
-    const popularRoutesResponse = await loadApiResource<TRoute[]>(
-      () => getPopularRoutes(serverAxios),
-      (data): data is TRoute[] => Array.isArray(data)
-    )
-
-    if (!popularRoutesResponse.ok) {
-      throw new Error(popularRoutesResponse?.message)
-    }
-
-    return <FeedView routes={popularRoutesResponse.data} settings={settings} />
-  }
+      <div className={styles.content}>
+        <p className={styles.eyebrow}>Передавайте между Москвой и Тбилиси</p>
+        <h1 className={styles.heading}>
+          Путь для<br />вашей посылки
+        </h1>
+        <p className={styles.description}>
+          Флоу — P2P платформа, где отправители находят проверенных
+          путешественников для доставки небольших посылок и документов
+          между Москвой и Тбилиси.
+        </p>
+        <div className={styles.buttons}>
+          <Link href="/ads" className={styles.buttonPrimary}>
+            Разместить объявление
+          </Link>
+          <Link href="/feed" className={styles.buttonSecondary}>
+            Найти доставку
+          </Link>
+        </div>
+      </div>
+    </section>
+  )
 }
-
-export default Page

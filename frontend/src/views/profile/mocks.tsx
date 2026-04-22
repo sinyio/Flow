@@ -17,7 +17,7 @@ export const mobileNavMocks = [
   },
   {
     icon: <FeedIcon />,
-    value: '',
+    value: 'feed',
     label: 'лента',
   },
   {

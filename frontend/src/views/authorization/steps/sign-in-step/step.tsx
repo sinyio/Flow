@@ -38,7 +38,7 @@ export const SignInStep = () => {
     await login({ email: data.email, password: data.password }, axiosInstance)
       .then(response => {
         if ('userId' in response) {
-          router.push('/')
+          router.push('/feed')
         }
       })
       .catch((e: unknown) =>
