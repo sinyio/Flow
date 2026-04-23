@@ -11,7 +11,20 @@ export function useChatSocket() {
   const [newMessages, setNewMessages] = useState<TMessage[]>([])
 
   useEffect(() => {
-    const socket = io(`${process.env.NEXT_PUBLIC_API_HOST}/chat`, {
+    const apiHost = process.env.NEXT_PUBLIC_API_HOST ?? ''
+    let wsOrigin = apiHost
+    let socketPath = '/socket.io'
+
+    try {
+      const url = new URL(apiHost)
+      wsOrigin = url.origin
+      if (url.pathname !== '/') {
+        socketPath = `${url.pathname.replace(/\/$/, '')}/socket.io`
+      }
+    } catch {}
+
+    const socket = io(`${wsOrigin}/chat`, {
+      path: socketPath,
       withCredentials: true,
     })
 

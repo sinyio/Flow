@@ -124,7 +124,7 @@ export function PhoneSection() {
                 className={styles.slide}
                 style={{ opacity: i === 0 ? 1 : 0 }}
               >
-                <Text variant="subheader-2" className={styles.label}>{slide.label}</Text>
+                <Text variant="header-1" className={styles.label}>{slide.label}</Text>
                 <Text variant="display-3" as="h2">{slide.title}</Text>
                 <Text variant="body-3" className={styles.body}>{slide.body}</Text>
                 <Link href={slide.href} className={styles.btn}>
