@@ -32,7 +32,7 @@ export const PostCard = ({ post }: IPostCardProps) => {
       <Card className={styles.container}>
         {post.image && (
           <div className={styles.imageWrapper}>
-            <Image fill alt="" src={post.image} className={styles.image} />
+            <Image fill alt="" src={post.image + (post.updatedAt ? `?v=${new Date(post.updatedAt).getTime()}` : '')} className={styles.image} />
           </div>
         )}
         <div className={styles.body}>

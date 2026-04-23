@@ -1,0 +1,31 @@
+.card {
+  position: relative;
+  border-radius: 32px;
+  overflow: hidden;
+  width: 455px;
+  height: 400px;
+}
+
+.image {
+  object-fit: cover;
+  object-position: center;
+}
+
+.textBlock {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 28px 28px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 12px;
+  z-index: 1;
+}
+
+.description {
+  color: rgba(0, 0, 0, 0.55);
+  max-width: 330px;
+  text-align: left;
+}

@@ -1,0 +1,103 @@
+.wrapper {
+  height: 400vh;
+  position: relative;
+}
+
+.inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: left;
+}
+
+.card {
+  background: #c6dbae;
+  border-radius: 32px;
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  height: 480px;
+  display: flex;
+  align-items: stretch;
+  overflow: visible;
+  position: relative;
+  padding-left: 155px;
+  gap: 115px;
+}
+
+.phoneCol {
+  position: relative;
+  flex-shrink: 0;
+  width: 320px;
+  overflow: visible;
+}
+
+.phoneWrap {
+  position: absolute;
+  bottom: -65px;
+  left: 0;
+  right: 0;
+  height: 620px;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.phoneWrap.phoneActive {
+  opacity: 1;
+}
+
+.phoneImg {
+  object-fit: contain;
+  object-position: center bottom;
+}
+
+.contentCol {
+  flex: 1;
+  max-width: 455px;
+  position: relative;
+  overflow: hidden;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 24px;
+  padding-block: 40px;
+  will-change: transform, opacity;
+}
+
+.label {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.body {
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.btn {
+  display: flex;
+  align-self: flex-start;
+  align-items: center;
+  justify-content: center;
+  background: #1a1a1a;
+  color: #fff;
+  border-radius: 40px;
+  padding: 14px 32px;
+  text-decoration: none;
+  width: 100%;
+  max-width: 370px;
+  transition: opacity 0.15s;
+}
+
+.btn:hover {
+  opacity: 0.85;
+}
