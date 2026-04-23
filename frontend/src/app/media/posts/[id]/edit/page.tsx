@@ -83,7 +83,9 @@ export default function EditPostPage({ params }: EditPostPageProps) {
         }
 
         reset({ title: postData.title, content: normalizeContent(postData.content) ?? "" });
-        setExistingImage(postData.image);
+        setExistingImage(postData.image
+          ? postData.image + (postData.updatedAt ? `?v=${new Date(postData.updatedAt).getTime()}` : "")
+          : null);
       })
       .catch(() => {
         if (!cancelled) router.replace("/media");
