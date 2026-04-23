@@ -7,5 +7,5 @@ export const buildSearchUrl = (params: Record<string, string | number | boolean 
   })
   const q = sp.toString()
 
-  return q ? `/?${q}` : '/'
+  return q ? `/feed?${q}` : '/feed'
 }

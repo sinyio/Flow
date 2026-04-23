@@ -119,7 +119,7 @@ export default function PostDetailPage({ params }: PostDetailPageProps) {
   const [post, setPost] = useState<TPost | null>(null);
   const [comments, setComments] = useState<TMediaComment[]>([]);
   const [loading, setLoading] = useState(true);
-  const [commentsLoading, setCommentsLoading] = useState(false);
+  const [, setCommentsLoading] = useState(false);
   const [currentUserId, setCurrentUserId] = useState<string | undefined>();
   const [replyTo, setReplyTo] = useState<string | undefined>();
   const [replyToCommentId, setReplyToCommentId] = useState<
@@ -375,7 +375,7 @@ export default function PostDetailPage({ params }: PostDetailPageProps) {
     <>
       {post.image && (
         <PostHeader
-          photoUrl={post.image}
+          photoUrl={post.image + (post.updatedAt ? `?v=${new Date(post.updatedAt).getTime()}` : '')}
           postId={post.id}
           canEdit={!isFlowPost && post.author?.id === currentUserId}
           onDeletePost={handleDeletePost}
