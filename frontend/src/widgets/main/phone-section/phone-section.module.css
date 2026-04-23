@@ -55,6 +55,7 @@
 .phoneImg {
   object-fit: contain;
   object-position: center bottom;
+  filter: drop-shadow(-22px 8px 18px rgba(0, 0, 0, 0.25));
 }
 
 .contentCol {

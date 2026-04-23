@@ -92,8 +92,9 @@
 }
 
 .animatedText {
-  font-size: 48px;
-  line-height: 64px;
+  font-size: 48px !important;
+  line-height: 64px !important;
+  font-weight: 600 !important;;
 }
 
 .greyText {
