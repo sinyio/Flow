@@ -2,6 +2,7 @@ import {
   ConnectedSocket,
   MessageBody,
   OnGatewayConnection,
+  OnGatewayInit,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
@@ -29,9 +30,9 @@ type SocketWithSession = Socket & {
     credentials: true,
   },
 })
-export class ChatGateway implements OnGatewayConnection {
+export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
   @WebSocketServer()
-  server: Server
+  server!: Server
 
   private redisClient: RedisClientType | null = null
   private sessionMiddleware: any
@@ -44,9 +45,7 @@ export class ChatGateway implements OnGatewayConnection {
     this.cookieParserMiddleware = cookieParser(this.config.getOrThrow('COOKIES_SECRET'))
   }
 
-  private async ensureRedis() {
-    if (this.redisClient) return
-
+  public async afterInit(server: Server) {
     const redisClient: RedisClientType = createClient({
       socket: {
         host: this.config.getOrThrow('REDIS_HOST'),
@@ -77,7 +76,7 @@ export class ChatGateway implements OnGatewayConnection {
       }),
     })
 
-    this.server.use((socket: SocketWithSession, next) => {
+    server.use((socket: SocketWithSession, next) => {
       this.cookieParserMiddleware(socket.request as any, {} as any, (err: any) => {
         if (err) return next(err)
         this.sessionMiddleware(socket.request as any, {} as any, next)
@@ -86,8 +85,6 @@ export class ChatGateway implements OnGatewayConnection {
   }
 
   public async handleConnection(client: SocketWithSession) {
-    await this.ensureRedis()
-
     const userId = client.request.session?.userId
     if (!userId) {
       client.disconnect(true)
