@@ -39,20 +39,22 @@ const SearchState = ({ routes }: ISearchStateProps) => {
     [routes]
   )
 
-  const { control, handleSubmit } = useForm<THeroSearchValues>({
-    defaultValues: { routeKey: '', startDate: '', minPrice: '' },
+  const { control, handleSubmit, watch } = useForm<THeroSearchValues>({
+    defaultValues: { routeKey: '', startDate: '', endDate: '', minPrice: '' },
     mode: 'onChange',
     resolver: zodResolver(heroSearchSchema),
   })
 
+  const routeKey = watch('routeKey')
+
   const onSubmit = (values: THeroSearchValues) => {
-    const [fromCity, toCity] = values.routeKey.split('__')
+    const [fromCity, toCity] = (values.routeKey ?? '').split('__')
 
     if (!fromCity || !toCity) return
 
     const minPriceNum =
-      values.minPrice && !Number.isNaN(Number(values.minPrice))
-        ? Number(values.minPrice)
+      values.minPrice && !Number.isNaN(Number(values.minPrice.replace('₽', '')))
+        ? Number(values.minPrice.replace('₽', ''))
         : undefined
 
     router.push(
@@ -61,6 +63,7 @@ const SearchState = ({ routes }: ISearchStateProps) => {
         fromCity,
         toCity,
         startDate: values.startDate || undefined,
+        endDate: values.endDate || undefined,
         minPrice: minPriceNum,
       })
     )
@@ -84,8 +87,14 @@ const SearchState = ({ routes }: ISearchStateProps) => {
         <div className={styles.inputsRow}>
           <DatePickerField
             size="xl"
-            placeholder="Даты"
+            placeholder="От"
             controllerProps={{ control, name: 'startDate' }}
+          />
+
+          <DatePickerField
+            size="xl"
+            placeholder="До"
+            controllerProps={{ control, name: 'endDate' }}
           />
 
           <MoneyField
@@ -95,7 +104,7 @@ const SearchState = ({ routes }: ISearchStateProps) => {
           />
         </div>
 
-        <Button type="submit" view="action" size="xl">
+        <Button type="submit" view="action" size="xl" className={styles.searchButton} width={device === 'mobile' ? 'max' : 'auto'} disabled={!routeKey}>
           <Text variant="header-1">Найти</Text>
         </Button>
       </form>

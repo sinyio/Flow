@@ -51,7 +51,7 @@ export const FeedView = ({ routes, ads, settings }: IFeedViewProps) => (
     )}
 
     <PageContainer inner={{ className: styles.pageInner }}>
-      {settings ? <AdsState ads={ads} /> : <MainState routes={routes} />}
+      {settings ? <AdsState ads={ads} settings={settings} /> : <MainState routes={routes} />}
     </PageContainer>
   </>
 )

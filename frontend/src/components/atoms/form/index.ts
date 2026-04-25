@@ -1,4 +1,5 @@
 export * from './autocomplete-field/field'
+export * from './date-range-field/field'
 export * from './checkbox-field/field'
 export * from './date-picker-field/field'
 export * from './email-field/field'

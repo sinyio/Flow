@@ -17,7 +17,7 @@ const FeedPage = async ({ searchParams }: { searchParams: Promise<TGetAdsParams>
 
   if (settings) {
     const adsResponse = await loadApiResource<TGetAdsSuccessfullResponse>(
-      () => getAds(settings, serverAxios),
+      () => getAds({ ...settings, limit: 9 }, serverAxios),
       (data): data is TGetAdsSuccessfullResponse =>
         typeof data === 'object' &&
         data !== null &&

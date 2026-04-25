@@ -289,7 +289,7 @@ export class AdService {
           },
           include: { author: true, sender: true, recipient: true, courier: true },
           orderBy: { createdAt: 'desc' },
-          take: 2
+          take: 3
         })
 
         return {

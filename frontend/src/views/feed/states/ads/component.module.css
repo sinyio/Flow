@@ -1,3 +1,22 @@
+.empty {
+  display: flex;
+  justify-content: center;
+  padding: 64px 0;
+  width: 100%;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  width: 100%;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+}
+
 .grid {
   display: grid;
   grid-template-columns: 1fr;

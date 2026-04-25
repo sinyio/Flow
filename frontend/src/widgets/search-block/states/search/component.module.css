@@ -14,6 +14,12 @@
   gap: 16px;
 }
 
+.searchButton {
+  height: 40px;
+  display: flex;
+  align-items: center;
+}
+
 @media (min-width: 834px) {
   .searchGrid {
     grid-template-columns: 1fr 1fr;
@@ -40,8 +46,8 @@
   }
 
   .inputsRow > * {
-    flex: 0 0 160px;
-    max-width: 160px;
+    flex: 0 0 130px;
+    max-width: 130px;
   }
 
   .searchGrid > button {
