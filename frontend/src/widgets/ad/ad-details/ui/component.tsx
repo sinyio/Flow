@@ -11,6 +11,8 @@ import { getPackageType } from "@utils/get-package-type";
 import { Stats } from "@components/stats";
 import { PenIcon } from "@components/svgr/pen-icon/icon";
 
+import { AdParticipants } from "@widgets/ad/ad-participants";
+
 import styles from "./component.module.css";
 
 export interface IAdHeaderProps {
@@ -34,6 +36,8 @@ export const AdDetails = ({ ad }: IAdHeaderProps) => {
 
   return (
     <div className={styles.adDetails}>
+      <AdParticipants courier={ad.courier} recipient={ad.recipient} />
+
       <div className={styles.adDescriptionBlock}>
         <Text variant="display-1">Описание</Text>
         <Text

@@ -16,6 +16,8 @@ export type TUserSnippet = {
   fullName: string
   photo: string | null
   deletedAt?: string | null
+  courierRating?: number
+  customerRating?: number
 }
 
 export type TAd = {
