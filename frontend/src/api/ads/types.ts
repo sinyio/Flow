@@ -1,6 +1,6 @@
 export type TPackaging = 'PACKAGE' | 'BOX' | 'ENVELOPE' | 'FILM' | 'NO_PACKAGING' | 'OTHER'
 
-export type TRole = 'sender' | 'recipient' | 'viewer'
+export type TRole = 'sender' | 'recipient' | 'courier' | 'viewer'
 
 export type TStatus = 'ACTIVE' | 'FINISHED'
 

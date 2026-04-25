@@ -7,8 +7,6 @@ import { useState } from 'react'
 import { acceptRecipientInvite } from '@api/ads'
 import { useAxiosInstance } from '@api/use-axios-instance'
 
-import { PageContainer } from '@components/global/page-container'
-
 import styles from './view.module.css'
 
 export const InvitationView = ({ token }: { token: string }) => {
@@ -22,8 +20,12 @@ export const InvitationView = ({ token }: { token: string }) => {
     setError('')
     try {
       const { data } = await acceptRecipientInvite(token, axiosInstance)
-      if ('adId' in data) {
-        router.push(`/ads/${data.adId}`)
+      if ('adId' in data && data.adId) {
+        router.replace(`/ads/${data.adId}`)
+        return
+      }
+      if ('message' in data) {
+        setError(data.message)
       }
     } catch (e: any) {
       setError(e?.response?.data?.message ?? 'Произошла ошибка')
@@ -33,7 +35,7 @@ export const InvitationView = ({ token }: { token: string }) => {
   }
 
   return (
-    <PageContainer>
+    <div className={styles.screen}>
       <div className={styles.wrapper}>
         <Text variant="display-2">Приглашение получателя</Text>
         <Text variant="body-3" color="secondary">
@@ -50,6 +52,6 @@ export const InvitationView = ({ token }: { token: string }) => {
           <Text variant="header-1">Принять приглашение</Text>
         </Button>
       </div>
-    </PageContainer>
+    </div>
   )
 }

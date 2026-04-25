@@ -36,12 +36,16 @@ export const AdDetails = ({ ad }: IAdHeaderProps) => {
 
   return (
     <div className={styles.adDetails}>
-      <AdParticipants
-        courier={ad.courier}
-        recipient={ad.recipient}
-        adId={ad.id}
-        canInvite={ad.userState.canEdit}
-      />
+      {(ad.userState.canEdit ||
+        ad.userState.role === 'courier' ||
+        ad.userState.role === 'recipient') && (
+        <AdParticipants
+          courier={ad.courier}
+          recipient={ad.recipient}
+          adId={ad.id}
+          canInvite={ad.userState.canEdit}
+        />
+      )}
 
       <div className={styles.adDescriptionBlock}>
         <Text variant="display-1">Описание</Text>

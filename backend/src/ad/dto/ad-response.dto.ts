@@ -128,7 +128,7 @@ export const getAdResponse = (ad: AdWithUsers, userId?: string) => ({
     height: ad.height,
     userState: {
         canEdit: ad.authorId === userId,
-        role: ad.senderId === userId ? 'sender' : ad.recipientId === userId ? 'recipient' : 'viewer',
+        role: ad.senderId === userId ? 'sender' : ad.recipientId === userId ? 'recipient' : ad.courierId === userId ? 'courier' : 'viewer',
         responseCount: ad._count?.responses ?? 0,
     },
     author: getUserResponse(ad.author),
