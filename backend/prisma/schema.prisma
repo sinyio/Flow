@@ -73,6 +73,7 @@ model Token {
 enum TokenType {
   VERIFICATION
   PASSWORD_RESET
+  RECIPIENT_INVITE
 }
 
 model Ad {

@@ -11,6 +11,7 @@ import { PaginatedResponse } from '../common/types'
 import { filterEmptyValues, getBoolFromString, getStatusOk } from '../common/helpers'
 import { type Request } from 'express'
 import { nanoid } from 'nanoid'
+import { v4 as uuidv4 } from 'uuid'
 import { S3Service } from '../s3/s3.service'
 import { ConfigService } from '@nestjs/config'
 import sharp from 'sharp'
@@ -348,6 +349,94 @@ export class AdService {
         ],
         skipDuplicates: true,
       })
+    })
+
+    return getStatusOk()
+  }
+
+  public async removeCourier(req: Request, adId: string) {
+    const userId = req.session.userId
+    if (!userId) throw new UnauthorizedException('Сессия не найдена')
+
+    const ad = await this.prisma.ad.findUnique({ where: { id: adId } })
+    if (!ad) throw new NotFoundException('Объявление не найдено')
+    if (ad.authorId !== userId) throw new ForbiddenException('Только автор может снять исполнителя')
+    if (!ad.courierId) throw new BadRequestException('Исполнитель не назначен')
+
+    await this.prisma.$transaction(async (tx) => {
+      await tx.ad.update({ where: { id: adId }, data: { courierId: null, recipientId: null } })
+      await tx.adResponse.updateMany({
+        where: { adId, status: 'ACCEPTED' },
+        data: { status: 'REJECTED' },
+      })
+      await tx.token.deleteMany({ where: { email: adId, type: 'RECIPIENT_INVITE' as any } })
+    })
+
+    return getStatusOk()
+  }
+
+  public async removeRecipient(req: Request, adId: string) {
+    const userId = req.session.userId
+    if (!userId) throw new UnauthorizedException('Сессия не найдена')
+
+    const ad = await this.prisma.ad.findUnique({ where: { id: adId } })
+    if (!ad) throw new NotFoundException('Объявление не найдено')
+    if (ad.authorId !== userId) throw new ForbiddenException('Только автор может снять получателя')
+    if (!ad.recipientId) throw new BadRequestException('Получатель не назначен')
+
+    await this.prisma.ad.update({ where: { id: adId }, data: { recipientId: null } })
+
+    return getStatusOk()
+  }
+
+  public async generateRecipientInvite(req: Request, adId: string) {
+    const userId = req.session.userId
+    if (!userId) throw new UnauthorizedException('Сессия не найдена')
+
+    const ad = await this.prisma.ad.findUnique({ where: { id: adId } })
+    if (!ad) throw new NotFoundException('Объявление не найдено')
+    if (ad.authorId !== userId) throw new ForbiddenException('Только автор может создать приглашение')
+    if (!ad.courierId) throw new BadRequestException('Сначала назначьте исполнителя')
+
+    await this.prisma.token.deleteMany({
+      where: { email: adId, type: 'RECIPIENT_INVITE' as any },
+    })
+
+    const token = uuidv4()
+    await this.prisma.token.create({
+      data: {
+        email: adId,
+        token,
+        type: 'RECIPIENT_INVITE' as any,
+        expiresIn: new Date(Date.now() + 48 * 3600 * 1000),
+      },
+    })
+
+    return { token }
+  }
+
+  public async acceptRecipientInvite(req: Request, token: string) {
+    const userId = req.session.userId
+    if (!userId) throw new UnauthorizedException('Сессия не найдена')
+
+    const existingToken = await this.prisma.token.findFirst({
+      where: { token, type: 'RECIPIENT_INVITE' as any },
+    })
+
+    if (!existingToken) throw new NotFoundException('Приглашение не найдено')
+    if (new Date(existingToken.expiresIn) < new Date()) throw new BadRequestException('Срок приглашения истёк')
+
+    const adId = existingToken.email
+
+    const ad = await this.prisma.ad.findUnique({ where: { id: adId } })
+    if (!ad) throw new NotFoundException('Объявление не найдено')
+    if (ad.authorId === userId) throw new BadRequestException('Автор не может быть получателем')
+    if (ad.courierId === userId) throw new BadRequestException('Исполнитель не может быть получателем')
+    if (ad.recipientId) throw new BadRequestException('Получатель уже назначен')
+
+    await this.prisma.$transaction(async (tx) => {
+      await tx.ad.update({ where: { id: adId }, data: { recipientId: userId } })
+      await tx.token.delete({ where: { id: existingToken.id } })
     })
 
     return getStatusOk()

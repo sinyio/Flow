@@ -58,6 +58,46 @@ export class AdController {
   }
 
   @HttpCode(HttpStatus.OK)
+  @Delete(':id/courier')
+  @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Снять исполнителя с объявления' })
+  @ApiParam({ name: 'id', example: 'ad_123' })
+  @ApiResponse({ status: 200, schema: { example: getStatusOk() } })
+  public removeCourier(@Req() req: Request, @Param('id') id: string) {
+    return this.adService.removeCourier(req, id)
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Delete(':id/recipient')
+  @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Снять получателя с объявления' })
+  @ApiParam({ name: 'id', example: 'ad_123' })
+  @ApiResponse({ status: 200, schema: { example: getStatusOk() } })
+  public removeRecipient(@Req() req: Request, @Param('id') id: string) {
+    return this.adService.removeRecipient(req, id)
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('recipient-invite/:token')
+  @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Принять приглашение получателя по токену' })
+  @ApiParam({ name: 'token', description: 'Токен приглашения' })
+  @ApiResponse({ status: 200, schema: { example: getStatusOk() } })
+  public acceptRecipientInvite(@Req() req: Request, @Param('token') token: string) {
+    return this.adService.acceptRecipientInvite(req, token)
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post(':id/recipient-invite')
+  @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Создать токен приглашения получателя' })
+  @ApiParam({ name: 'id', example: 'ad_123', description: 'Id объявления' })
+  @ApiResponse({ status: 200, schema: { example: { token: 'uuid' } } })
+  public generateRecipientInvite(@Req() req: Request, @Param('id') id: string) {
+    return this.adService.generateRecipientInvite(req, id)
+  }
+
+  @HttpCode(HttpStatus.OK)
   @Post(':id/assign-courier')
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Назначить исполнителем курьера по отклику' })
