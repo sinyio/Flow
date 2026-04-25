@@ -40,6 +40,7 @@ export type TAd = {
   userState: {
     canEdit: boolean
     role: TRole
+    responseCount: number
   }
   author: TUserSnippet
   sender: TUserSnippet | null

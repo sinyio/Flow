@@ -11,6 +11,11 @@
   gap: 8px;
 }
 
+.editButton {
+  align-self: flex-start;
+  margin-top: 4px;
+}
+
 .statsContainer {
     width: fit-content !important;
 }

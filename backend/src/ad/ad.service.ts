@@ -27,7 +27,13 @@ export class AdService {
   public async findAdById(req: Request, id: string) {
     const ad = await this.prisma.ad.findUnique({
       where: { id },
-      include: { author: true, sender: true, recipient: true, courier: true },
+      include: {
+        author: true,
+        sender: true,
+        recipient: true,
+        courier: true,
+        _count: { select: { responses: true } },
+      },
     })
 
     const userId = req.session.userId

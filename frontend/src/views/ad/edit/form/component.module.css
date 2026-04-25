@@ -53,7 +53,6 @@
   padding: 8px 0;
 }
 
-
 .submitWrap {
   display: flex;
   justify-content: center;
@@ -68,4 +67,3 @@
     grid-template-columns: 1fr 1fr;
   }
 }
-

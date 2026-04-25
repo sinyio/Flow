@@ -1,6 +1,6 @@
 'use client'
 
-import type { TCreateAdFormValues } from './types'
+import type { TEditAdFormValues } from './types'
 import { Button, Switch, Text, useToaster } from '@gravity-ui/uikit'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { isAxiosError } from 'axios'
@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useForm, type SubmitHandler } from 'react-hook-form'
 
-import { createAd, getPopularRoutes, type TPackaging } from '@api/ads'
+import { updateAd, getPopularRoutes, type TPackaging, type TAd } from '@api/ads'
 import { useAxiosInstance } from '@api/use-axios-instance'
 
 import { normalizeApiMessage } from '@utils/session-not-found'
@@ -20,7 +20,7 @@ import { TextAreaField } from '@components/form/text-area-field/field'
 import { TextField } from '@components/form/text-field/field'
 
 import styles from './component.module.css'
-import { createAdSchema } from './validation-schema'
+import { editAdSchema } from './validation-schema'
 
 const packagingOptions: Array<{ value: TPackaging; content: string }> = [
   { value: 'BOX', content: 'Коробка' },
@@ -33,87 +33,95 @@ const packagingOptions: Array<{ value: TPackaging; content: string }> = [
 
 const toRouteKey = (fromCity: string, toCity: string) => `${fromCity}__${toCity}`
 
-export const CreateAdForm = () => {
+interface IEditAdFormProps {
+  ad: TAd
+}
+
+export const EditAdForm = ({ ad }: IEditAdFormProps) => {
   const axiosInstance = useAxiosInstance()
   const router = useRouter()
   const { add } = useToaster()
 
   const [routes, setRoutes] = useState<Array<{ value: string; content: string }>>([])
-  const [preview, setPreview] = useState<string | null>(null)
+  const [preview, setPreview] = useState<string | null>(ad.image)
 
-  const { control, handleSubmit, setValue, watch, formState } = useForm<TCreateAdFormValues>({
+  const { control, handleSubmit, setValue, watch, formState } = useForm<TEditAdFormValues>({
     defaultValues: {
-      routeKey: '',
-      startDate: '',
-      endDate: '',
-      title: '',
-      role: 'sender',
-      isDocument: false,
-      isFragile: true,
-      packaging: '',
-      weight: '',
-      length: '',
-      width: '',
-      height: '',
-      price: '',
-      description: '',
+      routeKey: toRouteKey(ad.fromCity, ad.toCity),
+      startDate: ad.startDate,
+      endDate: ad.endDate,
+      title: ad.title,
+      role: ad.userState.role === 'recipient' ? 'recipient' : 'sender',
+      isDocument: ad.isDocument,
+      isFragile: ad.isFragile,
+      packaging: ad.packaging,
+      weight: String(ad.weight),
+      length: String(ad.length),
+      width: String(ad.width),
+      height: String(ad.height),
+      price: String(ad.price),
+      description: ad.description ?? '',
       image: null,
     },
     mode: 'onChange',
-    resolver: zodResolver(createAdSchema) as never,
+    resolver: zodResolver(editAdSchema) as never,
   })
 
   const role = watch('role')
 
-  const handleFileSelect = (file: File) => {
-    if (preview) URL.revokeObjectURL(preview)
-    setValue('image', file, { shouldValidate: true })
-    setPreview(URL.createObjectURL(file))
-  }
-
-  const handleRemove = () => {
-    if (preview) URL.revokeObjectURL(preview)
-    setValue('image', null, { shouldValidate: true })
-    setPreview(null)
-  }
-
   useEffect(() => {
     let alive = true
+    const currentRouteKey = toRouteKey(ad.fromCity, ad.toCity)
+    const currentRouteLabel = `${ad.fromCity} – ${ad.toCity}`
 
     getPopularRoutes(axiosInstance)
       .then(res => {
-        const data = res.data
-
         if (!alive) return
+        const data = res.data
+        if (!Array.isArray(data)) return
 
-        if (Array.isArray(data)) {
-          setRoutes(
-            data.map(r => ({
-              value: toRouteKey(r.fromCity, r.toCity),
-              content: `${r.fromCity} – ${r.toCity}`,
-            }))
-          )
+        const mappedRoutes = data.map(r => ({
+          value: toRouteKey(r.fromCity, r.toCity),
+          content: `${r.fromCity} – ${r.toCity}`,
+        }))
+
+        if (!mappedRoutes.find(r => r.value === currentRouteKey)) {
+          mappedRoutes.unshift({ value: currentRouteKey, content: currentRouteLabel })
         }
+
+        setRoutes(mappedRoutes)
       })
-      .catch(err => {
-        console.error('[CreateAdForm] getPopularRoutes failed:', err)
+      .catch(() => {
+        if (!alive) return
+        setRoutes([{ value: currentRouteKey, content: currentRouteLabel }])
       })
 
     return () => {
       alive = false
     }
-  }, [axiosInstance])
+  }, [axiosInstance, ad.fromCity, ad.toCity])
 
-  const onSubmit: SubmitHandler<TCreateAdFormValues> = async values => {
+  const handleFileSelect = (file: File) => {
+    if (preview?.startsWith('blob:')) URL.revokeObjectURL(preview)
+    setValue('image', file, { shouldValidate: true })
+    setPreview(URL.createObjectURL(file))
+  }
+
+  const handleRemove = () => {
+    if (preview?.startsWith('blob:')) URL.revokeObjectURL(preview)
+    setValue('image', null, { shouldValidate: true })
+    setPreview(null)
+  }
+
+  const onSubmit: SubmitHandler<TEditAdFormValues> = async values => {
     const [fromCity, toCity] = values.routeKey.split('__')
 
-    if (!fromCity || !toCity || !values.image) {
-      return
-    }
+    if (!fromCity || !toCity) return
 
     try {
-      const { data } = await createAd(
+      const { data } = await updateAd(
         {
+          id: ad.id,
           title: values.title.trim(),
           startDate: values.startDate,
           endDate: values.endDate,
@@ -128,8 +136,8 @@ export const CreateAdForm = () => {
           role: values.role,
           isFragile: values.isFragile,
           isDocument: values.isDocument,
-          description: values.description.trim() ? values.description.trim() : undefined,
-          image: values.image,
+          description: values.description?.trim() || undefined,
+          ...(values.image ? { image: values.image } : {}),
         },
         axiosInstance
       )
@@ -138,29 +146,26 @@ export const CreateAdForm = () => {
         add({
           isClosable: true,
           theme: 'success',
-          name: 'create_ad_ok',
+          name: 'edit_ad_ok',
           title: 'Готово',
-          content: 'Объявление создано.',
+          content: 'Объявление обновлено.',
         })
-        router.push('/')
+        router.push(`/ads/${ad.id}`)
 
         return
       }
 
-      const apiMessage = 'message' in data ? data.message : 'Не удалось создать объявление'
+      const apiMessage = 'message' in data ? data.message : 'Не удалось обновить объявление'
 
-      console.error('[CreateAdForm] API rejected:', data)
       add({
         isClosable: true,
         theme: 'warning',
-        name: 'create_ad_error',
+        name: 'edit_ad_error',
         title: 'Ошибка',
         content: apiMessage,
       })
     } catch (error: unknown) {
-      console.error('[CreateAdForm] createAd failed:', error)
-
-      let message = 'Произошла ошибка при создании объявления'
+      let message = 'Произошла ошибка при обновлении объявления'
 
       if (isAxiosError(error)) {
         const body = error.response?.data as { message?: unknown } | undefined
@@ -171,7 +176,7 @@ export const CreateAdForm = () => {
       add({
         isClosable: true,
         theme: 'warning',
-        name: 'create_ad_error',
+        name: 'edit_ad_error',
         title: 'Ошибка',
         content: message,
       })
@@ -337,7 +342,7 @@ export const CreateAdForm = () => {
           disabled={!formState.isValid || formState.isSubmitting}
           loading={formState.isSubmitting}
         >
-          Продолжить
+          Сохранить
         </Button>
       </div>
     </form>

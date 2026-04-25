@@ -11,6 +11,9 @@ export interface IAdHeaderProps {
   price: number
   authorName: string
   authorAvatarUrl?: string
+  adId?: string
+  canEdit?: boolean
+  responseCount?: number
 }
 
 export const AdHeader = ({
@@ -19,6 +22,9 @@ export const AdHeader = ({
   price,
   authorName,
   authorAvatarUrl,
+  adId,
+  canEdit,
+  responseCount,
 }: IAdHeaderProps) => (
   <section className={styles.container}>
     <Image priority fill alt="" src={imageUrl} className={styles.coverImage} />
@@ -30,6 +36,9 @@ export const AdHeader = ({
       price={price}
       authorName={authorName}
       authorAvatarUrl={authorAvatarUrl}
+      adId={adId}
+      canEdit={canEdit}
+      responseCount={responseCount}
       className={styles.adName}
     />
   </section>

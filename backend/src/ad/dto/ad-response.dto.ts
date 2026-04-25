@@ -4,7 +4,7 @@ import { ApiProperty } from "@nestjs/swagger"
 import { Ad, Packaging, User } from "@prisma/client"
 import { AdRoles } from "../types"
 
-type AdWithUsers = Ad & { author: User, sender: User | null, recipient: User | null, courier: User | null }
+type AdWithUsers = Ad & { author: User, sender: User | null, recipient: User | null, courier: User | null, _count?: { responses: number } }
 
 export class AdResponseDto {
 
@@ -65,12 +65,14 @@ export class AdResponseDto {
     @ApiProperty({
         example: {
             canEdit: false,
-            role: AdRoles.VIEWER
+            role: AdRoles.VIEWER,
+            responseCount: 0,
         }
     })
     userState: {
         canEdit: boolean
         role: AdRoles
+        responseCount: number
     }
 
     @ApiProperty({
@@ -127,6 +129,7 @@ export const getAdResponse = (ad: AdWithUsers, userId?: string) => ({
     userState: {
         canEdit: ad.authorId === userId,
         role: ad.senderId === userId ? 'sender' : ad.recipientId === userId ? 'recipient' : 'viewer',
+        responseCount: ad._count?.responses ?? 0,
     },
     author: getUserResponse(ad.author),
     sender: ad.sender ? getUserResponse(ad.sender) : null,

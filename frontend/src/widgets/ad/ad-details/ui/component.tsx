@@ -1,4 +1,7 @@
-import { Text } from '@gravity-ui/uikit'
+'use client'
+
+import { Button, Icon, Text } from '@gravity-ui/uikit'
+import { useRouter } from 'next/navigation'
 
 import { TAd } from '@api/ads'
 
@@ -6,6 +9,7 @@ import { getDate } from '@utils/get-date'
 import { getPackageType } from '@utils/get-package-type'
 
 import { Stats } from '@components/stats'
+import { PenIcon } from '@components/svgr/pen-icon/icon'
 
 import styles from './component.module.css'
 
@@ -14,6 +18,7 @@ export interface IAdHeaderProps {
 }
 
 export const AdDetails = ({ ad }: IAdHeaderProps) => {
+  const router = useRouter()
   const list = [
     { label: 'Вес', value: ad.weight },
     { label: 'Габариты', value: `${ad.height}x${ad.width}x${ad.length} см` },
@@ -31,6 +36,17 @@ export const AdDetails = ({ ad }: IAdHeaderProps) => {
         <Text variant="body-3" color="secondary" className={styles.adDescriptionText}>
           {ad.description}
         </Text>
+        {ad.userState.canEdit && (
+          <Button
+            view="normal"
+            size="l"
+            className={styles.editButton}
+            onClick={() => router.push(`/ads/${ad.id}/edit`)}
+          >
+            <Icon data={PenIcon} size={16} />
+            Редактировать
+          </Button>
+        )}
       </div>
 
       <Stats

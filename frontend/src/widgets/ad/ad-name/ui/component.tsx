@@ -13,6 +13,16 @@ export interface IAdNameProps extends HTMLAttributes<HTMLDivElement> {
   authorAvatarUrl?: string
   isBackdrop?: boolean
   adId?: string
+  canEdit?: boolean
+  responseCount?: number
+}
+
+function pluralResponse(n: number) {
+  if (n % 100 >= 11 && n % 100 <= 14) return 'откликов'
+  const r = n % 10
+  if (r === 1) return 'отклик'
+  if (r >= 2 && r <= 4) return 'отклика'
+  return 'откликов'
 }
 
 export const AdName = ({
@@ -22,6 +32,8 @@ export const AdName = ({
   authorAvatarUrl,
   isBackdrop = true,
   adId,
+  canEdit = false,
+  responseCount = 0,
   ...rest
 }: IAdNameProps) => {
   const router = useRouter()
@@ -50,15 +62,35 @@ export const AdName = ({
         </div>
       </div>
 
-      <Button
-        size="xl"
-        width="max"
-        view="action"
-        type="button"
-        onClick={() => router.push(adId ? `/chats?adId=${adId}` : '/chats')}
-      >
-        <Text variant="header-1">Написать в чат</Text>
-      </Button>
+      {canEdit ? (
+        <div className={styles.ownerActions}>
+          <Text variant="body-2" color="inverted-primary">
+            {responseCount === 0
+              ? 'Откликов пока нет'
+              : `${responseCount} ${pluralResponse(responseCount)}`}
+          </Text>
+          <Button
+            size="xl"
+            width="max"
+            view="action"
+            type="button"
+            disabled={responseCount === 0}
+            onClick={() => router.push(adId ? `/chats?adId=${adId}` : '/chats')}
+          >
+            Посмотреть чаты
+          </Button>
+        </div>
+      ) : (
+        <Button
+          size="xl"
+          width="max"
+          view="action"
+          type="button"
+          onClick={() => router.push(adId ? `/chats?adId=${adId}` : '/chats')}
+        >
+          <Text variant="header-1">Написать в чат</Text>
+        </Button>
+      )}
     </div>
   )
 }
