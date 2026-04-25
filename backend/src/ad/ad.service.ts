@@ -190,7 +190,7 @@ export class AdService {
       }
     })
 
-    return getStatusOk()
+    return { ...getStatusOk(), id: adId }
   }
 
   public async update(req: Request, id: string, ad: AdUpdateDto, file?) {

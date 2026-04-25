@@ -77,7 +77,7 @@ export const AdName = ({
             disabled={responseCount === 0}
             onClick={() => router.push(adId ? `/chats?adId=${adId}` : '/chats')}
           >
-            Посмотреть чаты
+            <Text variant='header-1'>Посмотреть чаты</Text>
           </Button>
         </div>
       ) : (

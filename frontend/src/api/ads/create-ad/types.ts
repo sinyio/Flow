@@ -21,4 +21,4 @@ export type TCreateAdRequest = {
   image: File
 }
 
-export type TCreateAdResponse = IStatusOk | IApiError
+export type TCreateAdResponse = (IStatusOk & { id: string }) | IApiError

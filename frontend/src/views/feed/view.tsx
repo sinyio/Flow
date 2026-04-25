@@ -1,8 +1,10 @@
 import Image from 'next/image'
+import { Text } from '@gravity-ui/uikit'
 
 import { TGetAdsParams, TGetAdsResponse, TGetPopularRoutesResponse } from '@api/ads'
 
 import { PageContainer } from '@components/global/page-container'
+import { Route } from '@components/atoms/route'
 
 import { HeroSearch } from '@widgets/search-block/component'
 
@@ -34,6 +36,19 @@ export const FeedView = ({ routes, ads, settings }: IFeedViewProps) => (
         </div>
       </div>
     </div>
+
+    {!settings && Array.isArray(routes) && routes.length > 0 && (
+      <div className={styles.popularStrip}>
+        <div className={styles.popularInner}>
+          <Text variant="display-3">Популярные</Text>
+          <div className={styles.popularRoutes}>
+            {routes.map(route => (
+              <Route key={route.fromCity + '__' + route.toCity} route={route} />
+            ))}
+          </div>
+        </div>
+      </div>
+    )}
 
     <PageContainer inner={{ className: styles.pageInner }}>
       {settings ? <AdsState ads={ads} /> : <MainState routes={routes} />}

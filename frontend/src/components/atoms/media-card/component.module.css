@@ -22,3 +22,33 @@
     bottom: 0;
     left: 0;
 }
+
+.title {
+    font-size: 20px;
+    line-height: 28px;
+}
+
+@media (min-width: 600px) {
+    .title {
+        font-size: 24px;
+        line-height: 32px;
+    }
+}
+
+@media (min-width: 1280px) {
+    .textBlock {
+        padding: 16px 30px 28px;
+    }
+}
+
+@media (min-width: 834px) {
+    .container {
+        height: 260px;
+    }
+}
+
+@media (min-width: 1280px) {
+    .container {
+        height: 272px;
+    }
+}

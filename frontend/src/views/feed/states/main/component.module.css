@@ -5,10 +5,16 @@
 }
 
 .adsContainer {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
   width: 100%;
-  flex-direction: column;
-  gap: 12px;
+}
+
+@media (min-width: 600px) {
+  .adsContainer {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 .section {

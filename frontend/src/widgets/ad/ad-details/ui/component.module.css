@@ -12,8 +12,13 @@
 }
 
 .editButton {
+  width: 100%;
   align-self: flex-start;
   margin-top: 4px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  line-height: 0;
 }
 
 .statsContainer {

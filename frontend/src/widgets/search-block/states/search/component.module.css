@@ -23,7 +23,29 @@
 
 @media (min-width: 1280px) {
   .searchGrid {
-    grid-template-columns: 1.2fr 1.2fr 1fr 1fr 1fr auto;
+    display: flex;
+    flex-direction: row;
     align-items: center;
+    gap: 8px;
+  }
+
+  .searchGrid > :first-child {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .inputsRow {
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .inputsRow > * {
+    flex: 0 0 160px;
+    max-width: 160px;
+  }
+
+  .searchGrid > button {
+    width: 200px;
+    flex-shrink: 0;
   }
 }

@@ -38,12 +38,26 @@
 .roleButton {
   border-radius: 0;
   height: 44px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.roleButton:first-child {
+  border-radius: 22px 0 0 22px !important;
+}
+
+.roleButton:last-child {
+  border-radius: 0 22px 22px 0 !important;
+}
+
+.roleButton:not(.roleButtonActive):hover {
+  background: var(--g-color-base-simple-hover) !important;
 }
 
 .roleButtonActive {
   background: var(--g-color-base-selection);
   box-shadow: inset 0 0 0 1px var(--g-color-line-brand);
-  color: var(--g-color-text-brand-heavy);
+  color: var(--g-color-text-brand-heavy) !important;
 }
 
 .toggles {

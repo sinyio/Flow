@@ -1,64 +1,68 @@
-'use client'
+"use client";
 
-import { Button, Icon, Text } from '@gravity-ui/uikit'
-import { useRouter } from 'next/navigation'
+import { Button, Icon, Text } from "@gravity-ui/uikit";
+import { useRouter } from "next/navigation";
 
-import { TAd } from '@api/ads'
+import { TAd } from "@api/ads";
 
-import { getDate } from '@utils/get-date'
-import { getPackageType } from '@utils/get-package-type'
+import { getDate } from "@utils/get-date";
+import { getPackageType } from "@utils/get-package-type";
 
-import { Stats } from '@components/stats'
-import { PenIcon } from '@components/svgr/pen-icon/icon'
+import { Stats } from "@components/stats";
+import { PenIcon } from "@components/svgr/pen-icon/icon";
 
-import styles from './component.module.css'
+import styles from "./component.module.css";
 
 export interface IAdHeaderProps {
-  ad: TAd
+  ad: TAd;
 }
 
 export const AdDetails = ({ ad }: IAdHeaderProps) => {
-  const router = useRouter()
+  const router = useRouter();
   const list = [
-    { label: 'Вес', value: ad.weight },
-    { label: 'Габариты', value: `${ad.height}x${ad.width}x${ad.length} см` },
-    { label: 'Упаковка', value: getPackageType(ad.packaging) },
-    { label: 'Хрупкое', value: ad.isFragile ? 'Да' : 'Нет' },
-    { label: 'Документы', value: ad.isDocument ? 'Да' : 'Нет' },
-  ]
+    { label: "Вес", value: ad.weight },
+    { label: "Габариты", value: `${ad.height}x${ad.width}x${ad.length} см` },
+    { label: "Упаковка", value: getPackageType(ad.packaging) },
+    { label: "Хрупкое", value: ad.isFragile ? "Да" : "Нет" },
+    { label: "Документы", value: ad.isDocument ? "Да" : "Нет" },
+  ];
 
-  const stats = [`${ad.fromCity} - ${ad.toCity}`, `${getDate(ad.endDate, 'before')}`]
+  const stats = [
+    `${ad.fromCity} - ${ad.toCity}`,
+    `${getDate(ad.endDate, "before")}`,
+  ];
 
   return (
     <div className={styles.adDetails}>
       <div className={styles.adDescriptionBlock}>
         <Text variant="display-1">Описание</Text>
-        <Text variant="body-3" color="secondary" className={styles.adDescriptionText}>
+        <Text
+          variant="body-3"
+          color="secondary"
+          className={styles.adDescriptionText}
+        >
           {ad.description}
         </Text>
-        {ad.userState.canEdit && (
-          <Button
-            view="normal"
-            size="l"
-            className={styles.editButton}
-            onClick={() => router.push(`/ads/${ad.id}/edit`)}
-          >
-            <Icon data={PenIcon} size={16} />
-            Редактировать
-          </Button>
-        )}
       </div>
 
       <Stats
         stats={stats}
-        labelProps={{ size: 'm', theme: 'normal', className: styles.statsContainer }}
+        labelProps={{
+          size: "m",
+          theme: "normal",
+          className: styles.statsContainer,
+        }}
         textProps={{ className: styles.statsChip }}
       />
 
       <div className={styles.adMetaGrid}>
-        {list.map(item => (
+        {list.map((item) => (
           <div key={item.label} className={styles.adMetaRow}>
-            <Text variant="body-2" color="secondary" className={styles.adMetaLabel}>
+            <Text
+              variant="body-2"
+              color="secondary"
+              className={styles.adMetaLabel}
+            >
               {item.label}
             </Text>
             <div className={styles.dashedLine} />
@@ -68,6 +72,17 @@ export const AdDetails = ({ ad }: IAdHeaderProps) => {
           </div>
         ))}
       </div>
+      {ad.userState.canEdit && (
+        <Button
+          view="normal"
+          size="l"
+          className={styles.editButton}
+          onClick={() => router.push(`/ads/${ad.id}/edit`)}
+        >
+          <Icon data={PenIcon} size={20} />
+          <Text variant="header-1">Редактировать</Text>
+        </Button>
+      )}
     </div>
-  )
-}
+  );
+};

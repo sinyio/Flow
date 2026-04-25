@@ -1,114 +1,118 @@
-'use client'
+"use client";
 
-import type { TCreateAdFormValues } from './types'
-import { Button, Switch, Text, useToaster } from '@gravity-ui/uikit'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { isAxiosError } from 'axios'
-import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
-import { useForm, type SubmitHandler } from 'react-hook-form'
+import type { TCreateAdFormValues } from "./types";
+import { Button, Switch, Text, useToaster } from "@gravity-ui/uikit";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { isAxiosError } from "axios";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useForm, type SubmitHandler } from "react-hook-form";
 
-import { createAd, getPopularRoutes, type TPackaging } from '@api/ads'
-import { useAxiosInstance } from '@api/use-axios-instance'
+import { createAd, getPopularRoutes, type TPackaging } from "@api/ads";
+import { useAxiosInstance } from "@api/use-axios-instance";
 
-import { normalizeApiMessage } from '@utils/session-not-found'
+import { normalizeApiMessage } from "@utils/session-not-found";
 
-import { DatePickerField } from '@components/form/date-picker-field/field'
-import { ImageUploadPreview } from '@components/form/image-upload'
-import { SelectField } from '@components/form/select-field/field'
-import { TextAreaField } from '@components/form/text-area-field/field'
-import { TextField } from '@components/form/text-field/field'
+import { DatePickerField } from "@components/form/date-picker-field/field";
+import { ImageUploadPreview } from "@components/form/image-upload";
+import { SelectField } from "@components/form/select-field/field";
+import { TextAreaField } from "@components/form/text-area-field/field";
+import { TextField } from "@components/form/text-field/field";
 
-import styles from './component.module.css'
-import { createAdSchema } from './validation-schema'
+import styles from "./component.module.css";
+import { createAdSchema } from "./validation-schema";
 
 const packagingOptions: Array<{ value: TPackaging; content: string }> = [
-  { value: 'BOX', content: 'Коробка' },
-  { value: 'PACKAGE', content: 'Пакет' },
-  { value: 'ENVELOPE', content: 'Конверт' },
-  { value: 'FILM', content: 'Плёнка' },
-  { value: 'NO_PACKAGING', content: 'Без упаковки' },
-  { value: 'OTHER', content: 'Другое' },
-]
+  { value: "BOX", content: "Коробка" },
+  { value: "PACKAGE", content: "Пакет" },
+  { value: "ENVELOPE", content: "Конверт" },
+  { value: "FILM", content: "Плёнка" },
+  { value: "NO_PACKAGING", content: "Без упаковки" },
+  { value: "OTHER", content: "Другое" },
+];
 
-const toRouteKey = (fromCity: string, toCity: string) => `${fromCity}__${toCity}`
+const toRouteKey = (fromCity: string, toCity: string) =>
+  `${fromCity}__${toCity}`;
 
 export const CreateAdForm = () => {
-  const axiosInstance = useAxiosInstance()
-  const router = useRouter()
-  const { add } = useToaster()
+  const axiosInstance = useAxiosInstance();
+  const router = useRouter();
+  const { add } = useToaster();
 
-  const [routes, setRoutes] = useState<Array<{ value: string; content: string }>>([])
-  const [preview, setPreview] = useState<string | null>(null)
+  const [routes, setRoutes] = useState<
+    Array<{ value: string; content: string }>
+  >([]);
+  const [preview, setPreview] = useState<string | null>(null);
 
-  const { control, handleSubmit, setValue, watch, formState } = useForm<TCreateAdFormValues>({
-    defaultValues: {
-      routeKey: '',
-      startDate: '',
-      endDate: '',
-      title: '',
-      role: 'sender',
-      isDocument: false,
-      isFragile: true,
-      packaging: '',
-      weight: '',
-      length: '',
-      width: '',
-      height: '',
-      price: '',
-      description: '',
-      image: null,
-    },
-    mode: 'onChange',
-    resolver: zodResolver(createAdSchema) as never,
-  })
+  const { control, handleSubmit, setValue, watch, formState } =
+    useForm<TCreateAdFormValues>({
+      defaultValues: {
+        routeKey: "",
+        startDate: "",
+        endDate: "",
+        title: "",
+        role: "sender",
+        isDocument: false,
+        isFragile: true,
+        packaging: "",
+        weight: "",
+        length: "",
+        width: "",
+        height: "",
+        price: "",
+        description: "",
+        image: null,
+      },
+      mode: "onChange",
+      resolver: zodResolver(createAdSchema) as never,
+    });
 
-  const role = watch('role')
+  const role = watch("role");
 
   const handleFileSelect = (file: File) => {
-    if (preview) URL.revokeObjectURL(preview)
-    setValue('image', file, { shouldValidate: true })
-    setPreview(URL.createObjectURL(file))
-  }
+    if (preview) URL.revokeObjectURL(preview);
+    setValue("image", file, { shouldValidate: true });
+    setPreview(URL.createObjectURL(file));
+  };
 
   const handleRemove = () => {
-    if (preview) URL.revokeObjectURL(preview)
-    setValue('image', null, { shouldValidate: true })
-    setPreview(null)
-  }
+    if (preview) URL.revokeObjectURL(preview);
+    setValue("image", null, { shouldValidate: true });
+    setPreview(null);
+  };
 
   useEffect(() => {
-    let alive = true
+    let alive = true;
 
     getPopularRoutes(axiosInstance)
-      .then(res => {
-        const data = res.data
+      .then((res) => {
+        const data = res.data;
 
-        if (!alive) return
+        if (!alive) return;
 
         if (Array.isArray(data)) {
           setRoutes(
-            data.map(r => ({
+            data.map((r) => ({
               value: toRouteKey(r.fromCity, r.toCity),
               content: `${r.fromCity} – ${r.toCity}`,
-            }))
-          )
+            })),
+          );
         }
       })
-      .catch(err => {
-        console.error('[CreateAdForm] getPopularRoutes failed:', err)
-      })
+      .catch((err) => {
+        console.error("[CreateAdForm] getPopularRoutes failed:", err);
+      });
 
     return () => {
-      alive = false
-    }
-  }, [axiosInstance])
+      alive = false;
+    };
+  }, [axiosInstance]);
 
-  const onSubmit: SubmitHandler<TCreateAdFormValues> = async values => {
-    const [fromCity, toCity] = values.routeKey.split('__')
+  const onSubmit: SubmitHandler<TCreateAdFormValues> = async (values) => {
+    const [fromCity, toCity] = values.routeKey.split("__");
 
     if (!fromCity || !toCity || !values.image) {
-      return
+      return;
     }
 
     try {
@@ -128,55 +132,59 @@ export const CreateAdForm = () => {
           role: values.role,
           isFragile: values.isFragile,
           isDocument: values.isDocument,
-          description: values.description.trim() ? values.description.trim() : undefined,
+          description: values.description.trim()
+            ? values.description.trim()
+            : undefined,
           image: values.image,
         },
-        axiosInstance
-      )
+        axiosInstance,
+      );
 
-      if ('status' in data && data.status === 'ok') {
+      if ("status" in data && data.status === "ok") {
         add({
           isClosable: true,
-          theme: 'success',
-          name: 'create_ad_ok',
-          title: 'Готово',
-          content: 'Объявление создано.',
-        })
-        router.push('/')
+          theme: "success",
+          name: "create_ad_ok",
+          title: "Готово",
+          content: "Объявление создано.",
+        });
+        router.push(`/ads/${data.id}`);
 
-        return
+        return;
       }
 
-      const apiMessage = 'message' in data ? data.message : 'Не удалось создать объявление'
+      const apiMessage =
+        "message" in data ? data.message : "Не удалось создать объявление";
 
-      console.error('[CreateAdForm] API rejected:', data)
+      console.error("[CreateAdForm] API rejected:", data);
       add({
         isClosable: true,
-        theme: 'warning',
-        name: 'create_ad_error',
-        title: 'Ошибка',
+        theme: "warning",
+        name: "create_ad_error",
+        title: "Ошибка",
         content: apiMessage,
-      })
+      });
     } catch (error: unknown) {
-      console.error('[CreateAdForm] createAd failed:', error)
+      console.error("[CreateAdForm] createAd failed:", error);
 
-      let message = 'Произошла ошибка при создании объявления'
+      let message = "Произошла ошибка при создании объявления";
 
       if (isAxiosError(error)) {
-        const body = error.response?.data as { message?: unknown } | undefined
+        const body = error.response?.data as { message?: unknown } | undefined;
 
-        message = normalizeApiMessage(body?.message) ?? error.message ?? message
+        message =
+          normalizeApiMessage(body?.message) ?? error.message ?? message;
       }
 
       add({
         isClosable: true,
-        theme: 'warning',
-        name: 'create_ad_error',
-        title: 'Ошибка',
+        theme: "warning",
+        name: "create_ad_error",
+        title: "Ошибка",
         content: message,
-      })
+      });
     }
-  }
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
@@ -190,19 +198,19 @@ export const CreateAdForm = () => {
             label="Направление:"
             placeholder="Выберите маршрут"
             options={routes}
-            controllerProps={{ control, name: 'routeKey' }}
+            controllerProps={{ control, name: "routeKey" }}
             width="max"
           />
 
           <div className={styles.datesRow}>
             <DatePickerField
               label="Дата начала:"
-              controllerProps={{ control, name: 'startDate' }}
+              controllerProps={{ control, name: "startDate" }}
               placeholder="ДД.ММ.ГГГГ"
             />
             <DatePickerField
               label="Дата окончания:"
-              controllerProps={{ control, name: 'endDate' }}
+              controllerProps={{ control, name: "endDate" }}
               placeholder="ДД.ММ.ГГГГ"
             />
           </div>
@@ -210,7 +218,7 @@ export const CreateAdForm = () => {
           <TextField
             label="Название:"
             placeholder="Например: кроссовки"
-            controllerProps={{ control, name: 'title' }}
+            controllerProps={{ control, name: "title" }}
           />
         </div>
       </div>
@@ -221,30 +229,26 @@ export const CreateAdForm = () => {
         </Text>
 
         <div className={styles.roleGroup} role="tablist" aria-label="Ваша роль">
-          <Button
-            type="button"
-            view="flat"
-            size="xl"
+          <div
             className={[
               styles.roleButton,
-              role === 'sender' ? styles.roleButtonActive : undefined,
-            ].join(' ')}
-            onClick={() => setValue('role', 'sender', { shouldValidate: true })}
+              role === "sender" ? styles.roleButtonActive : undefined,
+            ].join(" ")}
+            onClick={() => setValue("role", "sender", { shouldValidate: true })}
           >
-            Отправитель
-          </Button>
-          <Button
-            type="button"
-            view="flat"
-            size="xl"
+            <Text variant="body-2"> Отправитель</Text>
+          </div>
+          <div
             className={[
               styles.roleButton,
-              role === 'recipient' ? styles.roleButtonActive : undefined,
-            ].join(' ')}
-            onClick={() => setValue('role', 'recipient', { shouldValidate: true })}
+              role === "recipient" ? styles.roleButtonActive : undefined,
+            ].join(" ")}
+            onClick={() =>
+              setValue("role", "recipient", { shouldValidate: true })
+            }
           >
-            Получатель
-          </Button>
+            <Text variant="body-2">Получатель</Text>
+          </div>
         </div>
       </div>
 
@@ -257,14 +261,18 @@ export const CreateAdForm = () => {
           <Switch
             size="l"
             content="Доставка документов"
-            checked={watch('isDocument')}
-            onUpdate={next => setValue('isDocument', next, { shouldValidate: true })}
+            checked={watch("isDocument")}
+            onUpdate={(next) =>
+              setValue("isDocument", next, { shouldValidate: true })
+            }
           />
           <Switch
             size="l"
             content="Хрупкое"
-            checked={watch('isFragile')}
-            onUpdate={next => setValue('isFragile', next, { shouldValidate: true })}
+            checked={watch("isFragile")}
+            onUpdate={(next) =>
+              setValue("isFragile", next, { shouldValidate: true })
+            }
           />
         </div>
 
@@ -279,29 +287,29 @@ export const CreateAdForm = () => {
             label="Упаковка:"
             placeholder="Выберите вариант"
             options={packagingOptions}
-            controllerProps={{ control, name: 'packaging' }}
+            controllerProps={{ control, name: "packaging" }}
             width="max"
           />
 
           <TextField
             label="Вес посылки:"
             placeholder="кг"
-            controllerProps={{ control, name: 'weight' }}
+            controllerProps={{ control, name: "weight" }}
           />
           <TextField
             label="Длина:"
             placeholder="см"
-            controllerProps={{ control, name: 'length' }}
+            controllerProps={{ control, name: "length" }}
           />
           <TextField
             label="Ширина:"
             placeholder="см"
-            controllerProps={{ control, name: 'width' }}
+            controllerProps={{ control, name: "width" }}
           />
           <TextField
             label="Высота:"
             placeholder="см"
-            controllerProps={{ control, name: 'height' }}
+            controllerProps={{ control, name: "height" }}
           />
         </div>
       </div>
@@ -312,7 +320,11 @@ export const CreateAdForm = () => {
         </Text>
 
         <div className={styles.fields}>
-          <TextField label="" placeholder="₽" controllerProps={{ control, name: 'price' }} />
+          <TextField
+            label=""
+            placeholder="₽"
+            controllerProps={{ control, name: "price" }}
+          />
         </div>
       </div>
 
@@ -324,7 +336,7 @@ export const CreateAdForm = () => {
         <TextAreaField
           placeholder="Добавьте описание задания"
           minRows={4}
-          controllerProps={{ control, name: 'description' }}
+          controllerProps={{ control, name: "description" }}
         />
       </div>
 
@@ -341,5 +353,5 @@ export const CreateAdForm = () => {
         </Button>
       </div>
     </form>
-  )
-}
+  );
+};

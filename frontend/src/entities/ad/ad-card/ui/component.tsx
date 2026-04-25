@@ -1,17 +1,14 @@
 'use client'
 
-import { Button, Label, Text } from '@gravity-ui/uikit'
+import { Text } from '@gravity-ui/uikit'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 
 import type { TAd } from '@api/ads'
 
-import { getDate } from '@utils/get-date'
-
-import { Card } from '@components/templates/card'
+import { Card } from '@components/molecules/card'
 
 import styles from './component.module.css'
-import { statusesMap } from '../types'
 
 export interface IAdCardProps {
   ad: TAd
@@ -20,47 +17,32 @@ export interface IAdCardProps {
 export const AdCard = ({ ad }: IAdCardProps) => {
   const router = useRouter()
   const route = `${ad.fromCity} – ${ad.toCity}`
-  const date = `${getDate(ad.startDate)} – ${getDate(ad.endDate)}`
+
+  const startDate = new Date(ad.startDate).toLocaleDateString('ru-RU', {
+    day: 'numeric',
+    month: 'long',
+  })
+  const endDate = new Date(ad.endDate).toLocaleDateString('ru-RU', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  })
+  const date = `${startDate} – ${endDate}`
 
   return (
-    <Card className={styles.container}>
-      <Label size="xs" {...statusesMap[ad.status]}>
-        {statusesMap[ad.status].title}
-      </Label>
-
-      <div className={styles.content}>
-        <Image width={100} height={100} alt="" src={ad.image || '/profile/item.png'} />
-
-        <div className={styles.rightContainer}>
-          <div className={styles.priceAndRoute}>
-            <Text variant="display-1" className={styles.text}>
-              {ad.price} ₽
-            </Text>
-            <Text variant="subheader-3" className={styles.status}>
-              {route}
-            </Text>
-          </div>
-          <Text
-            variant="body-1"
-            style={{ color: 'var(--g-color-text-secondary)' }}
-            className={styles.status}
-          >
-            {date}
-          </Text>
-        </div>
+    <Card className={styles.container} onClick={() => router.push(`/ads/${ad.id}`)}>
+      <div className={styles.imageWrapper}>
+        <Image fill alt="" src={ad.image || '/profile/item.png'} className={styles.image} />
       </div>
 
-      {ad.userState.canEdit && statusesMap[ad.status]?.canEdit ? (
-        <Button
-          type="button"
-          view="action"
-          size="l"
-          style={{ width: '100%', marginTop: '8px' }}
-          onClick={() => router.push(`/ads/${ad.id}`)}
-        >
-          Редактировать
-        </Button>
-      ) : null}
+      <div className={styles.info}>
+        <Text variant="display-1">{ad.price} ₽</Text>
+        <Text variant="subheader-3">{route}</Text>
+        <Text variant="body-1" color="secondary">
+          {date}
+        </Text>
+      </div>
+
     </Card>
   )
 }

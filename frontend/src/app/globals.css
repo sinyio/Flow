@@ -99,6 +99,7 @@ body {
   --text-hint: rgba(0, 0, 0, 0.3);
 
   --g-color-text-brand-contrast: rgba(255, 255, 255, 1);
+  --g-color-text-brand-heavy: rgba(98, 139, 53, 1);
   --g-color-text-hint: var(--text-hint);
 }
 

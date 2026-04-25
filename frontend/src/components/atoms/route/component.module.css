@@ -7,7 +7,7 @@
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    background-color: var(--g-color-base-light);
+    background-color: var(--g-color-base-generic);
     display: flex;
     justify-content: center;
     align-items: center;
