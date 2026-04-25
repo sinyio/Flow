@@ -396,7 +396,6 @@ export class AdService {
     const ad = await this.prisma.ad.findUnique({ where: { id: adId } })
     if (!ad) throw new NotFoundException('Объявление не найдено')
     if (ad.authorId !== userId) throw new ForbiddenException('Только автор может создать приглашение')
-    if (!ad.courierId) throw new BadRequestException('Сначала назначьте исполнителя')
 
     await this.prisma.token.deleteMany({
       where: { email: adId, type: 'RECIPIENT_INVITE' as any },

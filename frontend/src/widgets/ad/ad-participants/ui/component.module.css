@@ -49,3 +49,36 @@
   align-items: center;
   gap: 8px;
 }
+
+.modal {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+  min-width: 300px;
+  max-width: 480px;
+}
+
+.linkRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--g-color-line-generic);
+  border-radius: var(--g-border-radius-m);
+  background: var(--g-color-base-generic);
+}
+
+.linkText {
+  flex: 1;
+  min-width: 0;
+  word-break: break-all;
+}
+
+.copyBtn {
+  flex-shrink: 0;
+  border-radius: 50% !important;
+  width: 32px !important;
+  height: 32px !important;
+  padding: 0 !important;
+}
