@@ -1,35 +1,35 @@
-'use client'
+"use client";
 
-import { Paperclip, Xmark } from '@gravity-ui/icons'
-import { Button } from '@gravity-ui/uikit'
-import Image from 'next/image'
-import { useRef } from 'react'
+import { Paperclip, Xmark } from "@gravity-ui/icons";
+import { Button, Text } from "@gravity-ui/uikit";
+import Image from "next/image";
+import { useRef } from "react";
 
-import styles from './component.module.css'
+import styles from "./component.module.css";
 
 interface IImageUploadPreviewProps {
-  preview: string | null
-  onFileSelect: (file: File) => void
-  onRemove: () => void
-  accept?: string
-  buttonText?: string
+  preview: string | null;
+  onFileSelect: (file: File) => void;
+  onRemove: () => void;
+  accept?: string;
+  buttonText?: string;
 }
 
 export const ImageUploadPreview = ({
   preview,
   onFileSelect,
   onRemove,
-  accept = 'image/*',
-  buttonText = 'Добавить фото',
+  accept = "image/*",
+  buttonText = "Добавить фото",
 }: IImageUploadPreviewProps) => {
-  const inputRef = useRef<HTMLInputElement | null>(null)
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-    onFileSelect(file)
-    e.target.value = ''
-  }
+    const file = e.target.files?.[0];
+    if (!file) return;
+    onFileSelect(file);
+    e.target.value = "";
+  };
 
   return (
     <>
@@ -42,9 +42,18 @@ export const ImageUploadPreview = ({
       />
       {preview ? (
         <div className={styles.previewWrapper}>
-          <Image src={preview} alt="Фото" fill className={styles.previewImage} />
-          <button type="button" className={styles.removeImage} onClick={onRemove}>
-            <Xmark width={16} height={16} />
+          <Image
+            src={preview}
+            alt="Фото"
+            fill
+            className={styles.previewImage}
+          />
+          <button
+            type="button"
+            className={styles.removeImage}
+            onClick={onRemove}
+          >
+            <Xmark width={20} height={20} />
           </button>
         </div>
       ) : (
@@ -55,10 +64,12 @@ export const ImageUploadPreview = ({
           className={styles.uploadButton}
           onClick={() => inputRef.current?.click()}
         >
-          <Paperclip width={16} height={16} />
-          {buttonText}
+          <div className={styles.uploadButtonInner}>
+            <Paperclip width={20} height={20} />
+            <Text variant="header-1">{buttonText}</Text>
+          </div>
         </Button>
       )}
     </>
-  )
-}
+  );
+};

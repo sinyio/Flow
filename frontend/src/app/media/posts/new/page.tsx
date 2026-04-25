@@ -1,13 +1,11 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { isAxiosError } from "axios";
 import { Button, Icon, Text, useToaster } from "@gravity-ui/uikit";
-import { Paperclip, Xmark } from "@gravity-ui/icons";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 import { createPost } from "@api/media/create-post";
@@ -15,6 +13,7 @@ import { useApiContext } from "@contexts/api-context";
 import { ArrowIcon } from "@components/svgr/arrow-icon/icon";
 import { TextField } from "@components/form/text-field/field";
 import { TextAreaField } from "@components/form/text-area-field/field";
+import { ImageUploadPreview } from "@components/form/image-upload";
 import { PageContainer } from "@components/global/page-container";
 
 import { normalizeContent } from "@utils/normalize-content";
@@ -33,7 +32,6 @@ export default function NewPostPage() {
   const router = useRouter();
   const { apiClient } = useApiContext();
   const { add } = useToaster();
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -44,15 +42,13 @@ export default function NewPostPage() {
     resolver: zodResolver(schema),
   });
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const handleFileSelect = (file: File) => {
+    if (preview) URL.revokeObjectURL(preview);
     setImage(file);
     setPreview(URL.createObjectURL(file));
-    e.target.value = "";
   };
 
-  const removeImage = () => {
+  const handleRemove = () => {
     setImage(null);
     if (preview) URL.revokeObjectURL(preview);
     setPreview(null);
@@ -142,32 +138,11 @@ export default function NewPostPage() {
 
           <div className={styles.section}>
             <Text variant="header-2">Добавьте обложку</Text>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              className={styles.hiddenInput}
-              onChange={handleFileChange}
+            <ImageUploadPreview
+              preview={preview}
+              onFileSelect={handleFileSelect}
+              onRemove={handleRemove}
             />
-            {preview ? (
-              <div className={styles.previewWrapper}>
-                <Image src={preview} alt="Обложка" fill className={styles.previewImage} />
-                <button type="button" className={styles.removeImage} onClick={removeImage}>
-                  <Xmark width={16} height={16} />
-                </button>
-              </div>
-            ) : (
-              <Button
-                type="button"
-                view="action"
-                size="xl"
-                className={styles.uploadButton}
-                onClick={() => fileInputRef.current?.click()}
-              >
-                <Paperclip width={16} height={16} />
-                Добавить фото
-              </Button>
-            )}
           </div>
 
           <Text variant="body-2" color="secondary">
