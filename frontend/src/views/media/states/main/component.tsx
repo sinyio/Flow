@@ -30,7 +30,7 @@ export const MainState = ({ flowPosts = [], userPosts = [] }: IMainStateProps) =
             <PostCard key={post.id} post={post} />
           ))}
         </div>
-        <Button view="action" size="xl" width={isFullWidth ? 'max' : 'auto'}>
+        <Button view="action" size="xl" width={isFullWidth ? 'max' : 'auto'} onClick={() => router.push('/media?filter=flow')}>
           <Text variant="header-1">Загрузить еще</Text>
         </Button>
       </section>
@@ -44,7 +44,7 @@ export const MainState = ({ flowPosts = [], userPosts = [] }: IMainStateProps) =
             <PostCard key={post.id} post={post} />
           ))}
         </div>
-        <Button view="action" size="xl" width={isFullWidth ? 'max' : 'auto'}>
+        <Button view="action" size="xl" width={isFullWidth ? 'max' : 'auto'} onClick={() => router.push('/media?filter=users')}>
           <Text variant="header-1">Загрузить еще</Text>
         </Button>
       </section>

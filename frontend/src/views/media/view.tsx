@@ -6,7 +6,7 @@ import { ArrowIcon } from '@components/svgr/arrow-icon/icon'
 
 import { Button, Icon, Text, TextProps } from "@gravity-ui/uikit";
 
-import { TPost, TGetPostsParams } from "@api/media";
+import { TPost, TGetPostsParams, TPaginationMeta } from "@api/media";
 
 import { PageContainer } from "@components/global/page-container";
 import { LiquidGlassBlock } from "@components/global/liquid-glass-block";
@@ -23,6 +23,7 @@ export interface IMediaViewProps {
   flowPosts?: TPost[];
   userPosts?: TPost[];
   searchPosts?: TPost[];
+  searchMeta?: TPaginationMeta;
   settings?: TGetPostsParams;
 }
 
@@ -30,6 +31,7 @@ export const MediaView = ({
   flowPosts,
   userPosts,
   searchPosts,
+  searchMeta,
   settings,
 }: IMediaViewProps) => {
   const { device } = useResponsive();
@@ -77,7 +79,7 @@ export const MediaView = ({
 
       <PageContainer inner={{ className: styles.pageInner }}>
         {settings ? (
-          <PostsState posts={searchPosts} />
+          <PostsState posts={searchPosts} meta={searchMeta} filter={settings.filter} sort={settings.sort} search={settings.search} />
         ) : (
           <MainState flowPosts={flowPosts} userPosts={userPosts} />
         )}

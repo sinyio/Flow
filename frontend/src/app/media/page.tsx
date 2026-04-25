@@ -13,7 +13,7 @@ const MediaPage = async ({ searchParams }: { searchParams: Promise<TGetPostsPara
   const params = await searchParams
   const serverAxios = await getServerAxiosInstance()
 
-  const hasSearch = Boolean(params.search || params.sort)
+  const hasSearch = Boolean(params.search || params.sort || (params.filter && params.filter !== 'all'))
 
   if (hasSearch) {
     const result = await loadApiResource(
@@ -24,6 +24,7 @@ const MediaPage = async ({ searchParams }: { searchParams: Promise<TGetPostsPara
     return (
       <MediaView
         searchPosts={result.ok ? result.data.data : []}
+        searchMeta={result.ok ? result.data.meta : undefined}
         settings={params}
       />
     )
