@@ -1,7 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { Button, DropdownMenu, Icon, Text, useToaster } from "@gravity-ui/uikit";
+import {
+  Button,
+  DropdownMenu,
+  Icon,
+  Text,
+  useToaster,
+} from "@gravity-ui/uikit";
 import { useRouter } from "next/navigation";
 import { Pencil, TrashBin } from "@gravity-ui/icons";
 
@@ -74,6 +80,7 @@ export const Header = ({ postId, canEdit, onDeletePost }: HeaderProps) => {
           size="l"
           type="button"
           onClick={() => router.push("/media")}
+          className={styles.menuButton}
         >
           <Icon data={ArrowIcon} />
         </Button>
@@ -85,7 +92,12 @@ export const Header = ({ postId, canEdit, onDeletePost }: HeaderProps) => {
             style: { width: "200px" },
           }}
           renderSwitcher={(props) => (
-            <Button {...props} view="normal" size="l">
+            <Button
+              {...props}
+              view="normal"
+              size="l"
+              className={styles.menuButton}
+            >
               <Icon data={DotsIcon} />
             </Button>
           )}

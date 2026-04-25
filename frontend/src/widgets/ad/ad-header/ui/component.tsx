@@ -14,6 +14,7 @@ export interface IAdHeaderProps {
   adId?: string
   canEdit?: boolean
   responseCount?: number
+  onDeleteAd?: () => void
 }
 
 export const AdHeader = ({
@@ -25,11 +26,12 @@ export const AdHeader = ({
   adId,
   canEdit,
   responseCount,
+  onDeleteAd,
 }: IAdHeaderProps) => (
   <section className={styles.container}>
     <Image priority fill alt="" src={imageUrl} className={styles.coverImage} />
 
-    <Header />
+    <Header canEdit={canEdit} adId={adId} onDeleteAd={onDeleteAd} />
 
     <AdName
       title={title}

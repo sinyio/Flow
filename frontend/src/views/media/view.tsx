@@ -58,7 +58,7 @@ export const MediaView = ({
             aria-hidden="true"
           />
           <LiquidGlassBlock className={styles.heroCard}>
-            {device === "mobile" && (
+            {/* {device === "mobile" && (
               <Button
                 view="normal"
                 size="l"
@@ -67,7 +67,7 @@ export const MediaView = ({
               >
                 <Icon data={ArrowIcon} size={20} />
               </Button>
-            )}
+            )} */}
             <Text variant={headerText} className={styles.heroTitle} as="h1">
               Медиа флоу
             </Text>
