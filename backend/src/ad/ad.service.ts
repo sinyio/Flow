@@ -438,7 +438,7 @@ export class AdService {
       await tx.token.delete({ where: { id: existingToken.id } })
     })
 
-    return getStatusOk()
+    return { ...getStatusOk(), adId }
   }
 
   public async assignCourier(req: Request, adId: string, courierId: string) {
