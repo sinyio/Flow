@@ -278,4 +278,18 @@ export class AdController {
   public respondToAd(@Req() req: Request, @Param('id') id: string) {
     return this.adService.respondToAd(req, id)
   }
+
+  @HttpCode(HttpStatus.OK)
+  @Patch(':id/complete')
+  @ApiOperation({ summary: 'Завершить объявление' })
+  @ApiParam({ name: 'id', example: 'ad_123' })
+  @ApiResponse({
+    status: 200, schema: {
+      example: getStatusOk(),
+    }
+  })
+  @UseGuards(CanEditAd)
+  public completeAd(@Req() req: Request, @Param('id') id: string) {
+    return this.adService.completeAd(req, id)
+  }
 }

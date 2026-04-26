@@ -364,6 +364,28 @@ export class AdService {
     return { ...getStatusOk(), chatId }
   }
 
+  async completeAd(req: Request, id: string) {
+    const userId = req.session.userId
+    if (!userId) throw new UnauthorizedException('Сессия не найдена')
+
+    const ad = await this.prisma.ad.findUnique({ where: { id } })
+    if (!ad) throw new NotFoundException('Объявление не найдено')
+    if (ad.status === 'COMPLETED') throw new BadRequestException('Объявление уже завершено')
+
+    await this.prisma.$transaction([
+      this.prisma.ad.update({
+        where: { id },
+        data: { status: 'COMPLETED' },
+      }),
+      this.prisma.adResponse.updateMany({
+        where: { adId: id, status: 'PENDING' },
+        data: { status: 'CANCELED' },
+      }),
+    ])
+
+    return getStatusOk()
+  }
+
   public async removeCourier(req: Request, adId: string) {
     const userId = req.session.userId
     if (!userId) throw new UnauthorizedException('Сессия не найдена')
