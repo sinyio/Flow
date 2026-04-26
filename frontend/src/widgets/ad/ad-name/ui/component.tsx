@@ -15,6 +15,10 @@ export interface IAdNameProps extends HTMLAttributes<HTMLDivElement> {
   adId?: string
   canEdit?: boolean
   responseCount?: number
+  hasResponded?: boolean
+  chatId?: string | null
+  onRespond?: () => void
+  responding?: boolean
 }
 
 function pluralResponse(n: number) {
@@ -34,6 +38,10 @@ export const AdName = ({
   adId,
   canEdit = false,
   responseCount = 0,
+  hasResponded = false,
+  chatId,
+  onRespond,
+  responding = false,
   ...rest
 }: IAdNameProps) => {
   const router = useRouter()
@@ -80,15 +88,26 @@ export const AdName = ({
             <Text variant='header-1'>Посмотреть чаты</Text>
           </Button>
         </div>
+      ) : hasResponded ? (
+        <Button
+          size="xl"
+          width="max"
+          view="action"
+          type="button"
+          onClick={() => router.push(chatId ? `/chats/${chatId}` : '/chats')}
+        >
+          <Text variant="header-1">Написать в чат</Text>
+        </Button>
       ) : (
         <Button
           size="xl"
           width="max"
           view="action"
           type="button"
-          onClick={() => router.push(adId ? `/chats?adId=${adId}` : '/chats')}
+          onClick={onRespond}
+          loading={responding}
         >
-          <Text variant="header-1">Написать в чат</Text>
+          <Text variant="header-1">Откликнуться</Text>
         </Button>
       )}
     </div>

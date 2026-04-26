@@ -44,6 +44,7 @@ export type TAd = {
     role: TRole
     responseCount: number
     hasResponded: boolean
+    chatId: string | null
   }
   author: TUserSnippet
   sender: TUserSnippet | null

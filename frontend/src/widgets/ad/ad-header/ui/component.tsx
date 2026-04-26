@@ -14,6 +14,10 @@ export interface IAdHeaderProps {
   adId?: string
   canEdit?: boolean
   responseCount?: number
+  hasResponded?: boolean
+  chatId?: string | null
+  onRespond?: () => void
+  responding?: boolean
   onDeleteAd?: () => void
 }
 
@@ -26,6 +30,10 @@ export const AdHeader = ({
   adId,
   canEdit,
   responseCount,
+  hasResponded,
+  chatId,
+  onRespond,
+  responding,
   onDeleteAd,
 }: IAdHeaderProps) => (
   <section className={styles.container}>
@@ -41,6 +49,10 @@ export const AdHeader = ({
       adId={adId}
       canEdit={canEdit}
       responseCount={responseCount}
+      hasResponded={hasResponded}
+      chatId={chatId}
+      onRespond={onRespond}
+      responding={responding}
       className={styles.adName}
     />
   </section>
