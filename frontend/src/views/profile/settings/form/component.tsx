@@ -1,18 +1,20 @@
-import { useState } from 'react'
+import { dateTimeParse } from '@gravity-ui/date-utils'
 import { Button, Text, useToaster } from '@gravity-ui/uikit'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { isAxiosError } from 'axios'
-import { useForm, type SubmitHandler } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+import { useForm, type SubmitHandler } from 'react-hook-form'
+
+import { Modal } from 'src/ui-kit'
 
 import { logout } from '@api/auth'
 import { useAxiosInstance } from '@api/use-axios-instance'
-import { emitAuthChange } from '@utils/auth-events'
-import { Modal } from 'src/ui-kit'
 import { deleteUser } from '@api/user/delete-user'
 import { TUser } from '@api/user/get-user'
-import { updateUser } from '@api/user/update-user'
+import { updateUser, type TUpdateUserRequest } from '@api/user/update-user'
 
+import { emitAuthChange } from '@utils/auth-events'
 import { normalizeApiMessage } from '@utils/session-not-found'
 
 import { EmailField } from '@components/form'
@@ -29,9 +31,24 @@ import { settingsSchema } from './validation-schema'
 
 export interface ISettingsFormProps {
   user: TUser
+  photo?: File | null
+  onPhotoSubmitted?: () => void
 }
 
-export const SettingsForm = ({ user }: ISettingsFormProps) => {
+const toIsoDateOrUndefined = (value: string): string | undefined => {
+  if (!value) return undefined
+
+  const parsed = dateTimeParse(value, { allowRelative: false })
+
+  if (!parsed?.isValid()) return undefined
+
+  return parsed.toDate().toISOString()
+}
+
+const emptyToUndefined = (value: string | undefined): string | undefined =>
+  value && value.length > 0 ? value : undefined
+
+export const SettingsForm = ({ user, photo, onPhotoSubmitted }: ISettingsFormProps) => {
   const { control, handleSubmit, formState } = useForm<TSettingsFormValues>({
     defaultValues: {
       firstName: user.firstName || '',
@@ -53,9 +70,19 @@ export const SettingsForm = ({ user }: ISettingsFormProps) => {
 
   const onSubmit: SubmitHandler<TSettingsFormValues> = async data => {
     try {
-      const { data: body } = await updateUser(data, axiosInstance)
+      const payload: TUpdateUserRequest = {
+        firstName: emptyToUndefined(data.firstName),
+        lastName: emptyToUndefined(data.lastName),
+        gender: emptyToUndefined(data.sex || undefined),
+        dateOfBirth: toIsoDateOrUndefined(data.dateOfBirth),
+        contacts: emptyToUndefined(data.contacts),
+        photo: photo ?? undefined,
+      }
+
+      const { data: body } = await updateUser(payload, axiosInstance)
 
       if ('status' in body && body.status === 'ok') {
+        onPhotoSubmitted?.()
         add({
           isClosable: true,
           theme: 'success',
@@ -101,8 +128,8 @@ export const SettingsForm = ({ user }: ISettingsFormProps) => {
   const handleLogout = () => {
     logout(axiosInstance)
       .then(() => {
-        emitAuthChange();
-        router.push('/');
+        emitAuthChange()
+        router.push('/')
       })
       .catch((error: unknown) => {
         console.error('[SettingsForm] logout failed:', error)
@@ -201,7 +228,12 @@ export const SettingsForm = ({ user }: ISettingsFormProps) => {
       <div className={styles.section}>
         <Text variant="header-2">Управление</Text>
         <div className={styles.managementButtons}>
-          <Button type="button" size="xl" onClick={() => setLogoutModalOpen(true)} className={styles.actionButton}>
+          <Button
+            type="button"
+            size="xl"
+            onClick={() => setLogoutModalOpen(true)}
+            className={styles.actionButton}
+          >
             Выйти
           </Button>
           <Button
@@ -221,7 +253,9 @@ export const SettingsForm = ({ user }: ISettingsFormProps) => {
           <Text variant="header-2">Выйти из аккаунта?</Text>
           <div className={styles.logoutModalActions}>
             <Button onClick={() => setLogoutModalOpen(false)}>Отмена</Button>
-            <Button view="action" onClick={handleLogout}>Выйти</Button>
+            <Button view="action" onClick={handleLogout}>
+              Выйти
+            </Button>
           </div>
         </div>
       </Modal>

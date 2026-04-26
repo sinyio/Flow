@@ -1,6 +1,7 @@
 'use client'
 
 import { Avatar, Button, Icon, Text } from '@gravity-ui/uikit'
+import { useEffect, useRef, useState } from 'react'
 
 import { TUser } from '@api/user/get-user'
 
@@ -19,6 +20,33 @@ export interface IProfileViewProps {
 const ProfileSettings = ({ user }: IProfileViewProps) => {
   const { device } = useResponsive()
 
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
+  const [photo, setPhoto] = useState<File | null>(null)
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (!photo) {
+      setPreviewUrl(null)
+
+      return
+    }
+
+    const url = URL.createObjectURL(photo)
+
+    setPreviewUrl(url)
+
+    return () => URL.revokeObjectURL(url)
+  }, [photo])
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+
+    if (file) setPhoto(file)
+    e.target.value = ''
+  }
+
+  const avatarUrl = previewUrl || user?.photo || '/profile/avatar.png'
+
   return (
     <>
       <div className={styles.gap} />
@@ -31,19 +59,27 @@ const ProfileSettings = ({ user }: IProfileViewProps) => {
           {device !== 'mobile' && <div className={styles.divider} />}
 
           <div className={styles.avatarWrap}>
-            <Avatar withImageBorder size="xl" imgUrl={user?.photo || '/profile/avatar.png'} />
+            <Avatar withImageBorder size="xl" imgUrl={avatarUrl} />
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className={styles.hiddenInput}
+              onChange={handleFileChange}
+            />
             <Button
               view="normal"
               size="l"
               className={styles.editAvatarButton}
               aria-label="Изменить фото профиля"
+              onClick={() => fileInputRef.current?.click()}
             >
               <Icon data={Pen2Icon} />
             </Button>
           </div>
         </div>
 
-        <SettingsForm user={user} />
+        <SettingsForm user={user} photo={photo} onPhotoSubmitted={() => setPhoto(null)} />
       </PageContainer>
     </>
   )

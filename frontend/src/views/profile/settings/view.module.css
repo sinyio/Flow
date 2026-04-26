@@ -40,6 +40,10 @@
   left: calc(50% + 34px);
 }
 
+.hiddenInput {
+  display: none;
+}
+
 @media (min-width: 834px) {
   .gap {
     height: 136px;
