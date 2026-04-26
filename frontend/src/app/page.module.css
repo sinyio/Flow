@@ -227,15 +227,11 @@
     margin-bottom: 24px;
   }
 
-  .heroImage, .footerImage {
-    filter: brightness(0.6)
-    
-  }
-
   .content {
     padding-top: 0;
     bottom: 10%;
     padding: 0 20px;
+    padding-bottom: 220px;
   }
 
   .heading {
