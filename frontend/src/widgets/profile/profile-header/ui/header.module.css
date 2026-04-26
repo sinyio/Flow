@@ -10,6 +10,10 @@
   overflow: hidden;
 }
 
+.menuButton {
+  z-index: 1000;
+}
+
 .deleteModal {
   display: flex;
   flex-direction: column;

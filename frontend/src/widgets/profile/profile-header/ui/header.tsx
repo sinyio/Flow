@@ -17,9 +17,10 @@ interface IHeaderProps {
   canEdit?: boolean
   adId?: string
   onDeleteAd?: () => void
+  className?: string
 }
 
-export const Header = ({ canEdit, adId, onDeleteAd }: IHeaderProps) => {
+export const Header = ({ canEdit, adId, onDeleteAd, className }: IHeaderProps) => {
   const router = useRouter()
   const { add } = useToaster()
   const [deleteModalOpen, setDeleteModalOpen] = useState(false)
@@ -68,15 +69,15 @@ export const Header = ({ canEdit, adId, onDeleteAd }: IHeaderProps) => {
 
   return (
     <>
-      <div className={styles.header}>
-        <Button view="normal" size="l" type="button" onClick={() => router.back()}>
+      <div className={`${styles.header} ${className ?? ''}`}>
+        <Button view="normal" size="l" type="button" onClick={() => router.back()} className={styles.menuButton}>
           <Icon data={ArrowIcon} />
         </Button>
         <DropdownMenu
           size="l"
           popupProps={{ placement: 'bottom-end', offset: 8, style: { width: '200px' } }}
           renderSwitcher={props => (
-            <Button {...props} view="normal" size="l">
+            <Button {...props} view="normal" size="l" className={styles.menuButton}>
               <Icon data={DotsIcon} />
             </Button>
           )}

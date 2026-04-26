@@ -19,6 +19,7 @@ export interface IAdNameProps extends HTMLAttributes<HTMLDivElement> {
   chatId?: string | null
   onRespond?: () => void
   responding?: boolean
+  hideActions?: boolean
 }
 
 function pluralResponse(n: number) {
@@ -42,6 +43,7 @@ export const AdName = ({
   chatId,
   onRespond,
   responding = false,
+  hideActions = false,
   ...rest
 }: IAdNameProps) => {
   const router = useRouter()
@@ -70,7 +72,7 @@ export const AdName = ({
         </div>
       </div>
 
-      {canEdit ? (
+      {!hideActions && (canEdit ? (
         <div className={styles.ownerActions}>
           <Text variant="body-2" color="inverted-primary">
             {responseCount === 0
@@ -109,7 +111,7 @@ export const AdName = ({
         >
           <Text variant="header-1">Откликнуться</Text>
         </Button>
-      )}
+      ))}
     </div>
   )
 }

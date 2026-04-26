@@ -1,7 +1,6 @@
 "use client";
 
-import { Button, Icon, Text } from "@gravity-ui/uikit";
-import { useRouter } from "next/navigation";
+import { Text } from "@gravity-ui/uikit";
 
 import { TAd } from "@api/ads";
 
@@ -9,7 +8,6 @@ import { getDate } from "@utils/get-date";
 import { getPackageType } from "@utils/get-package-type";
 
 import { Stats } from "@components/stats";
-import { PenIcon } from "@components/svgr/pen-icon/icon";
 
 import { AdParticipants } from "@widgets/ad/ad-participants";
 
@@ -20,7 +18,6 @@ export interface IAdHeaderProps {
 }
 
 export const AdDetails = ({ ad }: IAdHeaderProps) => {
-  const router = useRouter();
 
   const list = [
     { label: "Вес", value: ad.weight },
@@ -86,17 +83,6 @@ export const AdDetails = ({ ad }: IAdHeaderProps) => {
           </div>
         ))}
       </div>
-      {ad.userState.canEdit && (
-        <Button
-          view="normal"
-          size="l"
-          className={styles.editButton}
-          onClick={() => router.push(`/ads/${ad.id}/edit`)}
-        >
-          <Icon data={PenIcon} size={20} />
-          <Text variant="header-1">Редактировать</Text>
-        </Button>
-      )}
     </div>
   );
 };

@@ -1,17 +1,16 @@
 "use client";
 
 import type { TCreateAdFormValues } from "./types";
-import { Button, Switch, Text, useToaster } from "@gravity-ui/uikit";
+import { Button, Switch, Text } from "@gravity-ui/uikit";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { isAxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 
-import { createAd, getPopularRoutes, type TPackaging } from "@api/ads";
+import { getPopularRoutes } from "@api/ads";
 import { useAxiosInstance } from "@api/use-axios-instance";
 
-import { normalizeApiMessage } from "@utils/session-not-found";
+import { useCreateAdDraftStore } from "@utils/stores/create-ad-draft/store";
 
 import { DatePickerField } from "@components/form/date-picker-field/field";
 import { ImageUploadPreview } from "@components/form/image-upload";
@@ -37,16 +36,16 @@ const toRouteKey = (fromCity: string, toCity: string) =>
 export const CreateAdForm = () => {
   const axiosInstance = useAxiosInstance();
   const router = useRouter();
-  const { add } = useToaster();
+  const { save, values: storedValues, previewUrl: storedPreviewUrl } = useCreateAdDraftStore();
 
   const [routes, setRoutes] = useState<
     Array<{ value: string; content: string }>
   >([]);
-  const [preview, setPreview] = useState<string | null>(null);
+  const [preview, setPreview] = useState<string | null>(storedPreviewUrl);
 
   const { control, handleSubmit, setValue, watch, formState } =
     useForm<TCreateAdFormValues>({
-      defaultValues: {
+      defaultValues: storedValues ?? {
         routeKey: "",
         startDate: "",
         endDate: "",
@@ -108,82 +107,12 @@ export const CreateAdForm = () => {
     };
   }, [axiosInstance]);
 
-  const onSubmit: SubmitHandler<TCreateAdFormValues> = async (values) => {
+  const onSubmit: SubmitHandler<TCreateAdFormValues> = (values) => {
     const [fromCity, toCity] = values.routeKey.split("__");
+    if (!fromCity || !toCity || !values.image) return;
 
-    if (!fromCity || !toCity || !values.image) {
-      return;
-    }
-
-    try {
-      const { data } = await createAd(
-        {
-          title: values.title.trim(),
-          startDate: values.startDate,
-          endDate: values.endDate,
-          fromCity,
-          toCity,
-          weight: Number(values.weight),
-          length: Number(values.length),
-          width: Number(values.width),
-          height: Number(values.height),
-          price: Number(values.price),
-          packaging: values.packaging as TPackaging,
-          role: values.role,
-          isFragile: values.isFragile,
-          isDocument: values.isDocument,
-          description: values.description.trim()
-            ? values.description.trim()
-            : undefined,
-          image: values.image,
-        },
-        axiosInstance,
-      );
-
-      if ("status" in data && data.status === "ok") {
-        add({
-          isClosable: true,
-          theme: "success",
-          name: "create_ad_ok",
-          title: "Готово",
-          content: "Объявление создано.",
-        });
-        router.push(`/ads/${data.id}`);
-
-        return;
-      }
-
-      const apiMessage =
-        "message" in data ? data.message : "Не удалось создать объявление";
-
-      console.error("[CreateAdForm] API rejected:", data);
-      add({
-        isClosable: true,
-        theme: "warning",
-        name: "create_ad_error",
-        title: "Ошибка",
-        content: apiMessage,
-      });
-    } catch (error: unknown) {
-      console.error("[CreateAdForm] createAd failed:", error);
-
-      let message = "Произошла ошибка при создании объявления";
-
-      if (isAxiosError(error)) {
-        const body = error.response?.data as { message?: unknown } | undefined;
-
-        message =
-          normalizeApiMessage(body?.message) ?? error.message ?? message;
-      }
-
-      add({
-        isClosable: true,
-        theme: "warning",
-        name: "create_ad_error",
-        title: "Ошибка",
-        content: message,
-      });
-    }
+    save(values, preview);
+    router.push("/ads/preview");
   };
 
   return (

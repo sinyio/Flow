@@ -14,6 +14,7 @@ import { PageContainer } from '@components/global/page-container'
 
 import { AdHeader, AdName } from '@widgets/ad'
 import { AdDetails } from '@widgets/ad/ad-details'
+import { Header } from '@widgets/profile/profile-header'
 
 import styles from './view.module.css'
 
@@ -67,6 +68,7 @@ export const AdView = ({ ad }: IAdViewProps) => {
   return (
     <>
       <div className={styles.hero}>
+        <Header canEdit={ad.userState.canEdit} adId={ad.id} className={styles.heroHeader} />
         <div className={styles.heroInner}>
           <div className={styles.adName}>
             <AdName

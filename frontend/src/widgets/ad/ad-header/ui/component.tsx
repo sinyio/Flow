@@ -18,6 +18,8 @@ export interface IAdHeaderProps {
   chatId?: string | null
   onRespond?: () => void
   responding?: boolean
+  hideActions?: boolean
+  hideHeader?: boolean
   onDeleteAd?: () => void
 }
 
@@ -34,12 +36,14 @@ export const AdHeader = ({
   chatId,
   onRespond,
   responding,
+  hideActions,
+  hideHeader,
   onDeleteAd,
 }: IAdHeaderProps) => (
   <section className={styles.container}>
     <Image priority fill alt="" src={imageUrl} className={styles.coverImage} />
 
-    <Header canEdit={canEdit} adId={adId} onDeleteAd={onDeleteAd} />
+    {!hideHeader && <Header canEdit={canEdit} adId={adId} onDeleteAd={onDeleteAd} />}
 
     <AdName
       title={title}
@@ -53,6 +57,7 @@ export const AdHeader = ({
       chatId={chatId}
       onRespond={onRespond}
       responding={responding}
+      hideActions={hideActions}
       className={styles.adName}
     />
   </section>
