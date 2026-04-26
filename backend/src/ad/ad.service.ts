@@ -42,13 +42,14 @@ export class AdService {
       userId
         ? this.prisma.adResponse.findUnique({
             where: { adId_courierId: { adId: id, courierId: userId } },
+            include: { chat: true },
           })
         : null,
     ])
 
     if (!ad) throw new NotFoundException('Объявление не найдено')
 
-    return getAdResponse(ad, userId!, !!existingResponse)
+    return getAdResponse(ad, userId!, !!existingResponse, existingResponse?.chat?.id ?? null)
   }
 
   public async findAll(
@@ -323,7 +324,7 @@ export class AdService {
 
     if (ad.authorId === userId) throw new BadRequestException('Вы не можете ответить на свое объявление')
 
-    await this.prisma.$transaction(async (tx) => {
+    const { chatId } = await this.prisma.$transaction(async (tx) => {
       const response = await tx.adResponse.upsert({
         where: {
           adId_courierId: {
@@ -356,9 +357,11 @@ export class AdService {
         ],
         skipDuplicates: true,
       })
+
+      return { chatId: chat.id }
     })
 
-    return getStatusOk()
+    return { ...getStatusOk(), chatId }
   }
 
   public async removeCourier(req: Request, adId: string) {

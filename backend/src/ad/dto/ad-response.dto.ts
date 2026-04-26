@@ -75,6 +75,7 @@ export class AdResponseDto {
         role: AdRoles
         responseCount: number
         hasResponded: boolean
+        chatId: string | null
     }
 
     @ApiProperty({
@@ -109,7 +110,7 @@ export class AdPaginatedResponseDto {
     meta: PaginationMetaDto
 }
 
-export const getAdResponse = (ad: AdWithUsers, userId?: string, hasResponded = false) => ({
+export const getAdResponse = (ad: AdWithUsers, userId?: string, hasResponded = false, chatId: string | null = null) => ({
     id: ad.id,
     deletedAt: ad.deletedAt,
     title: ad.title,
@@ -133,6 +134,7 @@ export const getAdResponse = (ad: AdWithUsers, userId?: string, hasResponded = f
         role: ad.senderId === userId ? 'sender' : ad.recipientId === userId ? 'recipient' : ad.courierId === userId ? 'courier' : 'viewer',
         responseCount: ad._count?.responses ?? 0,
         hasResponded,
+        chatId,
     },
     author: getUserResponse(ad.author),
     sender: ad.sender ? getUserResponse(ad.sender) : null,
