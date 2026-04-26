@@ -26,22 +26,29 @@ export class AdService {
   ) { }
 
   public async findAdById(req: Request, id: string) {
-    const ad = await this.prisma.ad.findUnique({
-      where: { id },
-      include: {
-        author: true,
-        sender: true,
-        recipient: true,
-        courier: true,
-        _count: { select: { responses: true } },
-      },
-    })
-
     const userId = req.session.userId
+
+    const [ad, existingResponse] = await Promise.all([
+      this.prisma.ad.findUnique({
+        where: { id },
+        include: {
+          author: true,
+          sender: true,
+          recipient: true,
+          courier: true,
+          _count: { select: { responses: true } },
+        },
+      }),
+      userId
+        ? this.prisma.adResponse.findUnique({
+            where: { adId_courierId: { adId: id, courierId: userId } },
+          })
+        : null,
+    ])
 
     if (!ad) throw new NotFoundException('Объявление не найдено')
 
-    return getAdResponse(ad, userId!)
+    return getAdResponse(ad, userId!, !!existingResponse)
   }
 
   public async findAll(
