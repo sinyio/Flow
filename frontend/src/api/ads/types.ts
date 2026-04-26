@@ -43,6 +43,7 @@ export type TAd = {
     canEdit: boolean
     role: TRole
     responseCount: number
+    hasResponded: boolean
   }
   author: TUserSnippet
   sender: TUserSnippet | null

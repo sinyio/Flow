@@ -29,6 +29,15 @@ export default function MainPage() {
 
         <div className={styles.container}>
           <div className={styles.content}>
+            <div className={styles.heroLogo}>
+              <Image
+                src="/logo.png"
+                alt="Flow"
+                width={160}
+                height={40}
+                style={{ width: "160px", height: "auto" }}
+              />
+            </div>
             <Text variant="header-1">Передавайте между Москвой и Тбилиси</Text>
             <Text variant="display-4" as="h1" className={styles.heading}>
               Путь для
