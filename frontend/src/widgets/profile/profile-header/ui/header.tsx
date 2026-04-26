@@ -1,18 +1,28 @@
 'use client'
 
-import { Button, DropdownMenu, Icon, useToaster } from '@gravity-ui/uikit'
+import { useState } from 'react'
+import { Button, DropdownMenu, Icon, Text, useToaster } from '@gravity-ui/uikit'
+import { Pencil, TrashBin } from '@gravity-ui/icons'
 import { useRouter } from 'next/navigation'
 
 import { ArrowIcon } from '@components/svgr/arrow-icon/icon'
 import { DotsIcon } from '@components/svgr/dots-icon/icon'
 import { FlagIcon } from '@components/svgr/flag-icon/icon'
 import { ShareIcon } from '@components/svgr/share-icon/icon'
+import { Modal } from 'src/ui-kit'
 
 import styles from './header.module.css'
 
-export const Header = () => {
+interface IHeaderProps {
+  canEdit?: boolean
+  adId?: string
+  onDeleteAd?: () => void
+}
+
+export const Header = ({ canEdit, adId, onDeleteAd }: IHeaderProps) => {
   const router = useRouter()
   const { add } = useToaster()
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false)
 
   const notifySoon = () => {
     add({
@@ -24,32 +34,77 @@ export const Header = () => {
     })
   }
 
+  const items = [
+    ...(canEdit && adId
+      ? [
+          {
+            iconStart: <Pencil />,
+            text: 'Редактировать',
+            action: () => router.push(`/ads/${adId}/edit`),
+          },
+        ]
+      : []),
+    {
+      iconStart: <FlagIcon />,
+      text: 'Пожаловаться',
+      action: () => notifySoon(),
+    },
+    {
+      iconStart: <ShareIcon />,
+      text: 'Поделиться',
+      action: () => notifySoon(),
+    },
+    ...(canEdit
+      ? [
+          {
+            iconStart: <TrashBin />,
+            text: 'Удалить',
+            theme: 'danger' as const,
+            action: () => setDeleteModalOpen(true),
+          },
+        ]
+      : []),
+  ]
+
   return (
-    <div className={styles.header}>
-      <Button view="normal" size="l" type="button" onClick={() => router.back()}>
-        <Icon data={ArrowIcon} />
-      </Button>
-      <DropdownMenu
-        size="l"
-        popupProps={{ placement: 'bottom-end', offset: 8, style: { width: '200px' } }}
-        renderSwitcher={props => (
-          <Button {...props} view="normal" size="l">
-            <Icon data={DotsIcon} />
-          </Button>
-        )}
-        items={[
-          {
-            iconStart: <FlagIcon />,
-            text: 'Пожаловаться',
-            action: () => notifySoon(),
-          },
-          {
-            iconStart: <ShareIcon />,
-            text: 'Поделиться',
-            action: () => notifySoon(),
-          },
-        ]}
-      />
-    </div>
+    <>
+      <div className={styles.header}>
+        <Button view="normal" size="l" type="button" onClick={() => router.back()}>
+          <Icon data={ArrowIcon} />
+        </Button>
+        <DropdownMenu
+          size="l"
+          popupProps={{ placement: 'bottom-end', offset: 8, style: { width: '200px' } }}
+          renderSwitcher={props => (
+            <Button {...props} view="normal" size="l">
+              <Icon data={DotsIcon} />
+            </Button>
+          )}
+          items={items}
+        />
+      </div>
+      <Modal open={deleteModalOpen} onOpenChange={setDeleteModalOpen}>
+        <div className={styles.deleteModal}>
+          <Text variant="header-2">Удалить объявление?</Text>
+          <Text variant="body-2" color="secondary">
+            Это действие нельзя отменить.
+          </Text>
+          <div className={styles.deleteModalActions}>
+            <Button onClick={() => setDeleteModalOpen(false)}>
+              <Text variant="body-2">Отмена</Text>
+            </Button>
+            <Button
+              view="action"
+              onClick={() => {
+                setDeleteModalOpen(false)
+                onDeleteAd?.()
+              }}
+            >
+              <Text variant="body-2">Удалить</Text>
+            </Button>
+          </div>
+        </div>
+      </Modal>
+    </>
   )
 }

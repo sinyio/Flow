@@ -17,7 +17,14 @@ export default function MainPage() {
           alt=""
           fill
           priority
-          className={styles.heroImage}
+          className={`${styles.heroImage} ${styles.desktopOnly}`}
+        />
+        <Image
+          src="/main/hero-mobile.jpg"
+          alt=""
+          fill
+          priority
+          className={`${styles.heroImage} ${styles.mobileOnly}`}
         />
 
         <div className={styles.container}>
@@ -143,7 +150,14 @@ export default function MainPage() {
           alt=""
           fill
           priority
-          className={styles.footerImage}
+          className={`${styles.footerImage} ${styles.desktopOnly}`}
+        />
+        <Image
+          src="/main/footer-mobile.jpg"
+          alt=""
+          fill
+          priority
+          className={`${styles.footerImage} ${styles.mobileOnly}`}
         />
 
         <div className={styles.container}>

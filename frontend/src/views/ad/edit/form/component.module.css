@@ -38,6 +38,9 @@
 .roleButton {
   border-radius: 0;
   height: 44px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
   transition: background 0.15s;
 }

@@ -12,6 +12,20 @@
   position: absolute;
 }
 
+.mobileOnly {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .desktopOnly {
+    display: none;
+  }
+
+  .mobileOnly {
+    display: block;
+  }
+}
+
 .container {
   max-width: 1120px;
   padding-inline: 80px;

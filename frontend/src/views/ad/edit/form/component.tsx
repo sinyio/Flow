@@ -226,30 +226,24 @@ export const EditAdForm = ({ ad }: IEditAdFormProps) => {
         </Text>
 
         <div className={styles.roleGroup} role="tablist" aria-label="Ваша роль">
-          <Button
-            type="button"
-            view="flat"
-            size="xl"
+          <div
             className={[
               styles.roleButton,
               role === 'sender' ? styles.roleButtonActive : undefined,
             ].join(' ')}
             onClick={() => setValue('role', 'sender', { shouldValidate: true })}
           >
-            Отправитель
-          </Button>
-          <Button
-            type="button"
-            view="flat"
-            size="xl"
+            <Text variant="body-2">Отправитель</Text>
+          </div>
+          <div
             className={[
               styles.roleButton,
               role === 'recipient' ? styles.roleButtonActive : undefined,
             ].join(' ')}
             onClick={() => setValue('role', 'recipient', { shouldValidate: true })}
           >
-            Получатель
-          </Button>
+            <Text variant="body-2">Получатель</Text>
+          </div>
         </div>
       </div>
 
