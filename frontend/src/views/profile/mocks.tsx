@@ -29,5 +29,6 @@ export const mobileNavMocks = [
     icon: <ProfileIcon />,
     value: 'profile',
     label: 'профиль',
+    activeMatcher: (pathname: string) => /^\/profile\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(pathname),
   },
 ]

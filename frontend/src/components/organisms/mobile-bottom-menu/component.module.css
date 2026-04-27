@@ -7,6 +7,7 @@
   padding: 12px 34.5px 32px;
   width: 100%;
   z-index: 1000;
+  border-top: 1px solid #fff;
 }
 
 .item {
@@ -17,4 +18,17 @@
   align-items: center;
   text-decoration: none;
   color: var(--g-color-text-secondary);
+}
+
+.active {
+  color: var(--g-color-text-brand-heavy);
+}
+
+.active * {
+  color: var(--g-color-text-brand-heavy);
+}
+
+.active svg,
+.active svg * {
+  stroke: var(--g-color-text-brand-heavy);
 }
