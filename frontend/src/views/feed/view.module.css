@@ -9,7 +9,8 @@
   justify-content: center;
   align-items: center;
   position: relative;
-  padding: 80px 16px;
+  height: 440px;
+  padding: 0 16px;
   box-sizing: border-box;
 }
 
@@ -27,7 +28,8 @@
 
 .pageInner {
   width: 100%;
-  padding: 40px 16px 120px;
+  padding: 48px 175px 0;
+  max-width: 1280px;
   gap: 40px;
   box-sizing: border-box;
   background: var(--page-color, #f2f3f2);
@@ -36,7 +38,7 @@
 .popularRoutes {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
+  gap: 16px;
 }
 
 .popularStrip {
@@ -48,16 +50,15 @@
 
 .popularInner {
   width: 100%;
+  max-width: 1280px;
   display: flex;
   flex-direction: column;
   gap: 24px;
-  padding: 40px 16px;
+  padding: 48px 175px;
   box-sizing: border-box;
 }
 
-
-
-@media (min-width: 834px) {
+@media (max-width: 1280px) {
   .heroInner {
     height: 526px;
     padding: 0 85px;
@@ -65,27 +66,46 @@
 
   .pageInner {
     padding: 56px 85px 0;
+    max-width: none;
   }
 
   .popularInner {
     padding: 56px 85px;
+    max-width: none;
+  }
+
+  .title {
+    font-size: 32px;
+    line-height: 40px;
   }
 }
 
-@media (min-width: 1280px) {
+@media (max-width: 834px) {
   .heroInner {
-    height: 440px;
-    padding: 0 16px;
+    height: auto;
+    padding: 80px 16px;
   }
 
   .pageInner {
-    padding: 48px 175px 0;
-    max-width: 1280px;
+    padding: 40px 16px 120px;
+    
   }
 
   .popularInner {
-    padding: 48px 175px;
-    max-width: 1280px;
+    padding: 40px 16px;
+    padding-bottom: 0;
+  }
+
+  .popularStrip {
+    background: transparent;
+  }
+
+  .popularRoutes {
+    grid-template-columns: 1fr;
+  }
+
+  .title {
+    font-size: 28px;
+    line-height: 36px;
   }
 }
-

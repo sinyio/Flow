@@ -40,7 +40,7 @@ export const FeedView = ({ routes, ads, settings }: IFeedViewProps) => (
     {!settings && Array.isArray(routes) && routes.length > 0 && (
       <div className={styles.popularStrip}>
         <div className={styles.popularInner}>
-          <Text variant="display-3">Популярные</Text>
+          <Text variant="display-3" className={styles.title}>Популярные</Text>
           <div className={styles.popularRoutes}>
             {routes.map(route => (
               <Route key={route.fromCity + '__' + route.toCity} route={route} />

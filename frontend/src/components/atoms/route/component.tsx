@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 import { Text } from '@gravity-ui/uikit'
 
 import { TRoute } from '@api/ads'
@@ -13,7 +15,10 @@ export interface IRouteProps {
 }
 
 export const Route = ({ route }: IRouteProps) => (
-  <div role="button" className={styles.container}>
+  <Link
+    href={`/feed?fromCity=${encodeURIComponent(route.fromCity)}&toCity=${encodeURIComponent(route.toCity)}`}
+    className={styles.container}
+  >
     <div className={styles.routeCircle}>
       <LocationIcon />
     </div>
@@ -25,5 +30,5 @@ export const Route = ({ route }: IRouteProps) => (
         {getNoun(route.totalAds, 'объявление', 'объявления', 'объявлений')}
       </Text>
     </div>
-  </div>
+  </Link>
 )

@@ -28,3 +28,17 @@
   width: 100%;
   text-align: start;
 }
+
+@media (max-width: 1280px) {
+  .sectionTitle {
+    font-size: 32px;
+    line-height: 40px;
+  }
+}
+
+@media (max-width: 834px) {
+  .sectionTitle {
+    font-size: 28px;
+    line-height: 36px;
+  }
+}

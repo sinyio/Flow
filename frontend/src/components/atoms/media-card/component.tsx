@@ -10,7 +10,9 @@ export interface IMediaCardProps {
 
 export const MediaCard = ({ imageUrl, title }: IMediaCardProps) => (
   <div className={styles.container}>
-    <Image fill src={imageUrl} alt="" className={styles.image} />
+    <div className={styles.imageArea}>
+      <Image fill src={imageUrl} alt="" className={styles.image} />
+    </div>
     <div className={styles.textBlock}>
       <Text variant="header-2" className={styles.title}>{title}</Text>
     </div>

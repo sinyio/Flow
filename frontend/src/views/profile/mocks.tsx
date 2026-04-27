@@ -19,6 +19,8 @@ export const mobileNavMocks = [
     icon: <FeedIcon />,
     value: 'feed',
     label: 'лента',
+    activeMatcher: (pathname: string, _userId: string | null, searchParams: URLSearchParams) =>
+      pathname === '/feed' && searchParams.size === 0,
   },
   {
     icon: <AddIcon />,
