@@ -2,7 +2,8 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
+
+import { Link, useToaster } from '@gravity-ui/uikit'
 
 import { TAd } from '@api/ads'
 import { respondToAd } from '@api/ads'
@@ -24,15 +25,29 @@ export interface IAdViewProps {
 
 export const AdView = ({ ad }: IAdViewProps) => {
   const { device } = useResponsive()
-  const router = useRouter()
   const axiosInstance = useAxiosInstance()
+  const { add } = useToaster()
   const [responding, setResponding] = useState(false)
+  const [hasResponded, setHasResponded] = useState(ad.userState.hasResponded)
+  const [chatId, setChatId] = useState(ad.userState.chatId)
 
   const handleRespond = async () => {
     setResponding(true)
     try {
       const { data } = await respondToAd(ad.id, axiosInstance)
-      if ('chatId' in data) router.push(`/chats/${data.chatId}`)
+      if ('chatId' in data) {
+        setHasResponded(true)
+        setChatId(data.chatId)
+        add({
+          name: 'respond_ok',
+          theme: 'success',
+          title: 'Вы откликнулись!',
+          isClosable: true,
+          content: (
+            <Link href={`/chats/${data.chatId}`} style={{ color: 'var(--g-color-text-secondary)' }}>Перейти в чат</Link>
+          ),
+        })
+      }
     } finally {
       setResponding(false)
     }
@@ -51,8 +66,8 @@ export const AdView = ({ ad }: IAdViewProps) => {
             adId={ad.id}
             canEdit={ad.userState.canEdit}
             responseCount={ad.userState.responseCount}
-            hasResponded={ad.userState.hasResponded}
-            chatId={ad.userState.chatId}
+            hasResponded={hasResponded}
+            chatId={chatId}
             onRespond={handleRespond}
             responding={responding}
           />
@@ -80,8 +95,8 @@ export const AdView = ({ ad }: IAdViewProps) => {
               adId={ad.id}
               canEdit={ad.userState.canEdit}
               responseCount={ad.userState.responseCount}
-              hasResponded={ad.userState.hasResponded}
-              chatId={ad.userState.chatId}
+              hasResponded={hasResponded}
+              chatId={chatId}
               onRespond={handleRespond}
               responding={responding}
             />

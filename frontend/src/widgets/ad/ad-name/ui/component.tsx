@@ -108,6 +108,7 @@ export const AdName = ({
           type="button"
           onClick={onRespond}
           loading={responding}
+          disabled={responding}
         >
           <Text variant="header-1">Откликнуться</Text>
         </Button>
