@@ -8,15 +8,19 @@ import { TMessage } from '@api/chats/types'
 import { useChatStore } from '@utils/stores/chats'
 
 import { ChatInputBar } from '@components/molecules/chat-input-bar'
+import { DealConfirmBar } from '@components/molecules/deal-confirm-bar'
 import { MessageBubble } from '@components/molecules/message-bubble'
 
 import styles from './component.module.css'
 
 export interface IChatRoomProps {
   onSendMessage: (text: string) => Promise<void>
+  onConfirmDeal?: () => void
+  isConfirming?: boolean
+  showDealBar?: boolean
 }
 
-export const ChatRoom = ({ onSendMessage }: IChatRoomProps) => {
+export const ChatRoom = ({ onSendMessage, onConfirmDeal, isConfirming, showDealBar }: IChatRoomProps) => {
   const { messages, currentUserId, isLoading } = useChatStore()
 
   const bottomRef = useRef<HTMLDivElement>(null)
@@ -89,6 +93,10 @@ export const ChatRoom = ({ onSendMessage }: IChatRoomProps) => {
 
         <div ref={bottomRef} />
       </div>
+
+      {showDealBar && onConfirmDeal && (
+        <DealConfirmBar onConfirm={onConfirmDeal} isLoading={isConfirming} />
+      )}
 
       <ChatInputBar
         onSend={(text, files) => {

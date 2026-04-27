@@ -2,8 +2,9 @@
 
 import { Text } from '@gravity-ui/uikit'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
+import { assignCourier } from '@api/ads/assign-courier'
 import { useAxiosInstance } from '@api/use-axios-instance'
 
 import { useChatSocket } from '@utils/hooks/use-chat-socket'
@@ -33,7 +34,10 @@ export const ChatLayout = ({ initialChatId }: IChatLayoutProps) => {
     selectChat,
     sendMessage,
     addIncomingMessage,
+    setCanAssignCourier,
   } = useChatStore()
+
+  const [isConfirming, setIsConfirming] = useState(false)
 
   const selectedChat = useChatStore(selectSelectedChat)
 
@@ -99,6 +103,25 @@ export const ChatLayout = ({ initialChatId }: IChatLayoutProps) => {
     await sendMessage(selectedChatId, text, socketSendMessage)
   }
 
+  const handleConfirmDeal = async () => {
+    if (!selectedChat?.adId || !selectedChat.otherUser) return
+
+    setIsConfirming(true)
+    try {
+      await assignCourier(
+        { adId: selectedChat.adId, courierId: selectedChat.otherUser.id },
+        axios
+      )
+      setCanAssignCourier(selectedChat.id, false)
+    } catch (err) {
+      console.error('[ChatLayout] assignCourier failed:', err)
+    } finally {
+      setIsConfirming(false)
+    }
+  }
+
+  const showDealBar = selectedChat?.canAssignCourier === true
+
   return (
     <>
       <div className={styles.header} />
@@ -118,7 +141,12 @@ export const ChatLayout = ({ initialChatId }: IChatLayoutProps) => {
                 />
               )}
 
-              <ChatRoom onSendMessage={handleSendMessage} />
+              <ChatRoom
+                onSendMessage={handleSendMessage}
+                onConfirmDeal={handleConfirmDeal}
+                isConfirming={isConfirming}
+                showDealBar={showDealBar}
+              />
             </>
           ) : (
             <div className={styles.emptyState}>

@@ -38,6 +38,8 @@ export interface IChatActions {
   ) => Promise<boolean>
 
   addIncomingMessage: (message: TMessage) => void
+
+  setCanAssignCourier: (chatId: string, value: boolean) => void
 }
 
 export type TChatStore = IChatState & IChatActions
