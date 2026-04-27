@@ -65,7 +65,7 @@ export const ChatRoom = ({ onSendMessage }: IChatRoomProps) => {
         {Object.entries(groupedMessages).map(([date, msgs]) => (
           <div key={date} className={styles.dateGroup}>
             <div className={styles.dateDivider}>
-              <Text variant="caption-1" color="secondary">
+              <Text variant="body-1" color="hint">
                 {date}
               </Text>
             </div>

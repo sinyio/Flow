@@ -49,7 +49,7 @@ export const useChatStore = create<TChatStore>()(set => ({
 
     return getMessages(chatId, undefined, axiosInstance)
       .then(res => {
-        set({ messages: [...res.data.data].reverse() })
+        set({ messages: res.data.data })
       })
       .catch(error => console.error('[ChatStore] getMessages failed:', error))
       .finally(() => set(state => ({ isLoading: { ...state.isLoading, messages: false } })))

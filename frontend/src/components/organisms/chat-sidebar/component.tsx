@@ -1,9 +1,10 @@
 'use client'
 
-import { Loader, Tab, TabList, TabProvider, Text } from '@gravity-ui/uikit'
+import { Button, Loader, Text } from '@gravity-ui/uikit'
 import { useRouter } from 'next/navigation'
+import { useMemo } from 'react'
 
-import { selectFilteredChats, useChatStore } from '@utils/stores/chats'
+import { useChatStore } from '@utils/stores/chats'
 
 import { ChatListItem } from '@components/molecules/chat-list-item'
 
@@ -11,10 +12,28 @@ import { ChatSupportBanner } from '@widgets/chat/chat-support-banner/ui'
 
 import styles from './component.module.css'
 
+const TABS = [
+  { value: 'all', label: 'Все' },
+  { value: 'unread', label: 'Непрочитанные' },
+  { value: 'myads', label: 'Мои объявления' },
+] as const
+
 export const ChatSidebar = () => {
   const router = useRouter()
-  const { activeTab, selectedChatId, isLoading, setTab, selectChat } = useChatStore()
-  const filteredChats = useChatStore(selectFilteredChats)
+  const { chats, activeTab, selectedChatId, currentUserId, isLoading, setTab, selectChat } =
+    useChatStore()
+
+  const filteredChats = useMemo(() => {
+    switch (activeTab) {
+      case 'unread':
+        return chats.filter(chat => (chat.unreadCount ?? 0) > 0)
+      case 'myads':
+        return chats.filter(chat => chat.otherUser?.id !== currentUserId)
+      case 'all':
+      default:
+        return chats
+    }
+  }, [chats, activeTab, currentUserId])
 
   const handleChatSelect = (chatId: string) => {
     selectChat(chatId)
@@ -24,16 +43,23 @@ export const ChatSidebar = () => {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <Text variant="header-1">Все чаты</Text>
+        <Text variant="display-3">Все чаты</Text>
       </div>
 
-      <TabProvider value={activeTab} onUpdate={value => setTab(value as typeof activeTab)}>
-        <TabList size="l" className={styles.tabs}>
-          <Tab value="all">Все</Tab>
-          <Tab value="unread">Непрочитанные</Tab>
-          <Tab value="myads">Мои объявления</Tab>
-        </TabList>
-      </TabProvider>
+      <div className={styles.tabs}>
+        {TABS.map(tab => (
+          <Button
+            key={tab.value}
+            view={activeTab === tab.value ? 'action' : 'outlined'}
+            size="l"
+            pin="round-round"
+            className={activeTab === tab.value ? styles.tabButtonActive : styles.tabButton}
+            onClick={() => setTab(tab.value as typeof activeTab)}
+          >
+            {tab.label}
+          </Button>
+        ))}
+      </div>
 
       <ChatSupportBanner />
 

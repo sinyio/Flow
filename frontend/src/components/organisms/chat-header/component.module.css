@@ -1,15 +1,40 @@
 .container {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  background-color: var(--g-color-base-background);
+}
+
+.userSection {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding: 16px;
   border-bottom: 1px solid var(--g-color-line-generic);
-  background-color: var(--g-color-base-background);
 }
 
 .userRow {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 12px;
+}
+
+.avatar {
+  width: 50px !important;
+  height: 50px !important;
+  flex-shrink: 0;
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.menuButton {
+  border-radius: var(--g-border-radius-l) !important;
+  padding: 10px !important;
+}
+
+.adSection {
+  padding: 16px;
+  border-bottom: 1px solid var(--g-color-line-generic);
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import { Label, Text, User, Avatar } from '@gravity-ui/uikit'
+import { Avatar, Text } from '@gravity-ui/uikit'
 
 import { TChatItem } from '@api/chats/types'
 
@@ -34,28 +34,26 @@ export const ChatListItem = ({ chat, isActive = false, onClick }: IChatListItemP
       role="button"
       tabIndex={0}
     >
-      <div className={styles.userSection}>
-        <User
-          size="m"
-          name={name}
-          avatar={<Avatar size="m" imgUrl={chat.otherUser?.photo || ''} />}
-        />
-        {lastMessageDate && (
-          <Text variant="caption-2" color="secondary" className={styles.date}>
-            {lastMessageDate}
-          </Text>
-        )}
-      </div>
+      <div className={styles.userRow}>
+        <Avatar className={styles.avatar} imgUrl={chat.otherUser?.photo || ''} />
 
-      <div className={styles.messagePreview}>
-        <Text variant="body-2" color="secondary" className={styles.preview}>
-          {lastMessagePreview}
-        </Text>
-        {unreadCount > 0 && (
-          <Label size="xs" theme="danger">
-            {unreadCount}
-          </Label>
-        )}
+        <div className={styles.textBlock}>
+          <Text variant="subheader-3" className={styles.name}>
+            {name}
+          </Text>
+          <Text variant="body-2" color="complementary" className={styles.preview}>
+            {lastMessagePreview}
+          </Text>
+        </div>
+
+        <div className={styles.meta}>
+          {lastMessageDate && (
+            <Text variant="body-short" className={styles.date}>
+              {lastMessageDate}
+            </Text>
+          )}
+          {unreadCount > 0 && <div className={styles.unreadDot} />}
+        </div>
       </div>
     </div>
   )

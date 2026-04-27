@@ -1,9 +1,7 @@
 'use client'
 
-import { ArrowRight, Headphones } from '@gravity-ui/icons'
-import { Icon, Text } from '@gravity-ui/uikit'
-
-import { Card } from '@components/templates/card'
+import { ArrowRight } from '@gravity-ui/icons'
+import { Avatar, Button, Icon, Text } from '@gravity-ui/uikit'
 
 import styles from './component.module.css'
 
@@ -14,19 +12,20 @@ export const ChatSupportBanner = () => {
   }
 
   return (
-    <Card className={styles.container} onClick={handleClick}>
-      <div className={styles.iconWrapper}>
-        <Icon data={Headphones} size={24} />
+    <div className={styles.container} onClick={handleClick}>
+      <div className={styles.left}>
+        <Avatar size="xl" theme="brand" text="ПФ" />
+        <div className={styles.content}>
+          <Text variant="subheader-2">Поддержка флоу</Text>
+          <Text variant="body-2" color="complementary">
+            Будем рады помочь
+          </Text>
+        </div>
       </div>
 
-      <div className={styles.content}>
-        <Text variant="subheader-2">Поддержка флоу</Text>
-        <Text variant="body-2" color="secondary">
-          Будем рады помочь
-        </Text>
-      </div>
-
-      <Icon data={ArrowRight} size={20} className={styles.arrow} />
-    </Card>
+      <Button view="flat" size="s" className={styles.arrowButton}>
+        <Icon data={ArrowRight} size={24} />
+      </Button>
+    </div>
   )
 }

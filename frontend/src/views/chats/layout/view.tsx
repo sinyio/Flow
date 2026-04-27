@@ -1,5 +1,6 @@
 'use client'
 
+import { Text } from '@gravity-ui/uikit'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect } from 'react'
 
@@ -121,11 +122,11 @@ export const ChatLayout = ({ initialChatId }: IChatLayoutProps) => {
             </>
           ) : (
             <div className={styles.emptyState}>
-              <p>
+              <Text variant="subheader-3" color="hint">
                 {searchParams.get('userId') && chats.length > 0
                   ? 'Чат с этим пользователем не найден'
-                  : 'Выберите чат'}
-              </p>
+                  : 'Выберите чат для просмотра сообщений'}
+              </Text>
             </div>
           )}
         </div>
