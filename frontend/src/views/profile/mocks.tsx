@@ -1,4 +1,4 @@
-import { AddIcon } from '@components/svgr/add-icon/icon'
+import { ChatIcon } from '@components/svgr/chat-icon/icon'
 import { CompassIcon } from '@components/svgr/compass-icon/icon'
 import { FeedIcon } from '@components/svgr/feed-icon/icon'
 import { HomeIcon } from '@components/svgr/home-icon/icon'
@@ -23,9 +23,9 @@ export const mobileNavMocks = [
       pathname === '/feed' && searchParams.size === 0,
   },
   {
-    icon: <AddIcon />,
-    value: 'ads',
-    label: 'объявление',
+    icon: <ChatIcon />,
+    value: 'chats',
+    label: 'чат',
   },
   {
     icon: <ProfileIcon />,

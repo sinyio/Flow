@@ -71,7 +71,9 @@ export const Header = () => {
       setFullName("");
       setLoaded(true);
     });
-    return () => { unsubscribe(); };
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   return (
@@ -98,6 +100,11 @@ export const Header = () => {
             <li>
               <Link className={styles.navLink} href="/media">
                 <Text variant="subheader-2">Наше медиа</Text>
+              </Link>
+            </li>
+            <li>
+              <Link className={styles.navLink} href="/chats">
+                <Text variant="subheader-2">Чат</Text>
               </Link>
             </li>
           </ul>
