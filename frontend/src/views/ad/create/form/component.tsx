@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 
-import { getPopularRoutes } from "@api/ads";
+import { getPopularRoutes, TPackaging } from "@api/ads";
 import { useAxiosInstance } from "@api/use-axios-instance";
 
 import { useCreateAdDraftStore } from "@utils/stores/create-ad-draft/store";
