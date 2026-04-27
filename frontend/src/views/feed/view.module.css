@@ -27,7 +27,7 @@
 
 .pageInner {
   width: 100%;
-  padding: 40px 16px 80px;
+  padding: 40px 16px 120px;
   gap: 40px;
   box-sizing: border-box;
   background: var(--page-color, #f2f3f2);

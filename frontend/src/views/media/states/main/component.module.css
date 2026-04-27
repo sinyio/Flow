@@ -23,8 +23,20 @@
   width: 100%;
 }
 
+@media (max-width: 1280px) {
+  .sectionTitle {
+    font-size: 32px;
+    line-height: 40px;
+  }
+}
+
 @media (max-width: 834px) {
   .mediaCards {
     grid-template-columns: 1fr;
+  }
+
+  .sectionTitle {
+    font-size: 28px;
+    line-height: 36px;
   }
 }

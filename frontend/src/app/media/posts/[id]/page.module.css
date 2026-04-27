@@ -1,6 +1,7 @@
 .pageInner {
   width: 100%;
-  padding: 24px 16px 80px;
+  padding: 48px 175px 0;
+  max-width: 1280px;
   gap: 24px;
   box-sizing: border-box;
   background: var(--page-color, #f2f3f2);
@@ -54,6 +55,8 @@
   border-bottom: 1px solid var(--g-color-line-generic);
   line-height: 0;
   user-select: none;
+  margin-inline: -1000px;
+  padding-inline: 1000px;
 }
 
 .stat {
@@ -97,13 +100,17 @@
 .commentsSection {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 40px;
 }
 
 .commentsList {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  padding-inline: 1000px;
+  margin-inline: -1000px;
+  border-top: 1px solid var(--g-color-line-generic);
+  padding-top: 40px;
 }
 
 .showMore {
@@ -126,31 +133,41 @@
   line-height: 0;
 }
 
-@media (min-width: 834px) {
+@media (max-width: 1280px) {
   .pageInner {
     padding: 40px 85px 0;
-  }
-}
-
-@media (min-width: 1280px) {
-  .pageInner {
-    padding: 48px 175px 0;
-    max-width: 1280px;
-  }
-
-  .commentsList {
-    padding-inline: 1000px;
-    margin-inline: -1000px;
-    border-top: 1px solid var(--g-color-line-generic);
-    padding-top: 40px;
-  }
-
-  .commentsSection {
-    gap: 40px;
+    max-width: none;
   }
 
   .stats {
-    margin-inline: -1000px;
-    padding-inline: 1000px;
+    margin-inline: 0;
+    padding-inline: 0;
+  }
+
+  .commentsList {
+    padding-inline: 0;
+    margin-inline: 0;
+    border-top: none;
+    padding-top: 0;
+  }
+
+  .commentsSection {
+    gap: 16px;
+  }
+
+  .title {
+    font-size: 32px;
+    line-height: 40px;
+  }
+}
+
+@media (max-width: 834px) {
+  .pageInner {
+    padding: 24px 16px 120px;
+  }
+
+  .title {
+    font-size: 28px;
+    line-height: 36px;
   }
 }

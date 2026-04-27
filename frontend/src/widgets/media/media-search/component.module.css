@@ -39,6 +39,27 @@
   }
 }
 
+@media (max-width: 834px) {
+  .heroCard {
+    background-color: transparent;
+    padding: 16px;
+  }
+
+  .searchInput {
+    :global(.g-text-input__content) {
+      background-color: #fff;
+    }
+  }
+
+  .filterButton {
+    background-color: #fff;
+
+    &:hover {
+      background-color: #f0f0f0;
+    }
+  }
+}
+
 .popupContent {
   display: flex;
   flex-direction: column;

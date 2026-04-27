@@ -85,7 +85,7 @@ export const PostsState = ({ posts = [], meta, filter, sort, search }: IPostsSta
           <Button view="normal" size="l" onClick={() => router.push('/media')}>
             <Icon data={ArrowIcon} size={20} />
           </Button>
-          <Text variant="display-3" as="h2">{title}</Text>
+          <Text variant="display-3" as="h2" className={styles.title}>{title}</Text>
         </div>
       )}
       <div className={styles.grid}>

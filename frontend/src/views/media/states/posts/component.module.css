@@ -11,8 +11,20 @@
   width: 100%;
 }
 
+@media (max-width: 1280px) {
+  .title {
+    font-size: 32px;
+    line-height: 40px;
+  }
+}
+
 @media (max-width: 834px) {
   .grid {
     grid-template-columns: 1fr;
+  }
+
+  .title {
+    font-size: 28px;
+    line-height: 36px;
   }
 }

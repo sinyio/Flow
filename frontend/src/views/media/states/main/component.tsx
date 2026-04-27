@@ -51,7 +51,7 @@ export const MainState = ({ flowPosts = [], userPosts = [] }: IMainStateProps) =
 
       <section className={styles.section}>
         <Flex alignItems="center" direction="column" gap={4}>
-          <Text variant="display-3" as="h2">
+          <Text variant="display-3" as="h2" className={styles.sectionTitle}>
             Хотите поделиться своим опытом?
           </Text>
           <Text variant="body-3">

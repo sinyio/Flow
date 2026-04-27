@@ -42,8 +42,8 @@
 
 .pageInner {
   width: 100%;
-  padding: 80px 16px;
-  gap: 40px;
+  padding: 40px 16px 120px;
+  gap: 24px;
   box-sizing: border-box;
   background: var(--page-color, #f2f3f2);
 }
@@ -86,5 +86,6 @@
   .pageInner {
     padding: 48px 175px 0;
     max-width: 1280px;
+    gap: 40px;
   }
 }
