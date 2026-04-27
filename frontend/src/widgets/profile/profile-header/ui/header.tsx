@@ -10,6 +10,7 @@ import { DotsIcon } from '@components/svgr/dots-icon/icon'
 import { FlagIcon } from '@components/svgr/flag-icon/icon'
 import { ShareIcon } from '@components/svgr/share-icon/icon'
 import { Modal } from 'src/ui-kit'
+import { ShareModal } from '@components/molecules/share-modal'
 
 import styles from './header.module.css'
 
@@ -24,6 +25,8 @@ export const Header = ({ canEdit, adId, onDeleteAd, className }: IHeaderProps) =
   const router = useRouter()
   const { add } = useToaster()
   const [deleteModalOpen, setDeleteModalOpen] = useState(false)
+  const [shareOpen, setShareOpen] = useState(false)
+  const [shareUrl, setShareUrl] = useState('')
 
   const notifySoon = () => {
     add({
@@ -53,7 +56,7 @@ export const Header = ({ canEdit, adId, onDeleteAd, className }: IHeaderProps) =
     {
       iconStart: <ShareIcon />,
       text: 'Поделиться',
-      action: () => notifySoon(),
+      action: () => { setShareUrl(window.location.href); setShareOpen(true) },
     },
     ...(canEdit
       ? [
@@ -106,6 +109,7 @@ export const Header = ({ canEdit, adId, onDeleteAd, className }: IHeaderProps) =
           </div>
         </div>
       </Modal>
+      <ShareModal open={shareOpen} onOpenChange={setShareOpen} url={shareUrl} title={adId ? 'Поделиться объявлением' : 'Поделиться профилем'} />
     </>
   )
 }

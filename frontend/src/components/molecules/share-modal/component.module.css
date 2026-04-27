@@ -1,0 +1,31 @@
+.container {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 340px;
+  max-width: calc(100vw - 48px);
+  box-sizing: border-box;
+}
+
+.urlRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--g-color-base-generic);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.url {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.copyBtn {
+  flex-shrink: 0;
+}
