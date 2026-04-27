@@ -47,8 +47,20 @@ export function PhoneSection() {
   const innerRef = useRef<HTMLDivElement>(null);
   const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [activeSlide, setActiveSlide] = useState(0);
+  const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const touchStartX = useRef(0);
 
   useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 834);
+    check();
+    setMounted(true);
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+
+  useEffect(() => {
+    if (isMobile || window.innerWidth <= 834) return;
     const wrapper = wrapperRef.current;
     const inner = innerRef.current;
     if (!wrapper || !inner) return;
@@ -58,7 +70,6 @@ export function PhoneSection() {
       const scrolled = -rect.top;
       const scrollable = rect.height - window.innerHeight;
 
-      // JS-based sticky (обходит overflow-x: hidden на body)
       if (rect.top > 0) {
         inner.style.position = 'absolute';
         inner.style.top = '0';
@@ -82,7 +93,6 @@ export function PhoneSection() {
       const progress = Math.max(0, Math.min(1, scrolled / scrollable));
       const fractional = progress * (SLIDES.length - 1);
 
-      // обновляем текстовые слайды напрямую в DOM
       slideRefs.current.forEach((el, i) => {
         if (!el) return;
         const offset = fractional - i;
@@ -92,7 +102,6 @@ export function PhoneSection() {
         el.style.transform = `translateY(${translateY}px)`;
       });
 
-      // для телефона переключаем дискретно, чуть раньше смены текста
       const slide = Math.min(SLIDES.length - 1, Math.round(fractional));
       setActiveSlide(slide);
     };
@@ -100,7 +109,68 @@ export function PhoneSection() {
     window.addEventListener('scroll', update, { passive: true });
     update();
     return () => window.removeEventListener('scroll', update);
-  }, []);
+  }, [isMobile]);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) {
+      setActiveSlide(prev =>
+        diff > 0 ? Math.min(SLIDES.length - 1, prev + 1) : Math.max(0, prev - 1),
+      );
+    }
+  };
+
+  if (!mounted) return null;
+
+  if (isMobile) {
+    const slide = SLIDES[activeSlide];
+    return (
+      <div className={styles.mobileWrapper}>
+        <div
+          className={styles.mobileCard}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
+          {SLIDES.map((s, i) => (
+            <div
+              key={i}
+              className={`${styles.mobilePhoneWrap} ${i === activeSlide ? styles.mobilePhoneActive : ''}`}
+            >
+              <Image src={s.image} alt="" fill className={styles.phoneImg} />
+            </div>
+          ))}
+        </div>
+
+        <div className={styles.dots}>
+          {SLIDES.map((_, i) => (
+            <button
+              key={i}
+              className={`${styles.dot} ${i === activeSlide ? styles.dotActive : ''}`}
+              onClick={() => setActiveSlide(i)}
+              aria-label={`Слайд ${i + 1}`}
+            />
+          ))}
+        </div>
+
+        <div
+          className={styles.mobileText}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
+          <Text variant="header-1" className={styles.label}>{slide.label}</Text>
+          <Text variant="display-3" as="h2" className={styles.title}>{slide.title}</Text>
+          <Text variant="body-3" className={styles.body}>{slide.body}</Text>
+          <Link href={slide.href} className={styles.btn}>
+            <Text variant="header-1">{slide.linkText}</Text>
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div ref={wrapperRef} className={styles.wrapper}>
@@ -125,7 +195,7 @@ export function PhoneSection() {
                 style={{ opacity: i === 0 ? 1 : 0 }}
               >
                 <Text variant="header-1" className={styles.label}>{slide.label}</Text>
-                <Text variant="display-3" as="h2">{slide.title}</Text>
+                <Text variant="display-3" as="h2" className={styles.title}>{slide.title}</Text>
                 <Text variant="body-3" className={styles.body}>{slide.body}</Text>
                 <Link href={slide.href} className={styles.btn}>
                   <Text variant="header-1">{slide.linkText}</Text>

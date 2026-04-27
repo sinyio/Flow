@@ -103,7 +103,11 @@ export default function MainPage() {
         <section className={styles.conclusionSection}>
           <div className={styles.container}>
             <div className={styles.conclusionContent}>
-              <Text variant="display-4">
+              <Text
+                variant="display-4"
+                className={styles.conclusionHeading}
+                as="h2"
+              >
                 Изучите правила сервиса <br /> и опыт сообщества
               </Text>
               <Text variant="body-3" className={styles.conclusionDescription}>
@@ -170,12 +174,8 @@ export default function MainPage() {
         />
 
         <div className={styles.container}>
-          <div className={styles.content}>
-            <Text
-              variant="display-4"
-              as="h1"
-              className={styles.footerHeading}
-            >
+          <div className={`${styles.content} ${styles.footerContent}`}>
+            <Text variant="display-4" as="h1" className={styles.footerHeading}>
               Если вы уже едете — <br /> возьмите доставку по пути
             </Text>
             <Text variant="subheader-3" className={styles.description}>

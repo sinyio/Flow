@@ -2,7 +2,8 @@
   position: relative;
   border-radius: 32px;
   overflow: hidden;
-  width: 455px;
+  width: 100%;
+  max-width: 455px;
   height: 400px;
 }
 

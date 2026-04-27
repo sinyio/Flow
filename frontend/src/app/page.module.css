@@ -1,10 +1,12 @@
-.hero, .footer {
+.hero,
+.footer {
   position: relative;
   width: 100%;
   min-height: 100svh;
 }
 
-.heroImage, .footerImage {
+.heroImage,
+.footerImage {
   object-fit: cover;
   object-position: center;
   position: absolute;
@@ -100,7 +102,7 @@
 .animatedText {
   font-size: 48px !important;
   line-height: 64px !important;
-  font-weight: 600 !important;;
+  font-weight: 600 !important;
 }
 
 .greyText {
@@ -163,7 +165,7 @@
 }
 
 .footerHeading {
-  font-size: 48px
+  font-size: 48px;
 }
 
 .footerButtons {
@@ -184,6 +186,29 @@
 
   .mobileOnly {
     display: block;
+  }
+
+  .container {
+    margin-inline: auto;
+  }
+
+  .infoHeading {
+    font-size: 40px;
+    line-height: 48px;
+  }
+
+  .cardsGrid {
+    grid-template-columns: minmax(0, 455px);
+    gap: 24px;
+  }
+
+  .cardCenter {
+    grid-column: auto;
+  }
+
+  .conclusionHeading {
+    font-size: 40px;
+    line-height: 48px;
   }
 
   .content {
@@ -212,11 +237,24 @@
 
   .buttonPrimary,
   .buttonSecondary {
-    max-width: 380px;
+    width: 380px;
   }
 
   .container {
-    padding-inline: 20px;
+    padding-inline: 40px;
+  }
+
+  .footerContent {
+    padding-top: 142px;
+  }
+
+  .footerHeading {
+    font-size: 40px;
+    line-height: 48px;
+  }
+
+  .cardsGrid {
+    margin-top: 32px;
   }
 }
 
@@ -225,6 +263,25 @@
     display: block;
     margin-top: 80px;
     margin-bottom: 24px;
+  }
+
+  .container {
+    padding-inline: 16px;
+  }
+
+  .animatedText {
+    font-size: 28px !important;
+    line-height: 46px !important;
+  }
+
+  .infoHeading {
+    font-size: 32px;
+    line-height: 40px;
+  }
+
+  .conclusionHeading {
+    font-size: 32px;
+    line-height: 40px;
   }
 
   .content {
@@ -240,6 +297,24 @@
 
   .buttonPrimary,
   .buttonSecondary {
-    max-width: 100%;
+    width: 320px;
+  }
+
+  .conclusionCards {
+    grid-template-columns: minmax(0, 455px);
+    justify-content: center;
+  }
+
+  .conclusionCards > *:nth-child(2) {
+    display: none;
+  }
+
+  .footerContent {
+    padding-top: 80px;
+  }
+
+  .footerHeading {
+    font-size: 32px;
+    line-height: 40px;
   }
 }
