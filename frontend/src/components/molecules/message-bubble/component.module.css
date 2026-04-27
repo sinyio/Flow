@@ -1,6 +1,6 @@
 .container {
   display: flex;
-  align-items: flex-start;
+  align-items: flex-end;
   gap: 8px;
   margin-bottom: 12px;
   max-width: 70%;
@@ -15,33 +15,31 @@
   flex-shrink: 0;
 }
 
-.content {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  flex: 1;
-}
-
-.senderName {
-  font-weight: 600;
+.avatarSpacer {
+  width: 42px;
+  flex-shrink: 0;
 }
 
 .messageBubble {
   background-color: var(--g-color-base-generic);
-  padding: 8px 12px;
-  border-radius: 12px;
+  padding: 12px;
+  border-radius: var(--g-border-radius-l);
   word-wrap: break-word;
 }
 
 .messageBubble.ownBubble {
-  background-color: var(--g-color-base-brand);
-  color: var(--g-color-text-light-primary);
+  background-color: var(--g-color-base-info-light);
+}
+
+.messageText {
+  max-width: 240px;
 }
 
 .files {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  margin-top: 4px;
 }
 
 .fileItem {
@@ -53,7 +51,18 @@
   border-radius: 8px;
 }
 
-.time {
+.timeBlock {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
   align-self: flex-end;
-  margin-top: 2px;
+}
+
+.checkIcon {
+  color: var(--g-color-text-positive);
+}
+
+.time {
+  white-space: nowrap;
 }

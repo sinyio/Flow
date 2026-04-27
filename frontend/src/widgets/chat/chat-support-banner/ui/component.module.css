@@ -1,44 +1,35 @@
 .container {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 16px !important;
+  justify-content: space-between;
+  padding: 20px 16px;
+  margin-bottom: 24px;
   cursor: pointer;
+  border-radius: 24px;
+  background-color: rgba(131, 183, 73, 0.3);
   transition: background-color 0.2s;
-  background: linear-gradient(
-    135deg,
-    var(--g-color-base-brand-hover) 0%,
-    var(--g-color-base-brand) 100%
-  );
 }
 
 .container:hover {
-  background: linear-gradient(
-    135deg,
-    var(--g-color-base-brand) 0%,
-    var(--g-color-base-brand-hover) 100%
-  );
+  background-color: rgba(131, 183, 73, 0.4);
 }
 
-.iconWrapper {
-  flex-shrink: 0;
-  width: 48px;
-  height: 48px;
+.left {
   display: flex;
   align-items: center;
-  justify-content: center;
-  background-color: var(--g-color-base-background);
-  border-radius: 50%;
+  gap: 12px;
 }
 
 .content {
-  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
 
-.arrow {
+.arrowButton {
   flex-shrink: 0;
-  color: var(--g-color-text-secondary);
+  width: 36px;
+  height: 36px;
+  background-color: var(--g-color-base-light) !important;
+  border-radius: var(--g-border-radius-l) !important;
 }

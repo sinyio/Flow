@@ -1,11 +1,9 @@
 'use client'
 
-import { FileText } from '@gravity-ui/icons'
+import { Check, FileText } from '@gravity-ui/icons'
 import { Avatar, Icon, Text } from '@gravity-ui/uikit'
 
 import { TMessage } from '@api/chats/types'
-
-import { formatUserName } from '@utils/format-user-name'
 
 import styles from './component.module.css'
 
@@ -16,8 +14,6 @@ export interface IMessageBubbleProps {
 }
 
 export const MessageBubble = ({ message, isOwn, showAvatar = true }: IMessageBubbleProps) => {
-  const senderName = formatUserName(message.sender)
-
   const time = new Date(message.createdAt).toLocaleTimeString('ru-RU', {
     hour: '2-digit',
     minute: '2-digit',
@@ -26,20 +22,15 @@ export const MessageBubble = ({ message, isOwn, showAvatar = true }: IMessageBub
   return (
     <div className={`${styles.container} ${isOwn ? styles.own : ''}`}>
       {showAvatar && !isOwn && (
-        <Avatar size="s" imgUrl={message.sender.photo || ''} className={styles.avatar} />
+        <Avatar size="xl" imgUrl={message.sender.photo || ''} className={styles.avatar} />
       )}
+      {!showAvatar && !isOwn && <div className={styles.avatarSpacer} />}
 
-      <div className={styles.content}>
-        {!isOwn && (
-          <Text variant="caption-1" className={styles.senderName}>
-            {senderName}
-          </Text>
-        )}
-
+      <div className={`${styles.messageBubble} ${isOwn ? styles.ownBubble : ''}`}>
         {message.text && (
-          <div className={`${styles.messageBubble} ${isOwn ? styles.ownBubble : ''}`}>
-            <Text variant="body-1">{message.text}</Text>
-          </div>
+          <Text variant="body-2" className={styles.messageText}>
+            {message.text}
+          </Text>
         )}
 
         {message.files.length > 0 && (
@@ -54,15 +45,19 @@ export const MessageBubble = ({ message, isOwn, showAvatar = true }: IMessageBub
             ))}
           </div>
         )}
+      </div>
 
-        <Text variant="caption-2" color="secondary" className={styles.time}>
+      <div className={styles.timeBlock}>
+        {isOwn && <Icon data={Check} size={16} className={styles.checkIcon} />}
+        <Text variant="caption-2" color="hint" className={styles.time}>
           {time}
         </Text>
       </div>
 
       {showAvatar && isOwn && (
-        <Avatar size="s" imgUrl={message.sender.photo || ''} className={styles.avatar} />
+        <Avatar size="xl" imgUrl={message.sender.photo || ''} className={styles.avatar} />
       )}
+      {!showAvatar && isOwn && <div className={styles.avatarSpacer} />}
     </div>
   )
 }

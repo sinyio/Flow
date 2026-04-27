@@ -1,7 +1,7 @@
 'use client'
 
-import { Ellipsis } from '@gravity-ui/icons'
-import { Avatar, Button, DropdownMenu, Icon, User } from '@gravity-ui/uikit'
+import { EllipsisVertical } from '@gravity-ui/icons'
+import { Avatar, Button, DropdownMenu, Icon, Text } from '@gravity-ui/uikit'
 
 import { TChatAd, TChatUserSnippet } from '@api/chats/types'
 
@@ -21,11 +21,9 @@ export interface IChatHeaderProps {
 export const ChatHeader = ({ otherUser, ad, rating, onMenuAction }: IChatHeaderProps) => {
   const userName = formatUserName(otherUser)
 
-  // Используем rating из otherUser или переданный через props
   const userRating = rating ?? otherUser.rating
   const ratingText = userRating ? `${userRating.toFixed(1)} ★★★★★` : undefined
 
-  // Используем данные из ad если они есть, иначе заглушки
   const route = ad.fromCity && ad.toCity ? `${ad.fromCity} – ${ad.toCity}` : 'Маршрут не указан'
   const date =
     ad.startDate && ad.endDate
@@ -46,26 +44,33 @@ export const ChatHeader = ({ otherUser, ad, rating, onMenuAction }: IChatHeaderP
 
   return (
     <div className={styles.container}>
-      <div className={styles.userRow}>
-        <User
-          size="xl"
-          name={userName}
-          description={ratingText}
-          avatar={<Avatar size="l" imgUrl={otherUser.photo || ''} />}
-        />
+      <div className={styles.userSection}>
+        <div className={styles.userRow}>
+          <Avatar className={styles.avatar} imgUrl={otherUser.photo || ''} />
+          <div className={styles.userInfo}>
+            <Text variant="body-2">{userName}</Text>
+            {ratingText && (
+              <Text variant="body-short" color="secondary">
+                {ratingText}
+              </Text>
+            )}
+          </div>
+        </div>
 
         <DropdownMenu
           size="l"
           renderSwitcher={props => (
-            <Button {...props} view="flat" size="l">
-              <Icon data={Ellipsis} size={20} />
+            <Button {...props} view="outlined" pin="round-round" className={styles.menuButton}>
+              <Icon data={EllipsisVertical} size={24} />
             </Button>
           )}
           items={menuItems}
         />
       </div>
 
-      <AdMiniCard ad={ad} route={route} date={date} price={price} />
+      <div className={styles.adSection}>
+        <AdMiniCard ad={ad} route={route} date={date} price={price} />
+      </div>
     </div>
   )
 }

@@ -1,8 +1,8 @@
 'use client'
 
-import { Plus, Xmark } from '@gravity-ui/icons'
-import { Button, Icon, Text, TextInput } from '@gravity-ui/uikit'
-import { useRef, useState } from 'react'
+import { CirclePlus, Xmark } from '@gravity-ui/icons'
+import { Button, Icon, Text, TextArea } from '@gravity-ui/uikit'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import styles from './component.module.css'
 
@@ -16,6 +16,25 @@ export const ChatInputBar = ({ onSend, disabled = false }: IChatInputBarProps) =
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
   const fileInputRef = useRef<HTMLInputElement>(null)
 
+  const previews = useMemo(
+    () =>
+      selectedFiles.map(file => ({
+        file,
+        isImage: file.type.startsWith('image/'),
+        url: file.type.startsWith('image/') ? URL.createObjectURL(file) : null,
+      })),
+    [selectedFiles]
+  )
+
+  useEffect(
+    () => () => {
+      previews.forEach(p => {
+        if (p.url) URL.revokeObjectURL(p.url)
+      })
+    },
+    [previews]
+  )
+
   const handleSend = () => {
     if ((!text.trim() && selectedFiles.length === 0) || disabled) return
 
@@ -24,7 +43,7 @@ export const ChatInputBar = ({ onSend, disabled = false }: IChatInputBarProps) =
     setSelectedFiles([])
   }
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
       handleSend()
@@ -35,7 +54,6 @@ export const ChatInputBar = ({ onSend, disabled = false }: IChatInputBarProps) =
     const files = Array.from(e.target.files || [])
 
     setSelectedFiles(prev => [...prev, ...files])
-    // Сбросить input чтобы можно было выбрать тот же файл снова
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
     }
@@ -51,14 +69,30 @@ export const ChatInputBar = ({ onSend, disabled = false }: IChatInputBarProps) =
 
   return (
     <div className={styles.container}>
-      {selectedFiles.length > 0 && (
+      {previews.length > 0 && (
         <div className={styles.filesPreview}>
-          {selectedFiles.map((file, index) => (
-            <div key={`${file.name}-${index}`} className={styles.fileChip}>
-              <Text variant="caption-1">{file.name}</Text>
-              <Button view="flat" size="xs" onClick={() => handleRemoveFile(index)}>
-                <Icon data={Xmark} size={14} />
-              </Button>
+          {previews.map((preview, index) => (
+            <div key={`${preview.file.name}-${index}`} className={styles.previewItem}>
+              {preview.isImage && preview.url ? (
+                <div className={styles.imageThumbnail}>
+                  <img src={preview.url} alt={preview.file.name} className={styles.thumbnailImg} />
+                  <Button
+                    view="flat"
+                    size="xs"
+                    className={styles.removeOverlay}
+                    onClick={() => handleRemoveFile(index)}
+                  >
+                    <Icon data={Xmark} size={14} />
+                  </Button>
+                </div>
+              ) : (
+                <div className={styles.fileChip}>
+                  <Text variant="caption-1">{preview.file.name}</Text>
+                  <Button view="flat" size="xs" onClick={() => handleRemoveFile(index)}>
+                    <Icon data={Xmark} size={14} />
+                  </Button>
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -71,20 +105,17 @@ export const ChatInputBar = ({ onSend, disabled = false }: IChatInputBarProps) =
           type="file"
           accept="image/*,.pdf,.doc,.docx,.txt"
           onChange={handleFileSelect}
-          style={{ display: 'none' }}
+          className={styles.hiddenInput}
         />
 
-        <Button
-          view="outlined"
-          size="l"
-          onClick={handleAttachClick}
-          className={styles.attachButton}
-        >
-          <Icon data={Plus} size={20} />
+        <Button view="flat" size="xl" onClick={handleAttachClick} className={styles.attachButton}>
+          <Icon data={CirclePlus} size={30} />
         </Button>
 
-        <TextInput
+        <TextArea
           size="xl"
+          minRows={1}
+          maxRows={5}
           placeholder="Введите сообщение"
           value={text}
           onUpdate={setText}
