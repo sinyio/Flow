@@ -358,6 +358,18 @@ export class AdService {
         skipDuplicates: true,
       })
 
+      const messageCount = await tx.message.count({ where: { chatId: chat.id } })
+      if (messageCount === 0) {
+        await tx.message.create({
+          data: {
+            chatId: chat.id,
+            senderId: userId,
+            text: 'Отклик на объявление',
+            type: 'AD_RESPONSE',
+          },
+        })
+      }
+
       return { chatId: chat.id }
     })
 

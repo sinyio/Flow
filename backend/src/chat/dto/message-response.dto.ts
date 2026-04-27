@@ -48,6 +48,9 @@ export class MessageResponseDto {
   @ApiProperty({ example: 'Привет!', nullable: true })
   text: string | null
 
+  @ApiProperty({ example: 'REGULAR', enum: ['REGULAR', 'AD_RESPONSE'] })
+  type: 'REGULAR' | 'AD_RESPONSE'
+
   @ApiProperty({ example: '2026-03-12T10:00:00.000Z' })
   createdAt: Date
 

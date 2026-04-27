@@ -197,12 +197,18 @@ model Message {
   chatId    String        @map("chat_id")
   senderId  String        @map("sender_id")
   text      String?
+  type      MessageType   @default(REGULAR)
   createdAt DateTime      @default(now()) @map("created_at")
   chat      Chat          @relation(fields: [chatId], references: [id])
   sender    User          @relation(fields: [senderId], references: [id])
   files     MessageFile[]
 
   @@map("messages")
+}
+
+enum MessageType {
+  REGULAR
+  AD_RESPONSE
 }
 
 model MessageFile {

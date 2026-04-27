@@ -173,6 +173,7 @@ export class ChatService {
         id: m.id,
         chatId: m.chatId,
         text: m.text,
+        type: m.type,
         createdAt: m.createdAt,
         sender: {
           id: m.sender.id,
@@ -266,6 +267,7 @@ export class ChatService {
       id: message.id,
       chatId: message.chatId,
       text: message.text,
+      type: message.type,
       createdAt: message.createdAt,
       sender: {
         id: message.sender.id,
