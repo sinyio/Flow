@@ -25,6 +25,7 @@ export class UpdateProfileDto {
     @IsOptional()
     dateOfBirth?: Date
 
+    @IsOptional()
     @IsString()
     @ApiPropertyOptional({ example: '' })
     contacts?: string
