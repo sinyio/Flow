@@ -60,7 +60,7 @@ export function PhoneSection() {
   }, []);
 
   useEffect(() => {
-    if (isMobile || window.innerWidth <= 834) return;
+    if (!mounted || isMobile) return;
     const wrapper = wrapperRef.current;
     const inner = innerRef.current;
     if (!wrapper || !inner) return;
@@ -109,7 +109,7 @@ export function PhoneSection() {
     window.addEventListener('scroll', update, { passive: true });
     update();
     return () => window.removeEventListener('scroll', update);
-  }, [isMobile]);
+  }, [isMobile, mounted]);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
