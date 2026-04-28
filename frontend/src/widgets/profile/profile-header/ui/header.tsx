@@ -54,7 +54,7 @@ export const Header = ({
 
   const items = [
     ...(editItem ? [editItem] : []),
-    ...(!canEdit || adId
+    ...(!canEdit
       ? [
           {
             iconStart: <FlagIcon color="var(--g-color-text-secondary)" />,
@@ -71,7 +71,7 @@ export const Header = ({
         setShareOpen(true);
       },
     },
-    ...(canEdit
+    ...(canEdit && !!adId
       ? [
           {
             iconStart: <TrashBinIcon />,

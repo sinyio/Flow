@@ -4,9 +4,9 @@ import { useState } from 'react'
 import Image from 'next/image'
 
 import { Link, useToaster } from '@gravity-ui/uikit'
+import { useRouter } from 'next/navigation'
 
-import { TAd } from '@api/ads'
-import { respondToAd } from '@api/ads'
+import { TAd, deleteAd, respondToAd } from '@api/ads'
 import { useAxiosInstance } from '@api/use-axios-instance'
 
 import { useResponsive } from '@utils/hooks/use-responsive'
@@ -27,9 +27,16 @@ export const AdView = ({ ad }: IAdViewProps) => {
   const { device } = useResponsive()
   const axiosInstance = useAxiosInstance()
   const { add } = useToaster()
+  const router = useRouter()
   const [responding, setResponding] = useState(false)
   const [hasResponded, setHasResponded] = useState(ad.userState.hasResponded)
   const [chatId, setChatId] = useState(ad.userState.chatId)
+
+  const handleDeleteAd = async () => {
+    await deleteAd(ad.id, axiosInstance)
+    add({ name: 'delete_ad', theme: 'success', title: 'Объявление удалено', isClosable: true })
+    router.back()
+  }
 
   const handleRespond = async () => {
     setResponding(true)
@@ -71,6 +78,7 @@ export const AdView = ({ ad }: IAdViewProps) => {
             chatId={chatId}
             onRespond={handleRespond}
             responding={responding}
+            onDeleteAd={handleDeleteAd}
           />
 
           <div className={styles.adDetails}>
@@ -84,7 +92,7 @@ export const AdView = ({ ad }: IAdViewProps) => {
   return (
     <>
       <div className={styles.hero}>
-        <Header canEdit={ad.userState.canEdit} adId={ad.id} className={styles.heroHeader} />
+        <Header canEdit={ad.userState.canEdit} adId={ad.id} onDeleteAd={handleDeleteAd} className={styles.heroHeader} />
         <div className={styles.heroInner}>
           <div className={styles.adName}>
             <AdName
