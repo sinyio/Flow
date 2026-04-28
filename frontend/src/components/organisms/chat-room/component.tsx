@@ -20,19 +20,30 @@ export interface IChatRoomProps {
   showDealBar?: boolean
 }
 
-export const ChatRoom = ({ onSendMessage, onConfirmDeal, isConfirming, showDealBar }: IChatRoomProps) => {
+export const ChatRoom = ({
+  onSendMessage,
+  onConfirmDeal,
+  isConfirming,
+  showDealBar,
+}: IChatRoomProps) => {
   const { messages, currentUserId, isLoading } = useChatStore()
 
   const bottomRef = useRef<HTMLDivElement>(null)
   const messagesContainerRef = useRef<HTMLDivElement>(null)
+  const isFirstLoad = useRef(true)
 
-  // Автоскролл вниз при новых сообщениях
+  // Скролл к концу при загрузке и при новых сообщениях (если близко к низу)
   useEffect(() => {
     const container = messagesContainerRef.current
 
-    if (!container) return
+    if (!container || messages.length === 0) return
 
-    // Проверяем, находимся ли мы близко к низу (в пределах 100px)
+    if (isFirstLoad.current) {
+      isFirstLoad.current = false
+      bottomRef.current?.scrollIntoView()
+      return
+    }
+
     const isNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 100
 
     if (isNearBottom) {
@@ -91,12 +102,12 @@ export const ChatRoom = ({ onSendMessage, onConfirmDeal, isConfirming, showDealB
           </div>
         ))}
 
+        {showDealBar && onConfirmDeal && (
+          <DealConfirmBar onConfirm={onConfirmDeal} isLoading={isConfirming} />
+        )}
+
         <div ref={bottomRef} />
       </div>
-
-      {showDealBar && onConfirmDeal && (
-        <DealConfirmBar onConfirm={onConfirmDeal} isLoading={isConfirming} />
-      )}
 
       <ChatInputBar
         onSend={(text, files) => {

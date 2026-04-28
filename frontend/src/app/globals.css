@@ -73,9 +73,6 @@ body {
 .g-root_theme_light {
   --g-color-base-generic-accent-disabled: rgba(115, 115, 115, 1);
 
-  --g-color-base-generic: var(--g-color-base-light);
-  --g-color-base-generic-hover: var(--g-color-base-light-hover);
-
   --g-color-base-brand: rgba(98, 139, 53, 1);
   --g-color-line-brand: rgba(98, 139, 53, 1);
   --g-color-base-brand-hover: rgba(98, 139, 53, 0.85);

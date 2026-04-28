@@ -21,10 +21,11 @@ export const MessageBubble = ({ message, isOwn, showAvatar = true }: IMessageBub
 
   return (
     <div className={`${styles.container} ${isOwn ? styles.own : ''}`}>
-      {showAvatar && !isOwn && (
-        <Avatar size="xl" imgUrl={message.sender.photo || ''} className={styles.avatar} />
+      {showAvatar ? (
+        <Avatar size="l" imgUrl={message.sender.photo || ''} className={styles.avatar} />
+      ) : (
+        <div className={styles.avatarSpacer} />
       )}
-      {!showAvatar && !isOwn && <div className={styles.avatarSpacer} />}
 
       <div className={`${styles.messageBubble} ${isOwn ? styles.ownBubble : ''}`}>
         {message.text && (
@@ -53,11 +54,6 @@ export const MessageBubble = ({ message, isOwn, showAvatar = true }: IMessageBub
           {time}
         </Text>
       </div>
-
-      {showAvatar && isOwn && (
-        <Avatar size="xl" imgUrl={message.sender.photo || ''} className={styles.avatar} />
-      )}
-      {!showAvatar && isOwn && <div className={styles.avatarSpacer} />}
     </div>
   )
 }

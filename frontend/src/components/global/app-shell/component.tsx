@@ -53,7 +53,12 @@ export const AppShell = ({ children }: AppShellProps) => {
         <ToasterComponent />
       </ToasterProvider>
 
-      {device !== 'mobile' && !pathname.startsWith('/auth') && pathname !== '/' ? <Footer /> : null}
+      {device !== 'mobile' &&
+      !pathname.startsWith('/auth') &&
+      !pathname.startsWith('/chats') &&
+      pathname !== '/' ? (
+        <Footer />
+      ) : null}
     </>
   )
 }
