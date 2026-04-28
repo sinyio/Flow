@@ -6,6 +6,7 @@ import { type ReactNode, useRef } from 'react'
 
 import { useResponsive } from '@utils/hooks/use-responsive'
 
+import { AdminFab } from '@components/global/admin-fab/component'
 import { MobileBottomMenu } from '@components/global/mobile-bottom-menu'
 import { Footer } from '@components/organisms/footer'
 import { Header } from '@components/organisms/header'
@@ -52,6 +53,8 @@ export const AppShell = ({ children }: AppShellProps) => {
         {children}
         <ToasterComponent />
       </ToasterProvider>
+
+      <AdminFab />
 
       {device !== 'mobile' &&
       !pathname.startsWith('/auth') &&

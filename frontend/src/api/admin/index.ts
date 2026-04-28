@@ -1,2 +1,3 @@
 export { createComplaint } from './create-complaint'
-export type { TComplaintType, ICreateComplaintPayload } from './types'
+export { getComplaints } from './get-complaints'
+export type { TComplaintType, ICreateComplaintPayload, TComplaint, TComplaintsResponse } from './types'

@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import { Text } from '@gravity-ui/uikit'
 
 import { TGetAdsParams, TGetAdsResponse, TGetPopularRoutesResponse } from '@api/ads'
@@ -8,6 +7,7 @@ import { Route } from '@components/atoms/route'
 
 import { HeroSearch } from '@widgets/search-block/component'
 
+import { HeroImage } from './hero-image'
 import { AdsState } from './states/ads/component'
 import { MainState } from './states/main/component'
 import styles from './view.module.css'
@@ -22,14 +22,7 @@ export const FeedView = ({ routes, ads, settings }: IFeedViewProps) => (
   <>
     <div className={styles.hero}>
       <div className={styles.heroInner}>
-        <Image
-          fill
-          priority
-          src="/feed-hero.webp"
-          alt=""
-          className={styles.heroImage}
-          aria-hidden="true"
-        />
+        <HeroImage />
 
         <div className={styles.heroContent}>
           <HeroSearch routes={routes} settings={settings} />
