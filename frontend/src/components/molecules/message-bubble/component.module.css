@@ -32,7 +32,7 @@
 }
 
 .messageText {
-  max-width: 240px;
+  max-width: 100%;
 }
 
 .files {
@@ -65,4 +65,10 @@
 
 .time {
   white-space: nowrap;
+}
+
+@media (max-width: 767px) {
+  .container {
+    max-width: 80%;
+  }
 }

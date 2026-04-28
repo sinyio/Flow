@@ -24,9 +24,22 @@
   flex-shrink: 0;
 }
 
+.userLink {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: inherit;
+}
+
 .userInfo {
   display: flex;
   flex-direction: column;
+}
+
+.backButton {
+  display: none;
+  flex-shrink: 0;
 }
 
 .menuButton {
@@ -37,4 +50,19 @@
 .adSection {
   padding: 16px;
   border-bottom: 1px solid var(--g-color-line-generic);
+}
+
+@media (max-width: 767px) {
+  .backButton {
+    display: flex;
+  }
+
+  .avatar {
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  .adSection {
+    padding: 12px 16px;
+  }
 }

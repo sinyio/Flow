@@ -46,3 +46,22 @@
   padding: 40px 0;
   text-align: center;
 }
+
+/* Tablet */
+@media (max-width: 1279px) {
+  .container {
+    padding-left: 32px;
+    padding-right: 20px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+  .container {
+    padding: 0 16px;
+  }
+
+  .header {
+    padding: 24px 0 16px;
+  }
+}

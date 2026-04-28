@@ -1,8 +1,10 @@
 'use client'
 
-import { CirclePlus, Xmark } from '@gravity-ui/icons'
-import { Button, Icon, Text, TextArea } from '@gravity-ui/uikit'
+import { PaperPlane, Xmark } from '@gravity-ui/icons'
+import { Button, Icon, Text, TextInput } from '@gravity-ui/uikit'
 import { useEffect, useMemo, useRef, useState } from 'react'
+
+import { PlusCircleIcon } from '@components/svgr/plus-circle-icon/icon'
 
 import styles from './component.module.css'
 
@@ -43,8 +45,8 @@ export const ChatInputBar = ({ onSend, disabled = false }: IChatInputBarProps) =
     setSelectedFiles([])
   }
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
       e.preventDefault()
       handleSend()
     }
@@ -108,14 +110,13 @@ export const ChatInputBar = ({ onSend, disabled = false }: IChatInputBarProps) =
           className={styles.hiddenInput}
         />
 
-        <Button view="flat" size="xl" onClick={handleAttachClick} className={styles.attachButton}>
-          <Icon data={CirclePlus} size={30} />
-        </Button>
+        <button type="button" onClick={handleAttachClick} className={styles.attachButton}>
+          <PlusCircleIcon />
+        </button>
 
-        <TextArea
+        <TextInput
           size="xl"
-          minRows={1}
-          maxRows={5}
+          view="normal"
           placeholder="Введите сообщение"
           value={text}
           onUpdate={setText}
@@ -123,6 +124,16 @@ export const ChatInputBar = ({ onSend, disabled = false }: IChatInputBarProps) =
           disabled={disabled}
           className={styles.input}
         />
+
+        <Button
+          view="action"
+          size="xl"
+          onClick={handleSend}
+          disabled={disabled || (!text.trim() && selectedFiles.length === 0)}
+          className={styles.sendButton}
+        >
+          <Icon data={PaperPlane} size={20} />
+        </Button>
       </div>
     </div>
   )

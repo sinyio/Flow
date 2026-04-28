@@ -32,3 +32,10 @@
   gap: 16px;
   white-space: nowrap;
 }
+
+@media (max-width: 767px) {
+  .detailsRow {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}

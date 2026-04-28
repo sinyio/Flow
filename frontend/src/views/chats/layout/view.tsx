@@ -32,6 +32,7 @@ export const ChatLayout = ({ initialChatId }: IChatLayoutProps) => {
     loadChats,
     loadMessages,
     selectChat,
+    clearSelection,
     sendMessage,
     addIncomingMessage,
     setCanAssignCourier,
@@ -108,10 +109,7 @@ export const ChatLayout = ({ initialChatId }: IChatLayoutProps) => {
 
     setIsConfirming(true)
     try {
-      await assignCourier(
-        { adId: selectedChat.adId, courierId: selectedChat.otherUser.id },
-        axios
-      )
+      await assignCourier({ adId: selectedChat.adId, courierId: selectedChat.otherUser.id }, axios)
       setCanAssignCourier(selectedChat.id, false)
     } catch (err) {
       console.error('[ChatLayout] assignCourier failed:', err)
@@ -122,15 +120,20 @@ export const ChatLayout = ({ initialChatId }: IChatLayoutProps) => {
 
   const showDealBar = selectedChat?.canAssignCourier === true
 
+  const handleBack = () => {
+    clearSelection()
+    router.replace('/chats')
+  }
+
   return (
     <>
       <div className={styles.header} />
       <div className={styles.layout}>
-        <div className={styles.sidebar}>
+        <div className={`${styles.sidebar} ${selectedChatId ? styles.sidebarHidden : ''}`}>
           <ChatSidebar />
         </div>
 
-        <div className={styles.room}>
+        <div className={`${styles.room} ${!selectedChatId ? styles.roomHidden : ''}`}>
           {selectedChat ? (
             <>
               {selectedChat.otherUser && (
@@ -138,6 +141,7 @@ export const ChatLayout = ({ initialChatId }: IChatLayoutProps) => {
                   otherUser={selectedChat.otherUser}
                   ad={selectedChat.ad}
                   onMenuAction={action => console.log('Menu action:', action)}
+                  onBack={handleBack}
                 />
               )}
 

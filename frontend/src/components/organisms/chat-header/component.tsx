@@ -1,7 +1,8 @@
 'use client'
 
-import { EllipsisVertical } from '@gravity-ui/icons'
+import { ArrowLeft, EllipsisVertical } from '@gravity-ui/icons'
 import { Avatar, Button, DropdownMenu, Icon, Text } from '@gravity-ui/uikit'
+import Link from 'next/link'
 
 import { TChatAd, TChatUserSnippet } from '@api/chats/types'
 
@@ -16,13 +17,15 @@ export interface IChatHeaderProps {
   ad: TChatAd
   rating?: number
   onMenuAction?: (action: string) => void
+  onBack?: () => void
 }
 
-export const ChatHeader = ({ otherUser, ad, rating, onMenuAction }: IChatHeaderProps) => {
+export const ChatHeader = ({ otherUser, ad, rating, onMenuAction, onBack }: IChatHeaderProps) => {
   const userName = formatUserName(otherUser)
 
-  const userRating = rating ?? otherUser.rating
-  const ratingText = userRating ? `${userRating.toFixed(1)} ★★★★★` : undefined
+  const userRating = rating ?? otherUser.rating ?? 0
+  const filledStars = Math.round(userRating)
+  const ratingText = `${userRating.toFixed(1).replace('.', ',')} ${'★'.repeat(filledStars)}${'☆'.repeat(5 - filledStars)}`
 
   const route = ad.fromCity && ad.toCity ? `${ad.fromCity} – ${ad.toCity}` : 'Маршрут не указан'
   const date =
@@ -46,15 +49,25 @@ export const ChatHeader = ({ otherUser, ad, rating, onMenuAction }: IChatHeaderP
     <div className={styles.container}>
       <div className={styles.userSection}>
         <div className={styles.userRow}>
-          <Avatar className={styles.avatar} imgUrl={otherUser.photo || ''} />
-          <div className={styles.userInfo}>
-            <Text variant="body-2">{userName}</Text>
-            {ratingText && (
+          {onBack && (
+            <Button
+              view="outlined"
+              pin="round-round"
+              className={styles.backButton}
+              onClick={onBack}
+            >
+              <Icon data={ArrowLeft} size={24} />
+            </Button>
+          )}
+          <Link href={`/profile/${otherUser.id}`} className={styles.userLink}>
+            <Avatar className={styles.avatar} imgUrl={otherUser.photo || ''} />
+            <div className={styles.userInfo}>
+              <Text variant="body-2">{userName}</Text>
               <Text variant="body-short" color="secondary">
                 {ratingText}
               </Text>
-            )}
-          </div>
+            </div>
+          </Link>
         </div>
 
         <DropdownMenu

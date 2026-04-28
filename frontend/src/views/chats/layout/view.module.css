@@ -6,8 +6,8 @@
 
 .layout {
   display: grid;
-  grid-template-columns: 35% 65%;
-  height: calc(100vh - 80px); /* Вычитаем высоту header */
+  grid-template-columns: 440px 1fr;
+  height: calc(100vh - 136px);
   gap: 0;
   overflow: hidden;
 }
@@ -33,19 +33,29 @@
   text-align: center;
 }
 
+/* Tablet */
+@media (max-width: 1279px) {
+  .layout {
+    grid-template-columns: 350px 1fr;
+  }
+}
+
 /* Mobile */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
+  .header {
+    display: none;
+  }
+
   .layout {
     grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr;
+    height: 100vh;
   }
 
-  .sidebar {
-    border-bottom: 1px solid var(--g-color-line-generic);
-    max-height: 40vh;
+  .sidebarHidden {
+    display: none;
   }
 
-  .room {
-    height: 60vh;
+  .roomHidden {
+    display: none;
   }
 }
