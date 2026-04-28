@@ -11,6 +11,7 @@ export interface IAdHeaderProps {
   price: number
   authorName: string
   authorAvatarUrl?: string
+  authorId?: string
   adId?: string
   canEdit?: boolean
   responseCount?: number
@@ -29,6 +30,7 @@ export const AdHeader = ({
   price,
   authorName,
   authorAvatarUrl,
+  authorId,
   adId,
   canEdit,
   responseCount,
@@ -50,6 +52,7 @@ export const AdHeader = ({
       price={price}
       authorName={authorName}
       authorAvatarUrl={authorAvatarUrl}
+      authorId={authorId}
       adId={adId}
       canEdit={canEdit}
       responseCount={responseCount}

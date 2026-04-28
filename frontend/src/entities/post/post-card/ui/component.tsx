@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Avatar, Flex, Text } from "@gravity-ui/uikit";
+import { Avatar, Text } from "@gravity-ui/uikit";
 import {
   Eye,
   ThumbsUp,
@@ -48,15 +48,17 @@ export const PostCard = ({ post }: IPostCardProps) => {
           <div className={styles.body}>
             {!isFlowPost && post.author && (
               <div className={styles.meta}>
-                <Flex gap={2} alignItems='center'>
+                <div className={styles.authorMeta}>
                   <Avatar
                     size="s"
                     imgUrl={post.author.photo ?? undefined}
                     text={post.author.fullName}
                   />
-                  <Text variant="body-2">{post.author.fullName}</Text>
-                </Flex>
-                <Text variant="body-2" color="secondary">
+                  <div className={styles.authorName}>
+                    <Text variant="body-2">{post.author.fullName}</Text>
+                  </div>
+                </div>
+                <Text variant="body-2" color="secondary" style={{ flexShrink: 0 }}>
                   {getDate(post.createdAt, "short")}
                 </Text>
                 <div className={styles.views}>

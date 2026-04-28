@@ -63,6 +63,7 @@ export const AdView = ({ ad }: IAdViewProps) => {
             price={ad.price}
             authorName={ad.author.fullName || ''}
             authorAvatarUrl={ad.author.photo || ''}
+            authorId={ad.author.id}
             adId={ad.id}
             canEdit={ad.userState.canEdit}
             responseCount={ad.userState.responseCount}
@@ -91,6 +92,7 @@ export const AdView = ({ ad }: IAdViewProps) => {
               price={ad.price}
               authorName={ad?.author?.fullName}
               authorAvatarUrl={ad?.author?.photo || ''}
+              authorId={ad?.author?.id}
               isBackdrop={false}
               adId={ad.id}
               canEdit={ad.userState.canEdit}

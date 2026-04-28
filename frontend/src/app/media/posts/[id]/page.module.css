@@ -37,7 +37,27 @@
 .meta {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 12px;
+  flex-wrap: nowrap;
+  min-width: 0;
+}
+
+.authorMeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.authorName {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .views {

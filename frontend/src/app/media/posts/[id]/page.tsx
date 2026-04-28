@@ -25,6 +25,8 @@ import { deletePost } from "@api/media/delete-post";
 import { useApiContext } from "@contexts/api-context";
 import { useCurrentUserStore } from "@utils/stores/current-user";
 
+import Link from "next/link";
+
 import { PageContainer } from "@components/global/page-container";
 import { FormattedText } from "@components/atoms/formatted-text/component";
 
@@ -389,14 +391,20 @@ export default function PostDetailPage({ params }: PostDetailPageProps) {
 
           <div className={styles.meta}>
             {post.author && !isFlowPost && (
-              <Flex gap={2} alignItems="center">
-                <Avatar
-                  size="s"
-                  imgUrl={post.author.photo ?? undefined}
-                  text={post.author.fullName}
-                />
-                <Text variant="body-2">{post.author.fullName}</Text>
-              </Flex>
+              <Link href={`/profile/${post.author.id}`} style={{ display: 'contents', textDecoration: 'none', color: 'inherit' }}>
+                <div className={styles.authorMeta}>
+                  <span style={{ flexShrink: 0 }}>
+                    <Avatar
+                      size="s"
+                      imgUrl={post.author.photo ?? undefined}
+                      text={post.author.fullName}
+                    />
+                  </span>
+                  <div className={styles.authorName}>
+                    <Text variant="body-2">{post.author.fullName}</Text>
+                  </div>
+                </div>
+              </Link>
             )}
             <Text variant="body-2" color="secondary">
               {getDate(post.createdAt, "short")}

@@ -2,6 +2,7 @@
 
 import { Avatar, Button, Text, User } from '@gravity-ui/uikit'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { HTMLAttributes } from 'react'
 
 import styles from './component.module.css'
@@ -11,6 +12,7 @@ export interface IAdNameProps extends HTMLAttributes<HTMLDivElement> {
   price: number
   authorName: string
   authorAvatarUrl?: string
+  authorId?: string
   isBackdrop?: boolean
   adId?: string
   canEdit?: boolean
@@ -35,6 +37,7 @@ export const AdName = ({
   price,
   authorName,
   authorAvatarUrl,
+  authorId,
   isBackdrop = true,
   adId,
   canEdit = false,
@@ -63,12 +66,23 @@ export const AdName = ({
             {price} ₽
           </Text>
           <div className={styles.divider} />
-          <User
-            size="xl"
-            name={authorName}
-            className={styles.user}
-            avatar={<Avatar size="l" imgUrl={authorAvatarUrl || ''} />}
-          />
+          {authorId ? (
+            <Link href={`/profile/${authorId}`} style={{ display: 'contents', textDecoration: 'none', color: 'inherit' }}>
+              <User
+                size="xl"
+                name={authorName}
+                className={`${styles.user} ${styles.userLink}`}
+                avatar={<Avatar size="l" imgUrl={authorAvatarUrl || ''} />}
+              />
+            </Link>
+          ) : (
+            <User
+              size="xl"
+              name={authorName}
+              className={styles.user}
+              avatar={<Avatar size="l" imgUrl={authorAvatarUrl || ''} />}
+            />
+          )}
         </div>
       </div>
 

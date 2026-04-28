@@ -1,5 +1,5 @@
 .adDetails {
-  padding: 20px 16px 30px;
+  padding: 24px 0 0;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -23,11 +23,11 @@
 }
 
 .statsContainer {
-    width: fit-content !important;
+  width: fit-content !important;
 }
 
 .statsChip {
-    width: fit-content !important;
+  width: fit-content !important;
 }
 
 .adMetaGrid {
@@ -43,25 +43,25 @@
 }
 
 .dashedLine {
-    display: block;
-    height: 100%;
-    width: 100%;
-    padding-bottom: 7px;
-    border-top: 1px dashed gray;
+  display: block;
+  height: 100%;
+  width: 100%;
+  padding-bottom: 7px;
+  border-top: 1px dashed gray;
 }
 
 .adMetaLabel {
-    flex-shrink: 0;
-    white-space: nowrap;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .adMetaValue {
-    flex-shrink: 0;
-    text-align: right;
+  flex-shrink: 0;
+  text-align: right;
 }
 
-@media (min-width: 834px) {
-    .adDetails {
-        padding: 24px 0 0;
-    }
+@media (max-width: 834px) {
+  .adDetails {
+    padding: 20px 16px 120px;
+  }
 }

@@ -30,11 +30,24 @@
 }
 
 .user {
-  width: 100%;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.userLink {
+  cursor: pointer;
 }
 
 .user div > span {
   color: var(--g-color-text-inverted-primary) !important;
+}
+
+.user :global([class*='user__title']) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
 }
 
 .priceAuthorRow {
@@ -45,8 +58,9 @@
 }
 
 .price {
-  text-align: center;
-  width: 100%;
+  flex: 1;
+  text-align: right;
+  min-width: 0;
 }
 
 .divider {
