@@ -80,7 +80,7 @@ export class UserService {
                 status: 'COMPLETED',
               },
             },
-            authoredAds: true,
+            authoredAds: { where: { deletedAt: null } },
             reviewsReceived: true,
             reviewsAuthored: true,
           },
@@ -119,7 +119,7 @@ export class UserService {
     }
   }
 
-  public async updateProfile(req: Request, dto: UpdateProfileDto, file) {
+  public async updateProfile(req: Request, dto: UpdateProfileDto, file?: any) {
     console.log(dto)
     console.log(file)
     const userId = req.session.userId

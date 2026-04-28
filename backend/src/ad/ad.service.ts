@@ -47,7 +47,7 @@ export class AdService {
         : null,
     ])
 
-    if (!ad) throw new NotFoundException('Объявление не найдено')
+    if (!ad || ad.deletedAt) throw new NotFoundException('Объявление не найдено')
 
     return getAdResponse(ad, userId!, !!existingResponse, existingResponse?.chat?.id ?? null)
   }
@@ -69,7 +69,7 @@ export class AdService {
       isDocument
     } = filters
 
-    const where: any = {}
+    const where: any = { deletedAt: null }
 
     if (minPrice) {
       where.price = {
@@ -129,7 +129,7 @@ export class AdService {
   ): Promise<PaginatedResponse<ReturnType<typeof getAdResponse>>> {
     const skip = (page - 1) * limit
 
-    const where = { authorId: userId }
+    const where = { authorId: userId, deletedAt: null }
 
     const [ads, total] = await this.prisma.$transaction([
       this.prisma.ad.findMany({
@@ -294,7 +294,8 @@ export class AdService {
         const ads = await this.prisma.ad.findMany({
           where: {
             fromCity: route.fromCity,
-            toCity: route.toCity
+            toCity: route.toCity,
+            deletedAt: null,
           },
           include: { author: true, sender: true, recipient: true, courier: true },
           orderBy: { createdAt: 'desc' },
