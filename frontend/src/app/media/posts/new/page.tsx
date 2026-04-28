@@ -34,7 +34,7 @@ const schema = z.object({
 
 type TFormValues = z.infer<typeof schema>
 
-export const NewPostPage = () => {
+const NewPostPage = () => {
   const router = useRouter()
   const { apiClient } = useApiContext()
   const { add } = useToaster()
@@ -192,3 +192,5 @@ export const NewPostPage = () => {
     </>
   )
 }
+
+export default NewPostPage

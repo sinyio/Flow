@@ -41,7 +41,7 @@ interface EditPostPageProps {
   params: Promise<{ id: string }>
 }
 
-export const EditPostPage = ({ params }: EditPostPageProps) => {
+const EditPostPage = ({ params }: EditPostPageProps) => {
   const { id } = use(params)
   const router = useRouter()
   const { apiClient } = useApiContext()
@@ -284,3 +284,5 @@ export const EditPostPage = ({ params }: EditPostPageProps) => {
     </>
   )
 }
+
+export default EditPostPage
