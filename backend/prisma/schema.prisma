@@ -47,6 +47,9 @@ model User {
   mediaComments      MediaComment[]
   mediaCommentLikes  MediaCommentLike[]
 
+  complaintsAuthored Complaint[] @relation("ComplaintAuthor")
+  complaintsReceived Complaint[] @relation("ComplaintTargetUser")
+
   @@map("users")
 }
 
@@ -118,9 +121,10 @@ model Ad {
   recipient User? @relation("AdRecipient", fields: [recipientId], references: [id])
   courier   User? @relation("AdCourier", fields: [courierId], references: [id])
 
-  responses AdResponse[]
-  chats     Chat[]
-  reviews   Review[]
+  responses  AdResponse[]
+  chats      Chat[]
+  reviews    Review[]
+  complaints Complaint[]
 
   @@map("ads")
 }
@@ -269,9 +273,10 @@ model MediaPost {
   authorId String @map("author_id")
   author   User   @relation(fields: [authorId], references: [id])
 
-  likes     MediaPostLike[]
-  favorites MediaPostFavorite[]
-  comments  MediaComment[]
+  likes      MediaPostLike[]
+  favorites  MediaPostFavorite[]
+  comments   MediaComment[]
+  complaints Complaint[]
 
   @@index([authorId, createdAt])
   @@map("media_posts")
@@ -351,4 +356,32 @@ model MediaCommentLike {
   @@unique([commentId, userId])
   @@index([userId, createdAt])
   @@map("media_comment_likes")
+}
+
+enum ComplaintType {
+  USER
+  AD
+  POST
+}
+
+model Complaint {
+  id   String        @id @default(uuid())
+  type ComplaintType
+  text String
+
+  authorId String @map("author_id")
+  author   User   @relation("ComplaintAuthor", fields: [authorId], references: [id])
+
+  targetUserId String? @map("target_user_id")
+  targetUser   User?   @relation("ComplaintTargetUser", fields: [targetUserId], references: [id])
+
+  targetAdId String? @map("target_ad_id")
+  targetAd   Ad?     @relation(fields: [targetAdId], references: [id])
+
+  targetPostId String?    @map("target_post_id")
+  targetPost   MediaPost? @relation(fields: [targetPostId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("complaints")
 }

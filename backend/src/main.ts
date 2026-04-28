@@ -17,6 +17,7 @@ import { ChatModule } from './chat/chat.module'
 import { ReviewModule } from './review/review.module'
 import { UserModule } from './user/user.module'
 import { MediaModule } from './media/media.module'
+import { AdminModule } from './admin/admin.module'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
@@ -69,12 +70,19 @@ async function bootstrap() {
 
   app.enableCors(getCorsConfig(config))
 
-  const swaggerConfig = new DocumentBuilder()
-    .setTitle('Flow API')
-    .build()
+  const swaggerConfig = new DocumentBuilder().setTitle('Flow API').build()
 
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig, {
-    include: [AuthModule, EmailConfirmationModule, AdModule, ChatModule, ReviewModule, UserModule, MediaModule],
+    include: [
+      AuthModule,
+      EmailConfirmationModule,
+      AdModule,
+      ChatModule,
+      ReviewModule,
+      UserModule,
+      MediaModule,
+      AdminModule,
+    ],
   })
   SwaggerModule.setup('docs', app, swaggerDocument)
 

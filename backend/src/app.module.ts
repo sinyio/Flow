@@ -10,6 +10,7 @@ import { S3Module } from './s3/s3.module';
 import { ChatModule } from './chat/chat.module'
 import { ReviewModule } from './review/review.module';
 import { MediaModule } from './media/media.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { MediaModule } from './media/media.module';
     ChatModule,
     ReviewModule,
     MediaModule,
+    AdminModule,
   ],
 })
 export class AppModule {}
