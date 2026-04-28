@@ -1,6 +1,6 @@
 .bgLiquidGlass {
   backdrop-filter: blur(4px);
-  background: hsla(0, 0%, 100%, 0.4);
+  background: hsla(0, 0%, 100%, 0.5);
   width: fit-content;
   height: fit-content;
   border-bottom: 1px solid rgba(0, 0, 0, 0.3);

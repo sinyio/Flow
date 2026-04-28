@@ -85,6 +85,14 @@ export const useChatStore = create<TChatStore>()(set => ({
       return { messages: [...state.messages, message] }
     })
   },
+
+  setCanAssignCourier: (chatId, value) => {
+    set(state => ({
+      chats: state.chats.map(chat =>
+        chat.id === chatId ? { ...chat, canAssignCourier: value } : chat
+      ),
+    }))
+  },
 }))
 
 // Selectors

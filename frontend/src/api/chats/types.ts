@@ -36,12 +36,14 @@ export type TChatItem = {
   id: string
   adId: string
   responseId: string | null
+  isSupportChat?: boolean
+  canAssignCourier?: boolean
   createdAt: string
   updatedAt: string
   ad: TChatAd
   otherUser: TChatUserSnippet | null
   lastMessage: TChatLastMessage | null
-  unreadCount?: number // Количество непрочитанных сообщений
+  unreadCount?: number
 }
 
 export type TMessageFile = {
