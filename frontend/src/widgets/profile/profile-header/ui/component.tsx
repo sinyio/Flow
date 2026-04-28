@@ -25,7 +25,7 @@ export const ProfileHeader = ({
   <section className={styles.container}>
     <Image priority fill alt="" src={photoUrl} className={styles.profileImage} />
 
-    <Header />
+    <Header canEdit={canEdit} userId={userId} />
 
     <ProfileName
       canEdit={canEdit}

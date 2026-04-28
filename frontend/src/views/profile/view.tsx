@@ -17,7 +17,7 @@ import { StarIcon } from '@components/svgr/star-icon/icon'
 import { VerifiedIcon } from '@components/svgr/verified-icon/icon'
 import { Tabs } from '@components/tabs/component'
 
-import { Ads, ProfileDetails, ProfileHeader, ProfileName, Reviews } from '@widgets/profile'
+import { Ads, Header as ProfileHeaderNav, ProfileDetails, ProfileHeader, ProfileName, Reviews } from '@widgets/profile'
 
 import styles from './view.module.css'
 
@@ -127,6 +127,7 @@ const ProfileView = ({ user, initialReviews = [], initialAds = [] }: IProfileVie
             />
           </div>
         </div>
+        <ProfileHeaderNav canEdit={Boolean(user?.userState?.canEdit)} userId={user.id} className={styles.heroHeader} />
         <Image priority fill alt="" src={user?.photo} className={styles.backgroundImage} />
       </div>
       <PageContainer

@@ -1,15 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Button,
-  DropdownMenu,
-  Icon,
-  Text,
-  useToaster,
-} from "@gravity-ui/uikit";
+import { Button, DropdownMenu, Icon, Text } from "@gravity-ui/uikit";
 import { useRouter } from "next/navigation";
-import { Pencil, TrashBin } from "@gravity-ui/icons";
 
 import { ArrowIcon } from "@components/svgr/arrow-icon/icon";
 import { DotsIcon } from "@components/svgr/dots-icon/icon";
@@ -17,8 +10,11 @@ import { FlagIcon } from "@components/svgr/flag-icon/icon";
 import { ShareIcon } from "@components/svgr/share-icon/icon";
 import { Modal } from "src/ui-kit";
 import { ShareModal } from "@components/molecules/share-modal";
+import { ComplaintModal } from "@components/molecules/complaint-modal";
 
 import styles from "./header.module.css";
+import { TrashBinIcon } from "@components/svgr/trashbin-icon/icon";
+import { PenThinIcon } from "@components/svgr/pen-thin-icon/icon";
 
 interface HeaderProps {
   postId: string;
@@ -28,35 +24,25 @@ interface HeaderProps {
 
 export const Header = ({ postId, canEdit, onDeletePost }: HeaderProps) => {
   const router = useRouter();
-  const { add } = useToaster();
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
   const [shareUrl, setShareUrl] = useState('');
-
-  const notifySoon = () => {
-    add({
-      isClosable: true,
-      theme: "warning",
-      name: "feature_soon",
-      title: "Скоро",
-      content: "Эта функция пока недоступна.",
-    });
-  };
+  const [complaintOpen, setComplaintOpen] = useState(false);
 
   const items = [
     ...(canEdit
       ? [
           {
-            iconStart: <Pencil />,
+            iconStart: <PenThinIcon />,
             text: "Редактировать",
             action: () => router.push(`/media/posts/${postId}/edit`),
           },
         ]
       : []),
     {
-      iconStart: <FlagIcon />,
+      iconStart: <FlagIcon color='var(--g-color-text-secondary)' />,
       text: "Пожаловаться",
-      action: () => notifySoon(),
+      action: () => setComplaintOpen(true),
     },
     {
       iconStart: <ShareIcon />,
@@ -66,9 +52,8 @@ export const Header = ({ postId, canEdit, onDeletePost }: HeaderProps) => {
     ...(canEdit
       ? [
           {
-            iconStart: <TrashBin />,
+            iconStart: <TrashBinIcon />,
             text: "Удалить",
-            theme: "danger" as const,
             action: () => setDeleteModalOpen(true),
           },
         ]
@@ -130,6 +115,7 @@ export const Header = ({ postId, canEdit, onDeletePost }: HeaderProps) => {
         </div>
       </Modal>
       <ShareModal open={shareOpen} onOpenChange={setShareOpen} url={shareUrl} title="Поделиться постом" />
+      <ComplaintModal open={complaintOpen} onOpenChange={setComplaintOpen} type="POST" targetId={postId} />
     </>
   );
 };
