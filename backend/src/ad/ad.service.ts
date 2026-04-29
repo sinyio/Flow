@@ -492,28 +492,66 @@ export class AdService {
 
     const ad = await this.prisma.ad.findUnique({
       where: { id: adId },
-      include: { responses: true },
+      include: { responses: { include: { chat: true } } },
     })
 
     if (!ad) throw new NotFoundException('Объявление не найдено')
     if (ad.authorId !== userId) throw new ForbiddenException('Только автор объявления может назначить исполнителя')
     if (courierId === ad.authorId) throw new BadRequestException('Нельзя назначить автора объявления курьером')
+    if (ad.courierId) throw new BadRequestException('Исполнитель уже назначен')
 
-    const hasResponse = ad.responses.some((r) => r.courierId === courierId)
-    if (!hasResponse) throw new BadRequestException('Этот пользователь не откликался на объявление')
+    const response = ad.responses.find((r) => r.courierId === courierId)
+    if (!response) throw new BadRequestException('Этот пользователь не откликался на объявление')
+    if (response.status === 'SELECTED') throw new BadRequestException('Курьер уже выбран, ожидается подтверждение')
+    if (response.status === 'ACCEPTED') throw new BadRequestException('Исполнитель уже назначен')
+
+    const chat = response.chat
+    if (!chat) throw new NotFoundException('Чат по этому отклику не найден')
 
     await this.prisma.$transaction(async (tx) => {
-      await tx.ad.update({
-        where: { id: adId },
-        data: { courierId },
-      })
-      await tx.adResponse.updateMany({
-        where: { adId, courierId: { not: courierId } },
-        data: { status: 'REJECTED' },
-      })
       await tx.adResponse.update({
         where: { adId_courierId: { adId, courierId } },
+        data: { status: 'SELECTED' },
+      })
+      await tx.message.create({
+        data: {
+          chatId: chat.id,
+          senderId: userId,
+          type: 'COURIER_SELECTED',
+        },
+      })
+      await tx.chat.update({
+        where: { id: chat.id },
+        data: { updatedAt: new Date() },
+      })
+    })
+
+    return getStatusOk()
+  }
+
+  public async confirmCourier(req: Request, adId: string) {
+    const userId = req.session.userId
+    if (!userId) throw new UnauthorizedException('Сессия не найдена')
+
+    const ad = await this.prisma.ad.findUnique({ where: { id: adId } })
+    if (!ad) throw new NotFoundException('Объявление не найдено')
+    if (ad.courierId) throw new BadRequestException('Исполнитель уже назначен')
+
+    const response = await this.prisma.adResponse.findUnique({
+      where: { adId_courierId: { adId, courierId: userId } },
+    })
+    if (!response) throw new NotFoundException('Отклик не найден')
+    if (response.status !== 'SELECTED') throw new BadRequestException('Нет активного предложения для подтверждения')
+
+    await this.prisma.$transaction(async (tx) => {
+      await tx.ad.update({ where: { id: adId }, data: { courierId: userId } })
+      await tx.adResponse.update({
+        where: { adId_courierId: { adId, courierId: userId } },
         data: { status: 'ACCEPTED' },
+      })
+      await tx.adResponse.updateMany({
+        where: { adId, courierId: { not: userId }, status: { not: 'ACCEPTED' } },
+        data: { status: 'REJECTED' },
       })
     })
 

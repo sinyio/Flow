@@ -160,6 +160,7 @@ model AdResponse {
 
 enum AdResponseStatus {
   PENDING
+  SELECTED
   ACCEPTED
   REJECTED
   CANCELED
@@ -214,6 +215,7 @@ model Message {
 enum MessageType {
   REGULAR
   AD_RESPONSE
+  COURIER_SELECTED
 }
 
 model MessageFile {

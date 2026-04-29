@@ -100,17 +100,32 @@ export class AdController {
   @HttpCode(HttpStatus.OK)
   @Post(':id/assign-courier')
   @UseGuards(AuthGuard)
-  @ApiOperation({ summary: 'Назначить исполнителем курьера по отклику' })
+  @ApiOperation({
+    summary: 'Предложить курьеру стать исполнителем',
+    description:
+      'Заказчик выбирает курьера — в чат отправляется сообщение типа COURIER_SELECTED, курьер должен подтвердить через /confirm-courier. Курьер назначается только после его согласия.',
+  })
   @ApiParam({ name: 'id', example: 'ad_123', description: 'Id объявления' })
   @ApiBody({ type: AssignCourierDto })
-  @ApiResponse({
-    status: 200,
-    schema: {
-      example: getStatusOk(),
-    },
-  })
+  @ApiResponse({ status: 200, schema: { example: getStatusOk() } })
+  @ApiResponse({ status: 400, schema: { example: { message: 'Курьер уже выбран, ожидается подтверждение', statusCode: 400 } } })
   public assignCourier(@Req() req: Request, @Param('id') id: string, @Body() body: AssignCourierDto) {
     return this.adService.assignCourier(req, id, body.courierId)
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post(':id/confirm-courier')
+  @UseGuards(AuthGuard)
+  @ApiOperation({
+    summary: 'Курьер подтверждает своё назначение исполнителем',
+    description:
+      'Вызывается курьером после того, как заказчик предложил ему стать исполнителем (assign-courier). Только при наличии отклика со статусом SELECTED. После подтверждения courierId на объявлении устанавливается, остальные отклики отклоняются.',
+  })
+  @ApiParam({ name: 'id', example: 'ad_123', description: 'Id объявления' })
+  @ApiResponse({ status: 200, schema: { example: getStatusOk() } })
+  @ApiResponse({ status: 400, schema: { example: { message: 'Нет активного предложения для подтверждения', statusCode: 400 } } })
+  public confirmCourier(@Req() req: Request, @Param('id') id: string) {
+    return this.adService.confirmCourier(req, id)
   }
 
   // @Authorization()

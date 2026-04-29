@@ -93,7 +93,9 @@ export class ChatService {
           chat.ad.authorId === userId &&
           otherMember &&
           otherMember.userId === chat.response.courierId &&
-          chat.ad.courierId !== chat.response.courierId,
+          !chat.ad.courierId &&
+          chat.response.status !== 'SELECTED' &&
+          chat.response.status !== 'ACCEPTED',
       )
 
       return {
