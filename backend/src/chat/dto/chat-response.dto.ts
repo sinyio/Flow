@@ -68,6 +68,9 @@ export class ChatResponseDto {
   })
   canAssignCourier: boolean
 
+  @ApiProperty({ description: 'Текущий пользователь является подтверждённым исполнителем этого объявления', example: false })
+  isCourierConfirmed: boolean
+
   @ApiProperty({ description: 'Количество непрочитанных сообщений от собеседника', example: 3 })
   unreadCount: number
 

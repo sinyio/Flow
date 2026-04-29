@@ -97,6 +97,7 @@ export class ChatService {
           chat.response.status !== 'SELECTED' &&
           chat.response.status !== 'ACCEPTED',
       )
+      const isCourierConfirmed = Boolean(chat.ad?.courierId && chat.ad.courierId === userId)
 
       return {
         id: chat.id,
@@ -104,6 +105,7 @@ export class ChatService {
         responseId: chat.responseId,
         isSupportChat,
         canAssignCourier,
+        isCourierConfirmed,
         unreadCount: unreadCounts[i],
         createdAt: chat.createdAt,
         updatedAt: chat.updatedAt,
