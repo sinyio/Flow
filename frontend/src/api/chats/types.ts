@@ -59,6 +59,7 @@ export type TMessage = {
   id: string
   chatId: string
   text: string | null
+  type: 'REGULAR' | 'AD_RESPONSE'
   createdAt: string
   sender: TChatUserSnippet
   files: TMessageFile[]

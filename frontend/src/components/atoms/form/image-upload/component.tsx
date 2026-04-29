@@ -80,16 +80,14 @@ export const ImageUploadPreview = ({
             onClick={() => inputRef.current?.click()}
           >
             <div className={styles.uploadButtonInner}>
-              <Paperclip width={20} height={20} />
-              <Text variant="header-1">{buttonText}</Text>
+              <Paperclip width={18} height={18} />
+              {buttonText}
             </div>
           </Button>
           {hint && <p className={styles.hint}>{hint}</p>}
         </div>
       )}
-      {hintError && (
-        <p className={styles.hintError}>Файл превышает 10 МБ</p>
-      )}
+      {hintError && <p className={styles.hintError}>Файл превышает 10 МБ</p>}
     </>
   );
 };

@@ -19,6 +19,18 @@ export const MessageBubble = ({ message, isOwn, showAvatar = true }: IMessageBub
     minute: '2-digit',
   })
 
+  if (message.type === 'AD_RESPONSE') {
+    return (
+      <div className={styles.systemContainer}>
+        <div className={styles.systemBubble}>
+          <Text variant="caption-2" color="secondary">
+            {message.text}
+          </Text>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className={`${styles.container} ${isOwn ? styles.own : ''}`}>
       {showAvatar ? (

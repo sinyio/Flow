@@ -72,3 +72,17 @@
     max-width: 80%;
   }
 }
+
+.systemContainer {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 12px;
+  width: 100%;
+}
+
+.systemBubble {
+  background-color: var(--g-color-base-generic);
+  border-radius: var(--g-border-radius-xl);
+  padding: 6px 16px;
+  border: 1px solid var(--g-color-line-generic);
+}
