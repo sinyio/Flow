@@ -39,11 +39,15 @@ export const Header = ({ postId, canEdit, onDeletePost }: HeaderProps) => {
           },
         ]
       : []),
-    {
-      iconStart: <FlagIcon color='var(--g-color-text-secondary)' />,
-      text: "Пожаловаться",
-      action: () => setComplaintOpen(true),
-    },
+    ...(!canEdit
+      ? [
+          {
+            iconStart: <FlagIcon color='var(--g-color-text-secondary)' />,
+            text: "Пожаловаться",
+            action: () => setComplaintOpen(true),
+          },
+        ]
+      : []),
     {
       iconStart: <ShareIcon />,
       text: "Поделиться",

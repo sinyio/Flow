@@ -41,6 +41,7 @@ const NewPostPage = () => {
   const [image, setImage] = useState<File | null>(null)
   const [preview, setPreview] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
+  const [imageError, setImageError] = useState(false)
 
   const { control, handleSubmit, formState, watch } = useForm<TFormValues>({
     defaultValues: { title: '', content: '' },
@@ -49,6 +50,7 @@ const NewPostPage = () => {
   })
 
   const handleFileSelect = (file: File) => {
+    setImageError(file.size > 10 * 1024 * 1024)
     if (preview) URL.revokeObjectURL(preview)
     setImage(file)
     setPreview(URL.createObjectURL(file))
@@ -56,6 +58,7 @@ const NewPostPage = () => {
 
   const handleRemove = () => {
     setImage(null)
+    setImageError(false)
     if (preview) URL.revokeObjectURL(preview)
     setPreview(null)
   }
@@ -159,6 +162,8 @@ const NewPostPage = () => {
               preview={preview}
               onFileSelect={handleFileSelect}
               onRemove={handleRemove}
+              hint="Не более 10 МБ"
+              hintError={imageError}
             />
           </div>
 
@@ -176,7 +181,7 @@ const NewPostPage = () => {
               size="xl"
               view="action"
               className={styles.submitButton}
-              disabled={!formState.isValid || submitting}
+              disabled={!formState.isValid || submitting || imageError}
               loading={submitting}
             >
               Опубликовать

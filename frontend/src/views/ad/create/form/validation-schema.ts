@@ -26,5 +26,6 @@ export const createAdSchema = z.object({
   image: z
     .instanceof(File, { message: 'Добавьте фото' })
     .nullable()
-    .refine(v => v !== null, { message: 'Добавьте фото' }),
+    .refine(v => v !== null, { message: 'Добавьте фото' })
+    .refine(v => v === null || v.size <= 10 * 1024 * 1024, { message: 'Файл не должен превышать 10 МБ' }),
 })

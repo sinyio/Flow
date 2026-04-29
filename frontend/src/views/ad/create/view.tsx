@@ -23,7 +23,7 @@ export const CreateAdView = () => {
             size="l"
             className={styles.backButton}
             aria-label="Назад"
-            onClick={() => router.back()}
+            onClick={() => router.push('/feed')}
           >
             <Icon data={ArrowIcon} />
           </Button>

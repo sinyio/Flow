@@ -13,6 +13,10 @@ interface IImageUploadPreviewProps {
   onRemove: () => void;
   accept?: string;
   buttonText?: string;
+  aspectRatio?: string;
+  maxWidth?: number | string;
+  hint?: string;
+  hintError?: boolean;
 }
 
 export const ImageUploadPreview = ({
@@ -21,6 +25,10 @@ export const ImageUploadPreview = ({
   onRemove,
   accept = "image/*",
   buttonText = "Добавить фото",
+  aspectRatio,
+  maxWidth,
+  hint,
+  hintError,
 }: IImageUploadPreviewProps) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -41,7 +49,13 @@ export const ImageUploadPreview = ({
         onChange={handleChange}
       />
       {preview ? (
-        <div className={styles.previewWrapper}>
+        <div
+          className={styles.previewWrapper}
+          style={{
+            ...(aspectRatio && { aspectRatio }),
+            ...(maxWidth && { maxWidth }),
+          }}
+        >
           <Image
             src={preview}
             alt="Фото"
@@ -57,18 +71,24 @@ export const ImageUploadPreview = ({
           </button>
         </div>
       ) : (
-        <Button
-          type="button"
-          view="action"
-          size="xl"
-          className={styles.uploadButton}
-          onClick={() => inputRef.current?.click()}
-        >
-          <div className={styles.uploadButtonInner}>
-            <Paperclip width={20} height={20} />
-            <Text variant="header-1">{buttonText}</Text>
-          </div>
-        </Button>
+        <div>
+          <Button
+            type="button"
+            view="action"
+            size="xl"
+            className={styles.uploadButton}
+            onClick={() => inputRef.current?.click()}
+          >
+            <div className={styles.uploadButtonInner}>
+              <Paperclip width={20} height={20} />
+              <Text variant="header-1">{buttonText}</Text>
+            </div>
+          </Button>
+          {hint && <p className={styles.hint}>{hint}</p>}
+        </div>
+      )}
+      {hintError && (
+        <p className={styles.hintError}>Файл превышает 10 МБ</p>
       )}
     </>
   );

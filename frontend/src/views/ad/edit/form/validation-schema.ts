@@ -23,5 +23,10 @@ export const editAdSchema = z.object({
   height: numberString('Высота'),
   price: numberString('Вознаграждение'),
   description: z.string().trim().optional().default(''),
-  image: z.instanceof(File).nullable().optional().default(null),
+  image: z
+    .instanceof(File)
+    .nullable()
+    .optional()
+    .default(null)
+    .refine(v => v === null || v === undefined || v.size <= 10 * 1024 * 1024, { message: 'Файл не должен превышать 10 МБ' }),
 })

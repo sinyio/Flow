@@ -27,6 +27,18 @@
   object-fit: cover;
 }
 
+.hint {
+  margin-left: 12px;
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--g-color-text-secondary);
+}
+
+.hintError {
+  margin-top: -8px;
+  color: var(--g-color-text-danger);
+}
+
 .removeImage {
   position: absolute;
   top: 8px;

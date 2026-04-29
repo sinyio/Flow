@@ -271,6 +271,10 @@ export const EditAdForm = ({ ad }: IEditAdFormProps) => {
           preview={preview}
           onFileSelect={handleFileSelect}
           onRemove={handleRemove}
+          aspectRatio="3/4"
+          maxWidth={300}
+          hint="Не более 10 МБ"
+          hintError={formState.errors.image?.message === 'Файл не должен превышать 10 МБ'}
         />
 
         <div className={styles.fields}>
