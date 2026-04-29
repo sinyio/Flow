@@ -68,6 +68,9 @@ export class ChatResponseDto {
   })
   canAssignCourier: boolean
 
+  @ApiProperty({ description: 'Количество непрочитанных сообщений от собеседника', example: 3 })
+  unreadCount: number
+
   @ApiProperty({ example: '2026-03-12T10:00:00.000Z' })
   createdAt: Date
 

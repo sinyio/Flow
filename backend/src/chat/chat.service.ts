@@ -71,7 +71,20 @@ export class ChatService {
       this.prisma.chat.count({ where }),
     ])
 
-    const data = items.map((chat) => {
+    const unreadCounts = await Promise.all(
+      items.map((chat) => {
+        const myMember = chat.members.find((m) => m.userId === userId)
+        return this.prisma.message.count({
+          where: {
+            chatId: chat.id,
+            senderId: { not: userId },
+            ...(myMember?.lastReadAt ? { createdAt: { gt: myMember.lastReadAt } } : {}),
+          },
+        })
+      }),
+    )
+
+    const data = items.map((chat, i) => {
       const otherMember = chat.members.find((m) => m.userId !== userId)
       const isSupportChat = chat.adId === null
       const canAssignCourier = Boolean(
@@ -89,6 +102,7 @@ export class ChatService {
         responseId: chat.responseId,
         isSupportChat,
         canAssignCourier,
+        unreadCount: unreadCounts[i],
         createdAt: chat.createdAt,
         updatedAt: chat.updatedAt,
         ad: chat.ad
@@ -149,6 +163,11 @@ export class ChatService {
     })
 
     if (!isMember) throw new NotFoundException('Чат не найден')
+
+    await this.prisma.chatMember.update({
+      where: { chatId_userId: { chatId, userId } },
+      data: { lastReadAt: new Date() },
+    })
 
     const skip = (page - 1) * limit
 
