@@ -5,7 +5,7 @@ import { useEffect, useRef } from 'react'
 
 import { TMessage } from '@api/chats/types'
 
-import { useChatStore } from '@utils/stores/chats'
+import { selectSelectedChat, useChatStore } from '@utils/stores/chats'
 
 import { ChatInputBar } from '@components/molecules/chat-input-bar'
 import { DealConfirmBar } from '@components/molecules/deal-confirm-bar'
@@ -27,6 +27,8 @@ export const ChatRoom = ({
   showDealBar,
 }: IChatRoomProps) => {
   const { messages, currentUserId, isLoading } = useChatStore()
+  const selectedChat = useChatStore(selectSelectedChat)
+  const adId = selectedChat?.adId ?? null
 
   const bottomRef = useRef<HTMLDivElement>(null)
   const messagesContainerRef = useRef<HTMLDivElement>(null)
@@ -96,6 +98,8 @@ export const ChatRoom = ({
                   message={message}
                   isOwn={isOwn}
                   showAvatar={showAvatar}
+                  adId={adId}
+                  isConfirmed={selectedChat?.isCourierConfirmed}
                 />
               )
             })}

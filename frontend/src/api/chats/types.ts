@@ -38,6 +38,7 @@ export type TChatItem = {
   responseId: string | null
   isSupportChat?: boolean
   canAssignCourier?: boolean
+  isCourierConfirmed?: boolean
   createdAt: string
   updatedAt: string
   ad: TChatAd
@@ -59,7 +60,7 @@ export type TMessage = {
   id: string
   chatId: string
   text: string | null
-  type: 'REGULAR' | 'AD_RESPONSE'
+  type: 'REGULAR' | 'AD_RESPONSE' | 'COURIER_SELECTED'
   createdAt: string
   sender: TChatUserSnippet
   files: TMessageFile[]

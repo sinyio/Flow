@@ -55,7 +55,12 @@ export const useChatStore = create<TChatStore>()(set => ({
       .finally(() => set(state => ({ isLoading: { ...state.isLoading, messages: false } })))
   },
 
-  selectChat: chatId => set({ selectedChatId: chatId }),
+  selectChat: chatId => set(state => ({
+    selectedChatId: chatId,
+    chats: state.chats.map(chat =>
+      chat.id === chatId ? { ...chat, unreadCount: 0 } : chat
+    ),
+  })),
 
   clearSelection: () => set({ selectedChatId: null, messages: [] }),
 

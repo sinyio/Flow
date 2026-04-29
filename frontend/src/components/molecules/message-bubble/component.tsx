@@ -5,15 +5,19 @@ import { Avatar, Icon, Text } from '@gravity-ui/uikit'
 
 import { TMessage } from '@api/chats/types'
 
+import { CourierSelectedMessage } from '@components/molecules/courier-selected-message'
+
 import styles from './component.module.css'
 
 export interface IMessageBubbleProps {
   message: TMessage
   isOwn: boolean
   showAvatar?: boolean
+  adId?: string | null
+  isConfirmed?: boolean
 }
 
-export const MessageBubble = ({ message, isOwn, showAvatar = true }: IMessageBubbleProps) => {
+export const MessageBubble = ({ message, isOwn, showAvatar = true, adId, isConfirmed }: IMessageBubbleProps) => {
   const time = new Date(message.createdAt).toLocaleTimeString('ru-RU', {
     hour: '2-digit',
     minute: '2-digit',
@@ -29,6 +33,11 @@ export const MessageBubble = ({ message, isOwn, showAvatar = true }: IMessageBub
         </div>
       </div>
     )
+  }
+
+  if (message.type === 'COURIER_SELECTED') {
+    if (isOwn || !adId) return null
+    return <CourierSelectedMessage adId={adId} isConfirmed={isConfirmed} />
   }
 
   return (
