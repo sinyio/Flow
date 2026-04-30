@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger'
-import { IsOptional, IsString, IsNumber, IsBoolean, IsEnum } from 'class-validator'
+import { IsOptional, IsString, IsNumber, IsBoolean, IsEnum, MaxLength } from 'class-validator'
 import { AdDtoRoles } from '../types'
 import { Packaging } from '@prisma/client'
 import { Transform, Type } from 'class-transformer'
@@ -85,6 +85,7 @@ export class AdUpdateDto {
   @ApiPropertyOptional({ description: 'Описание', example: '' })
   @IsOptional()
   @IsString()
+  @MaxLength(1000)
   description?: string
 
   @ApiPropertyOptional({ description: 'Изображение', type: 'string', format: 'binary' })

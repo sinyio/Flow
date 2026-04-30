@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { Packaging } from '@prisma/client'
-import { IsEnum, IsNotEmpty } from 'class-validator'
+import { IsEnum, IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator'
 import { AdDtoRoles } from '../types'
 import { Type } from 'class-transformer'
 
@@ -99,6 +99,9 @@ export class AdDto {
   isDocument: boolean
 
   @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  @MaxLength(1000)
   description?: string
 
   @ApiProperty({ type: 'string', format: 'binary' })
