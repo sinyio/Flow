@@ -212,7 +212,7 @@ export class MediaService {
             deletedAt: null,
             parentId: { in: rootIds },
           },
-          orderBy: { createdAt: 'asc' },
+          orderBy: { createdAt: 'desc' },
           include: {
             author: true,
             parent: {
