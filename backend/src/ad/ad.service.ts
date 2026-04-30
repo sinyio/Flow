@@ -203,7 +203,7 @@ export class AdService {
   }
 
   public async update(req: Request, id: string, ad: AdUpdateDto, file?) {
-    const { role, ...data } =  filterEmptyValues(ad)
+    const { role, ...data } = filterEmptyValues(ad)
 
     const authorId = req.session.userId
 
@@ -211,12 +211,11 @@ export class AdService {
     if (role === 'sender') senderId = authorId
     if (role === 'recipient') recipientId = authorId
 
+    let imagePath: string | undefined
     if (file) {
-      const adId = id
-      const originalBuffer = file.buffer
-      const imageKey = `ads/${adId}/image`
+      const imageKey = `ads/${id}/image`
 
-      const thumb600 = await sharp(originalBuffer)
+      const thumb600 = await sharp(file.buffer)
         .resize(600, 600, { fit: 'cover' })
         .jpeg({ quality: 85 })
         .toBuffer()
@@ -227,6 +226,8 @@ export class AdService {
         thumb600,
         'image/jpeg'
       )
+
+      imagePath = `${this.configService.getOrThrow('MINIO_PUBLIC_BASE')}/${this.configService.getOrThrow('MINIO_BUCKET')}/${imageKey}`
     }
 
     await this.prisma.ad.update({
@@ -235,6 +236,7 @@ export class AdService {
       },
       data: {
         ...data,
+        ...(imagePath ? { image: imagePath } : {}),
         authorId,
         senderId,
         recipientId,
