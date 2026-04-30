@@ -77,6 +77,9 @@ body {
   --g-color-line-brand: rgba(98, 139, 53, 1);
   --g-color-base-brand-hover: rgba(98, 139, 53, 0.85);
 
+  --g-color-base-generic: var(--g-color-base-light);
+  --g-color-base-generic-hover: var(--g-color-base-light-hover);
+
   --g-color-base-selection: rgba(98, 139, 53, 0.25);
   --g-color-base-selection-hover: rgba(98, 139, 53, 0.35);
 

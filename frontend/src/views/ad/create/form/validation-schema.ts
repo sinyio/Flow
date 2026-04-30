@@ -22,7 +22,7 @@ export const createAdSchema = z.object({
   width: numberString('Ширина'),
   height: numberString('Высота'),
   price: numberString('Вознаграждение'),
-  description: z.string().trim().optional().default(''),
+  description: z.string().trim().max(1000, 'Не более 1000 символов').optional().default(''),
   image: z
     .instanceof(File, { message: 'Добавьте фото' })
     .nullable()

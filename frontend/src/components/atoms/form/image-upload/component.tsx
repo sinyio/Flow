@@ -17,6 +17,7 @@ interface IImageUploadPreviewProps {
   maxWidth?: number | string;
   hint?: string;
   hintError?: boolean;
+  hintErrorText?: string;
 }
 
 export const ImageUploadPreview = ({
@@ -29,6 +30,7 @@ export const ImageUploadPreview = ({
   maxWidth,
   hint,
   hintError,
+  hintErrorText = 'Файл превышает 10 МБ',
 }: IImageUploadPreviewProps) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -87,7 +89,7 @@ export const ImageUploadPreview = ({
           {hint && <p className={styles.hint}>{hint}</p>}
         </div>
       )}
-      {hintError && <p className={styles.hintError}>Файл превышает 10 МБ</p>}
+      {hintError && <p className={styles.hintError}>{hintErrorText}</p>}
     </>
   );
 };

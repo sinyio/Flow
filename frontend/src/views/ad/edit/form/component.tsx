@@ -274,7 +274,8 @@ export const EditAdForm = ({ ad }: IEditAdFormProps) => {
           aspectRatio="3/4"
           maxWidth={300}
           hint="Не более 10 МБ"
-          hintError={formState.errors.image?.message === 'Файл не должен превышать 10 МБ'}
+          hintError={!preview || formState.errors.image?.message === 'Файл не должен превышать 10 МБ'}
+          hintErrorText={!preview ? 'Фото обязательно' : 'Файл превышает 10 МБ'}
         />
 
         <div className={styles.fields}>
@@ -337,7 +338,7 @@ export const EditAdForm = ({ ad }: IEditAdFormProps) => {
           view="action"
           size="xl"
           className={styles.submitButton}
-          disabled={!formState.isValid || formState.isSubmitting}
+          disabled={!formState.isValid || formState.isSubmitting || !preview}
           loading={formState.isSubmitting}
         >
           Сохранить

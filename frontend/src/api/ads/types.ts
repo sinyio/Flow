@@ -25,7 +25,7 @@ export type TAd = {
   deletedAt?: string | null
   title: string
   image: string | null
-  description: string
+  description: string | null
   status: TStatus
   startDate: string
   endDate: string

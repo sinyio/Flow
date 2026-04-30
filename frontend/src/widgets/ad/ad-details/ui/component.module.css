@@ -10,6 +10,40 @@
   flex-direction: column;
   gap: 8px;
   margin-top: 16px;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.descriptionCollapsed {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  -webkit-box-orient: vertical;
+}
+
+.descriptionExpanded {
+  overflow: visible;
+}
+
+.expandBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--g-color-text-secondary);
+  transition: transform 0.2s, color 0.15s;
+}
+
+.expandBtn:hover {
+  color: var(--g-color-text-primary);
+}
+
+.expandBtnUp {
+  transform: rotate(180deg);
 }
 
 .editButton {

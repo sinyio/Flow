@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { Text } from "@gravity-ui/uikit";
 
 import { TAd } from "@api/ads";
@@ -7,6 +8,7 @@ import { TAd } from "@api/ads";
 import { getDate } from "@utils/get-date";
 import { getPackageType } from "@utils/get-package-type";
 
+import { FormattedText } from "@components/atoms/formatted-text/component";
 import { Stats } from "@components/stats";
 
 import { AdParticipants } from "@widgets/ad/ad-participants";
@@ -18,6 +20,14 @@ export interface IAdHeaderProps {
 }
 
 export const AdDetails = ({ ad }: IAdHeaderProps) => {
+  const [expanded, setExpanded] = useState(false);
+  const [overflows, setOverflows] = useState(false);
+  const textRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = textRef.current;
+    if (el) setOverflows(el.scrollHeight > el.clientHeight);
+  }, [ad.description]);
 
   const list = [
     { label: "Вес", value: ad.weight },
@@ -31,6 +41,8 @@ export const AdDetails = ({ ad }: IAdHeaderProps) => {
     `${ad.fromCity} - ${ad.toCity}`,
     `${getDate(ad.endDate, "before")}`,
   ];
+
+  console.log(ad) // TODO: удалить
 
   return (
     <div className={styles.adDetails}>
@@ -47,13 +59,27 @@ export const AdDetails = ({ ad }: IAdHeaderProps) => {
 
       <div className={styles.adDescriptionBlock}>
         <Text variant="display-1">Описание</Text>
-        <Text
-          variant="body-3"
-          color="secondary"
-          className={styles.adDescriptionText}
-        >
-          {ad.description}
-        </Text>
+        {ad.description && (
+          <>
+            <div
+              ref={textRef}
+              className={expanded ? styles.descriptionExpanded : styles.descriptionCollapsed}
+            >
+              <FormattedText variant="body-3" text={ad.description} />
+            </div>
+            {overflows && (
+              <button
+                className={`${styles.expandBtn} ${expanded ? styles.expandBtnUp : ""}`}
+                onClick={() => setExpanded((v) => !v)}
+                aria-label={expanded ? "Свернуть" : "Развернуть"}
+              >
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <path d="M2.5 5L7 9.5L11.5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+            )}
+          </>
+        )}
       </div>
 
       <Stats
