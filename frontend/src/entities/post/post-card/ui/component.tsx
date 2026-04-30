@@ -24,9 +24,10 @@ const FLOW_AUTHOR_ID = "adminuser";
 
 export interface IPostCardProps {
   post: TPost;
+  disabled?: boolean;
 }
 
-export const PostCard = ({ post }: IPostCardProps) => {
+export const PostCard = ({ post, disabled }: IPostCardProps) => {
   const isFlowPost = !post.author || post.author.id === FLOW_AUTHOR_ID;
   const [shareOpen, setShareOpen] = useState(false);
 
@@ -36,9 +37,17 @@ export const PostCard = ({ post }: IPostCardProps) => {
     setShareOpen(true);
   };
 
+  const Wrapper = disabled
+    ? ({ children, className }: { children: React.ReactNode; className?: string }) => (
+        <div className={className} style={{ pointerEvents: 'none' }}>{children}</div>
+      )
+    : ({ children, className }: { children: React.ReactNode; className?: string }) => (
+        <Link href={`/media/posts/${post.id}`} className={className}>{children}</Link>
+      );
+
   return (
     <>
-      <Link href={`/media/posts/${post.id}`} className={styles.link}>
+      <Wrapper className={styles.link}>
         <Card className={styles.container}>
           {post.image && (
             <div className={styles.imageWrapper}>
@@ -110,7 +119,7 @@ export const PostCard = ({ post }: IPostCardProps) => {
             </div>
           </div>
         </Card>
-      </Link>
+      </Wrapper>
       <ShareModal
         open={shareOpen}
         onOpenChange={setShareOpen}

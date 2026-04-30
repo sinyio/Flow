@@ -132,7 +132,7 @@ const CommentItem = ({
           )}
           {isOwn && onDelete && (
             <div className={styles.deleteButton} onClick={() => onDelete(id)}>
-              <Text className={styles.commentStat} variant="body-1">
+              <Text className={styles.deleteText} variant="body-1">
                 Удалить
               </Text>
             </div>

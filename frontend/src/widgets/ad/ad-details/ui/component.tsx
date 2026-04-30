@@ -42,8 +42,6 @@ export const AdDetails = ({ ad }: IAdHeaderProps) => {
     `${getDate(ad.endDate, "before")}`,
   ];
 
-  console.log(ad) // TODO: удалить
-
   return (
     <div className={styles.adDetails}>
       {(ad.userState.canEdit ||

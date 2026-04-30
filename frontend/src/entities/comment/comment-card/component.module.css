@@ -109,6 +109,16 @@
   }
 }
 
+.deleteText {
+  color: var(--g-color-text-secondary);
+  transition: 0.2s color;
+  cursor: pointer;
+  
+  &:hover {
+    color: var(--g-color-text-primary);
+  }
+}
+
 .cancelReply {
   margin-left: 14px;
   margin-bottom: 4px;

@@ -118,13 +118,14 @@ export default function MainPage() {
               </Text>
               <div className={styles.conclusionCards}>
                 <PostCard
+                  disabled
                   post={{
                     id: "mock-1",
                     title: "Как работает Флоу?",
                     image: "/main/4.jpg",
-                    createdAt: "2025-04-10T00:00:00.000Z",
+                    createdAt: "2026-04-10T00:00:00.000Z",
                     author: null,
-                    viewsCount: 187,
+                    viewsCount: 9870,
                     likesCount: 0,
                     favoritesCount: 0,
                     commentsCount: 0,
@@ -133,13 +134,14 @@ export default function MainPage() {
                   }}
                 />
                 <PostCard
+                  disabled
                   post={{
                     id: "mock-2",
                     title: "Как работает Флоу?",
                     image: "/main/5.jpg",
-                    createdAt: "2025-04-10T00:00:00.000Z",
+                    createdAt: "2026-04-10T00:00:00.000Z",
                     author: null,
-                    viewsCount: 187,
+                    viewsCount: 9870,
                     likesCount: 0,
                     favoritesCount: 0,
                     commentsCount: 0,
