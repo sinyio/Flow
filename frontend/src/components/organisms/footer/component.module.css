@@ -1,5 +1,6 @@
 .container {
-    padding: 28px 80px;
+    height: 75px;
+    padding: 0 80px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -7,6 +8,7 @@
     border-top: 1px solid var(--g-color-line-generic);
     color: var(--g-color-text-secondary);
     margin-top: 148px;
+    box-sizing: border-box;
 }
 
 .linksContainer {

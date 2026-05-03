@@ -39,6 +39,8 @@ export interface IChatActions {
 
   addIncomingMessage: (message: TMessage) => void
 
+  handleChatActivity: (chatId: string, message: TMessage) => void
+
   setCanAssignCourier: (chatId: string, value: boolean) => void
 }
 

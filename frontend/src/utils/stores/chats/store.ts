@@ -87,7 +87,50 @@ export const useChatStore = create<TChatStore>()(set => ({
       if (message.chatId !== state.selectedChatId) return state
       if (state.messages.some(m => m.id === message.id)) return state
 
-      return { messages: [...state.messages, message] }
+      const updatedChats = state.chats.map(chat =>
+        chat.id === message.chatId
+          ? {
+              ...chat,
+              lastMessage: {
+                id: message.id,
+                text: message.text,
+                createdAt: message.createdAt,
+                senderId: message.sender.id,
+                filesCount: message.files.length,
+              },
+              updatedAt: message.createdAt,
+            }
+          : chat
+      )
+
+      return { messages: [...state.messages, message], chats: updatedChats }
+    })
+  },
+
+  handleChatActivity: (chatId, message) => {
+    set(state => {
+      if (chatId === state.selectedChatId) return state
+
+      const updatedChats = state.chats
+        .map(chat =>
+          chat.id === chatId
+            ? {
+                ...chat,
+                unreadCount: (chat.unreadCount ?? 0) + 1,
+                lastMessage: {
+                  id: message.id,
+                  text: message.text,
+                  createdAt: message.createdAt,
+                  senderId: message.sender.id,
+                  filesCount: message.files.length,
+                },
+                updatedAt: message.createdAt,
+              }
+            : chat
+        )
+        .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
+
+      return { chats: updatedChats }
     })
   },
 

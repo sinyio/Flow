@@ -35,6 +35,7 @@ export const ChatLayout = ({ initialChatId }: IChatLayoutProps) => {
     clearSelection,
     sendMessage,
     addIncomingMessage,
+    handleChatActivity,
     setCanAssignCourier,
   } = useChatStore()
 
@@ -42,7 +43,7 @@ export const ChatLayout = ({ initialChatId }: IChatLayoutProps) => {
 
   const selectedChat = useChatStore(selectSelectedChat)
 
-  const { isConnected, joinRoom, sendMessage: socketSendMessage, newMessages } = useChatSocket()
+  const { isConnected, joinRoom, sendMessage: socketSendMessage, newMessages, chatActivities } = useChatSocket()
 
   // Инициализация: initialChatId из props
   useEffect(() => {
@@ -90,7 +91,7 @@ export const ChatLayout = ({ initialChatId }: IChatLayoutProps) => {
     }
   }, [isConnected, selectedChatId, joinRoom])
 
-  // Socket → store bridge: новые сообщения
+  // Socket → store bridge: новые сообщения в открытом чате
   useEffect(() => {
     if (newMessages.length === 0) return
 
@@ -98,6 +99,15 @@ export const ChatLayout = ({ initialChatId }: IChatLayoutProps) => {
 
     addIncomingMessage(lastMessage)
   }, [newMessages, addIncomingMessage])
+
+  // Socket → store bridge: новые сообщения в других чатах (счётчик непрочитанных)
+  useEffect(() => {
+    if (chatActivities.length === 0) return
+
+    const last = chatActivities[chatActivities.length - 1]
+
+    handleChatActivity(last.chatId, last.message)
+  }, [chatActivities, handleChatActivity])
 
   const handleSendMessage = async (text: string) => {
     if (!selectedChatId) return

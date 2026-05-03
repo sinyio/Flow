@@ -9,6 +9,7 @@ export function useChatSocket() {
   const socketRef = useRef<Socket | null>(null)
   const [isConnected, setIsConnected] = useState(false)
   const [newMessages, setNewMessages] = useState<TMessage[]>([])
+  const [chatActivities, setChatActivities] = useState<Array<{ chatId: string; message: TMessage }>>([])
 
   useEffect(() => {
     const apiHost = process.env.NEXT_PUBLIC_API_HOST ?? ''
@@ -35,6 +36,9 @@ export function useChatSocket() {
     socket.on('connect_error', error => console.error('[useChatSocket] connect_error:', error))
     socket.on('message:new', (message: TMessage) => {
       setNewMessages(prev => [...prev, message])
+    })
+    socket.on('chat:newMessage', (data: { chatId: string; message: TMessage }) => {
+      setChatActivities(prev => [...prev, data])
     })
 
     return () => {
@@ -66,5 +70,5 @@ export function useChatSocket() {
       })
     })
 
-  return { isConnected, joinRoom, sendMessage, newMessages }
+  return { isConnected, joinRoom, sendMessage, newMessages, chatActivities }
 }
