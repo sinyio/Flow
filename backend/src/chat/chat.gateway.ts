@@ -90,6 +90,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
       client.disconnect(true)
       return
     }
+    await client.join(`user:${userId}`)
   }
 
   @SubscribeMessage('join')
@@ -125,6 +126,14 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
 
     const msg = await this.chatService.createMessage(userId, body.chatId, body.text)
     this.server.to(body.chatId).emit('message:new', msg)
+
+    const memberIds = await this.chatService.getChatMemberIds(body.chatId)
+    for (const memberId of memberIds) {
+      if (memberId !== userId) {
+        this.server.to(`user:${memberId}`).emit('chat:newMessage', { chatId: body.chatId, message: msg })
+      }
+    }
+
     return { ok: true, message: msg }
   }
 }

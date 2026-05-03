@@ -266,6 +266,14 @@ export class ChatService {
     return member
   }
 
+  public async getChatMemberIds(chatId: string): Promise<string[]> {
+    const members = await this.prisma.chatMember.findMany({
+      where: { chatId },
+      select: { userId: true },
+    })
+    return members.map(m => m.userId)
+  }
+
   public async createMessage(userId: string, chatId: string, text?: string) {
     await this.assertChatMember(userId, chatId)
 
