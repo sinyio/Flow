@@ -1,12 +1,10 @@
 'use client'
 
-import { Paperclip, Xmark } from '@gravity-ui/icons'
 import { Button, Icon, Text, useToaster } from '@gravity-ui/uikit'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { isAxiosError } from 'axios'
-import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { useRef, useState, useEffect, use } from 'react'
+import { useState, useEffect, use } from 'react'
 import { useForm, type SubmitHandler } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -18,6 +16,7 @@ import { useApiContext } from '@contexts/api-context'
 import { normalizeContent } from '@utils/normalize-content'
 import { useCurrentUserStore } from '@utils/stores/current-user'
 
+import { ImageUploadPreview } from '@components/atoms/form/image-upload'
 import { TextAreaField } from '@components/form/text-area-field/field'
 import { TextField } from '@components/form/text-field/field'
 import { PageContainer } from '@components/global/page-container'
@@ -46,7 +45,6 @@ const EditPostPage = ({ params }: EditPostPageProps) => {
   const router = useRouter()
   const { apiClient } = useApiContext()
   const { add } = useToaster()
-  const fileInputRef = useRef<HTMLInputElement>(null)
   const [image, setImage] = useState<File | null>(null)
   const [preview, setPreview] = useState<string | null>(null)
   const [existingImage, setExistingImage] = useState<string | null>(null)
@@ -108,14 +106,11 @@ const EditPostPage = ({ params }: EditPostPageProps) => {
     }
   }, [id, apiClient, router, reset])
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-
-    if (!file) return
+  const handleFileSelect = (file: File) => {
+    if (preview) URL.revokeObjectURL(preview)
     setImage(file)
     setPreview(URL.createObjectURL(file))
     setExistingImage(null)
-    e.target.value = ''
   }
 
   const removeImage = () => {
@@ -239,32 +234,11 @@ const EditPostPage = ({ params }: EditPostPageProps) => {
 
           <div className={styles.section}>
             <Text variant="header-2">Обложка</Text>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              className={styles.hiddenInput}
-              onChange={handleFileChange}
+            <ImageUploadPreview
+              preview={currentPreview}
+              onFileSelect={handleFileSelect}
+              onRemove={removeImage}
             />
-            {currentPreview ? (
-              <div className={styles.previewWrapper}>
-                <Image fill src={currentPreview} alt="Обложка" className={styles.previewImage} />
-                <button type="button" className={styles.removeImage} onClick={removeImage}>
-                  <Xmark width={16} height={16} />
-                </button>
-              </div>
-            ) : (
-              <Button
-                type="button"
-                view="action"
-                size="xl"
-                className={styles.uploadButton}
-                onClick={() => fileInputRef.current?.click()}
-              >
-                <Paperclip width={16} height={16} />
-                Добавить фото
-              </Button>
-            )}
           </div>
 
           <div className={styles.submitBlock}>
