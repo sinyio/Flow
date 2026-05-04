@@ -1,5 +1,5 @@
 .container {
-  padding: 32px 0;
+  padding: 32px 16px;
   cursor: pointer;
   transition: background-color 0.2s;
   border-top: 1px solid var(--g-color-line-generic);
@@ -74,6 +74,6 @@
 
 @media (max-width: 767px) {
   .container {
-    padding: 16px 0;
+    padding: 16px 8px;
   }
 }

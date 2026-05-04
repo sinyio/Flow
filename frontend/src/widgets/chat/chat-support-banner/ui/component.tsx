@@ -25,9 +25,9 @@ export const ChatSupportBanner = () => {
         </div>
       </div>
 
-      <Button view="flat" size="s" className={styles.arrowButton}>
+      <div className={styles.arrowButton}>
         <Icon data={ArrowRight} size={24} />
-      </Button>
+      </div>
     </div>
   )
 }
